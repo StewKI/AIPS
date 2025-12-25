@@ -1,1 +1,1 @@
-# AIPS
+# AIPS (Advanced Interactive Painting System)
