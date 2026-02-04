@@ -2,4 +2,7 @@
 
 namespace AipsCore.Domain.Models.User.ValueObjects;
 
-public record UserId(string IdValue) : DomainId(IdValue);
+public record UserId(string IdValue) : DomainId(IdValue)
+{
+    public static UserId Any() => new(Guid.NewGuid().ToString());
+}

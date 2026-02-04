@@ -1,6 +1,9 @@
-﻿namespace AipsCore.Infrastructure.Db;
+﻿using AipsCore.Infrastructure.Entities;
+using Microsoft.EntityFrameworkCore;
 
-public class AipsDbContext
+namespace AipsCore.Infrastructure.Db;
+
+public class AipsDbContext : DbContext
 {
-    
+    public DbSet<User> Users { get; set; }
 }

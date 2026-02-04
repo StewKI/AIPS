@@ -2,6 +2,7 @@
 using AipsCore.Domain.Abstract.Rule;
 using AipsCore.Domain.Abstract.ValueObject;
 using AipsCore.Domain.Common.Validation;
+using AipsCore.Domain.Common.Validation.Rules;
 
 namespace AipsCore.Domain.Common.ValueObjects;
 
@@ -17,6 +18,8 @@ public record DomainId : AbstractValueObject
 
     protected override ICollection<IRule> GetValidationRules()
     {
-        return [];
+        return [
+            new MinLengthRule(IdValue, 5)
+        ];
     }
 }
