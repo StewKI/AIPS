@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace AipsCore.Infrastructure.Entities;
+namespace AipsCore.Infrastructure.Persistence.User;
 
 
 public class User

@@ -1,6 +1,6 @@
 using AipsCore.Domain.Abstract;
 
-namespace AipsCore.Infrastructure.Db;
+namespace AipsCore.Infrastructure.Persistence.Db;
 
 public class EfUnitOfWork : IUnitOfWork
 {

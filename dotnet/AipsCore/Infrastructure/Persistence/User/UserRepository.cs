@@ -1,10 +1,8 @@
-using AipsCore.Domain.Common.ValueObjects;
-using AipsCore.Domain.Models.User;
 using AipsCore.Domain.Models.User.External;
 using AipsCore.Domain.Models.User.ValueObjects;
-using AipsCore.Infrastructure.Db;
+using AipsCore.Infrastructure.Persistence.Db;
 
-namespace AipsCore.Infrastructure.Repositories;
+namespace AipsCore.Infrastructure.Persistence.User;
 
 public class UserRepository : IUserRepository
 {
@@ -15,19 +13,19 @@ public class UserRepository : IUserRepository
         _context = context;
     }
     
-    public async Task<User?> Get(UserId userId, CancellationToken cancellationToken = default)
+    public async Task<Domain.Models.User.User?> Get(UserId userId, CancellationToken cancellationToken = default)
     {
         var userEntity = await _context.Users.FindAsync([new Guid(userId.IdValue), cancellationToken], cancellationToken: cancellationToken);
 
         if (userEntity is null) return null;
         
-        return User.Create(
+        return Domain.Models.User.User.Create(
             userEntity.Id.ToString(),
             userEntity.Email,
             userEntity.Username);
     }
 
-    public async Task Save(User user, CancellationToken cancellationToken = default)
+    public async Task Save(Domain.Models.User.User user, CancellationToken cancellationToken = default)
     {
         var userEntity = await _context.Users.FindAsync([new Guid(user.Id.IdValue), cancellationToken], cancellationToken: cancellationToken);
 
@@ -40,7 +38,7 @@ public class UserRepository : IUserRepository
         }
         else
         {
-            userEntity = new Entities.User()
+            userEntity = new User()
             {
                 Id = new Guid(user.Id.IdValue),
                 Email = user.Email.EmailValue,
