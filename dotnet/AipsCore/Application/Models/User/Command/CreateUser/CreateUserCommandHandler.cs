@@ -1,9 +1,7 @@
 using AipsCore.Application.Abstract.Command;
-using AipsCore.Domain.Common.ValueObjects;
 using AipsCore.Domain.Models.User.External;
-using AipsCore.Domain.Models.User.ValueObjects;
 
-namespace AipsCore.Application.Models.User.Command.Handler;
+namespace AipsCore.Application.Models.User.Command.CreateUser;
 
 public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand>
 {
