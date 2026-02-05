@@ -59,11 +59,15 @@ public sealed class Dispatcher : IDispatcher
 
     private dynamic ResolveHandler(Type handlerType, object commandOrQuery)
     {
-        dynamic? handler = _serviceProvider.GetService(handlerType);
-        
-        if (handler is null)
+        dynamic handler;
+
+        try
         {
-            throw new DispatchException(commandOrQuery);
+            handler = _serviceProvider.GetRequiredService(handlerType);
+        }
+        catch (InvalidOperationException serviceProviderException)
+        {
+            throw new DispatchException(commandOrQuery, serviceProviderException);
         }
 
         return handler;

@@ -5,7 +5,7 @@ namespace AipsCore.Application.Common.Dispatcher;
 
 public class DispatchException : Exception
 {
-    public DispatchException(object commandQuery)
-        : base($"Error while dispatching '{commandQuery.GetType().Name}'")
+    public DispatchException(object commandQuery, Exception innerException)
+        : base($"Error dispatching '{commandQuery.GetType().Name}' because of: {innerException.Message}", innerException)
     { }
 }
