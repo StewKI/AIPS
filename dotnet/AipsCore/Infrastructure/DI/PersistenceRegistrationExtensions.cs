@@ -12,7 +12,10 @@ public static class PersistenceRegistrationExtensions
     {
         services.AddDbContext<AipsDbContext>(options =>
         {
-            options.UseNpgsql(configuration.GetEnvConnectionString());
+            options.UseNpgsql(configuration.GetEnvConnectionString(), npgsql =>
+            {
+                npgsql.MigrationsAssembly(typeof(AipsDbContext).Assembly.FullName);
+            });
         });
         
         return services;
