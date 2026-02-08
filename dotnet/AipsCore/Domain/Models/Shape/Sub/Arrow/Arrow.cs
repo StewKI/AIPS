@@ -1,4 +1,4 @@
-using System.Drawing;
+using AipsCore.Domain.Common.ValueObjects;
 using AipsCore.Domain.Models.Shape.Enums;
 using AipsCore.Domain.Models.Shape.ValueObjects;
 using AipsCore.Domain.Models.Whiteboard.ValueObjects;
