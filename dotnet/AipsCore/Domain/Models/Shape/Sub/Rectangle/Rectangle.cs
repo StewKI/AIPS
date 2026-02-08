@@ -7,7 +7,7 @@ namespace AipsCore.Domain.Models.Shape.Sub.Rectangle;
 
 public class Rectangle : Shape
 {
-    public override ShapeTypeEnum ShapeType => ShapeTypeEnum.Rectangle;
+    public override ShapeType ShapeType => ShapeType.Rectangle;
     
     public Position EndPosition { get; }
     

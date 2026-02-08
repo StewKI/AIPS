@@ -16,5 +16,5 @@ public class Line : Shape
         Thickness = thickness;
     }
 
-    public override ShapeTypeEnum ShapeType =>  ShapeTypeEnum.Line;
+    public override ShapeType ShapeType =>  ShapeType.Line;
 }

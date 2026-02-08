@@ -11,7 +11,7 @@ public abstract class Shape
     
     public WhiteboardId WhiteboardId { get; private set; }
     
-    public abstract ShapeTypeEnum ShapeType { get; }
+    public abstract ShapeType ShapeType { get; }
     
     public Position Position { get; private set; }
 

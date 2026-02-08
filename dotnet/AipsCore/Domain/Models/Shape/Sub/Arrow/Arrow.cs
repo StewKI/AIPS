@@ -16,5 +16,5 @@ public class Arrow : Shape
         Thickness = thickness;
     }
 
-    public override ShapeTypeEnum ShapeType => ShapeTypeEnum.Arrow;
+    public override ShapeType ShapeType => ShapeType.Arrow;
 }

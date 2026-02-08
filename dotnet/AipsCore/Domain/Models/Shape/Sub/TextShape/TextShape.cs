@@ -19,5 +19,5 @@ public class TextShape : Shape
         TextShapeSize = textShapeSize;
     }
 
-    public override ShapeTypeEnum ShapeType => ShapeTypeEnum.Text;
+    public override ShapeType ShapeType => ShapeType.Text;
 }

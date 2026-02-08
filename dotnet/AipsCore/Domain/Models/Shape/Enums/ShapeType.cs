@@ -1,6 +1,6 @@
 namespace AipsCore.Domain.Models.Shape.Enums;
 
-public enum ShapeTypeEnum
+public enum ShapeType
 {
     Rectangle,
     Line,
