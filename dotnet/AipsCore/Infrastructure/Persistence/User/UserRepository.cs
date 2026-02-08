@@ -27,7 +27,8 @@ public class UserRepository : IUserRepository
 
     public async Task Save(Domain.Models.User.User user, CancellationToken cancellationToken = default)
     {
-        var userEntity = await _context.Users.FindAsync([new Guid(user.Id.IdValue), cancellationToken], cancellationToken: cancellationToken);
+        // ReSharper disable once MethodSupportsCancellation
+        var userEntity = await _context.Users.FindAsync(new Guid(user.Id.IdValue));
 
         if (userEntity is not null)
         {

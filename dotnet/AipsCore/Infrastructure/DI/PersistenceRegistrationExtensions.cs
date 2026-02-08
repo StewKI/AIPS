@@ -1,5 +1,8 @@
+using AipsCore.Domain.Abstract;
+using AipsCore.Domain.Models.User.External;
 using AipsCore.Infrastructure.DI.Configuration;
 using AipsCore.Infrastructure.Persistence.Db;
+using AipsCore.Infrastructure.Persistence.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +20,9 @@ public static class PersistenceRegistrationExtensions
                 npgsql.MigrationsAssembly(typeof(AipsDbContext).Assembly.FullName);
             });
         });
+
+        services.AddTransient<IUnitOfWork, EfUnitOfWork>();
+        services.AddTransient<IUserRepository, UserRepository>();
         
         return services;
     }

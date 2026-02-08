@@ -33,7 +33,7 @@ public static class HandlerRegistrationExtensions
                 if (!handlerInterfaces.Contains(genericDef))
                     continue;
                 
-                services.AddScoped(@interface, type);
+                services.AddTransient(@interface, type);
             }
         }
 
