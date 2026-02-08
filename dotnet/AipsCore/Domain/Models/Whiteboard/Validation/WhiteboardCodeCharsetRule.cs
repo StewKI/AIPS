@@ -3,9 +3,9 @@ using AipsCore.Utility.Text;
 
 namespace AipsCore.Domain.Models.Whiteboard.Validation;
 
-public class WhitebordCodeCharsetRule : CharsetRule
+public class WhiteboardCodeCharsetRule : CharsetRule
 {
-    public WhitebordCodeCharsetRule(string stringValue)
+    public WhiteboardCodeCharsetRule(string stringValue)
         : base(stringValue, GetWhiteboardCodeCharset())
     {
     }

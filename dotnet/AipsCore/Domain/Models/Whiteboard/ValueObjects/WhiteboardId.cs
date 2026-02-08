@@ -2,4 +2,7 @@
 
 namespace AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
-public record WhiteboardId(string IdValue) : DomainId(IdValue);
+public record WhiteboardId(string IdValue) : DomainId(IdValue)
+{
+    public static WhiteboardId Any() => new(Guid.NewGuid().ToString());
+}

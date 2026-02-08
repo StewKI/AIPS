@@ -1,9 +1,6 @@
-﻿using AipsCore.Domain.Abstract;
-using AipsCore.Domain.Abstract.Rule;
+﻿using AipsCore.Domain.Abstract.Rule;
 using AipsCore.Domain.Abstract.ValueObject;
-using AipsCore.Domain.Common.Validation;
 using AipsCore.Domain.Common.Validation.Rules;
-using AipsCore.Domain.Common.ValueObjects;
 using AipsCore.Domain.Models.Whiteboard.Validation;
 
 namespace AipsCore.Domain.Models.Whiteboard.ValueObjects;
@@ -25,7 +22,7 @@ public record WhiteboardCode : AbstractValueObject
         return
         [
             new ExactLength(CodeValue, CodeLength),
-            new WhitebordCodeCharsetRule(CodeValue)
+            new WhiteboardCodeCharsetRule(CodeValue)
         ];
     }
 } 
