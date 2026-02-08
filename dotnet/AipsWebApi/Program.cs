@@ -1,4 +1,5 @@
 using AipsCore.Infrastructure.DI;
+using AipsWebApi.Middleware;
 using DotNetEnv;
 
 Env.Load();
@@ -20,6 +21,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseAuthorization();
 

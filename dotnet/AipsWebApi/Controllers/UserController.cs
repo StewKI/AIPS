@@ -13,14 +13,7 @@ public class UserController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<int>> CreateUser(CreateUserCommand command, IDispatcher dispatcher, CancellationToken cancellationToken)
     {
-        try
-        {
-            var userId = await dispatcher.Execute(command, cancellationToken);
-            return Ok(userId.IdValue);
-        }
-        catch (ValidationException validationException)
-        {
-            return BadRequest(validationException.ValidationErrors);
-        }
+        var userId = await dispatcher.Execute(command, cancellationToken);
+        return Ok(userId.IdValue);
     }
 }
