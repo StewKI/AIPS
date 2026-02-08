@@ -1,6 +1,7 @@
 using System.Drawing;
 using AipsCore.Domain.Models.Shape.Enums;
 using AipsCore.Domain.Models.Shape.ValueObjects;
+using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Domain.Models.Shape.Sub.Arrow;
 
@@ -9,7 +10,7 @@ public class Arrow : Shape
     public Position EndPosition { get; private set; }
     public Thickness Thickness { get; private set; }
     
-    public Arrow(ShapeId id, Position position, Color color, Position endPosition, Thickness thickness) : base(id, position, color)
+    public Arrow(ShapeId id, WhiteboardId whiteboardId, Position position, Color color, Position endPosition, Thickness thickness) : base(id, whiteboardId, position, color)
     {
         EndPosition = endPosition;
         Thickness = thickness;
