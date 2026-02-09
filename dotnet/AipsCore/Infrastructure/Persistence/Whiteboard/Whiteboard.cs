@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using AipsCore.Domain.Models.Whiteboard.Enums;
 
 namespace AipsCore.Infrastructure.Persistence.Whiteboard;
 
@@ -8,7 +9,9 @@ public class Whiteboard
     public Guid Id { get; set; }
     
     [Required]
-    public Guid WhiteboardOwnerId { get; set; }
+    public Guid OwnerId { get; set; }
+
+    public User.User Owner { get; set; } = null!;
     
     [Required]
     [MaxLength(8)]
@@ -19,4 +22,14 @@ public class Whiteboard
     [MaxLength(32)]
     [MinLength(3)]
     public string Title { get; set; } = null!;
+    
+    public DateTime CreatedAt { get; set; }
+    
+    public DateTime? DeletedAt { get; set; }
+    
+    public int MaxParticipants { get; set; }
+    
+    public WhiteboardJoinPolicy JoinPolicy { get; set; }
+    
+    public WhiteboardState State { get; set; }
 }
