@@ -8,6 +8,7 @@ using AipsCore.Infrastructure.Persistence.Db;
 using AipsCore.Infrastructure.Persistence.Shape;
 using AipsCore.Infrastructure.Persistence.User;
 using AipsCore.Infrastructure.Persistence.Whiteboard;
+using AipsCore.Infrastructure.Persistence.WhiteboardMembership;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +30,7 @@ public static class PersistenceRegistrationExtensions
         services.AddTransient<IUnitOfWork, EfUnitOfWork>();
         services.AddTransient<IUserRepository, UserRepository>();
         services.AddTransient<IWhiteboardRepository, WhiteboardRepository>();
-        services.AddTransient<IWhiteboardMembershipRepository, IWhiteboardMembershipRepository>();
+        services.AddTransient<IWhiteboardMembershipRepository, WhiteboardMembershipRepository>();
         services.AddTransient<IShapeRepository, ShapeRepository>();
         
         return services;
