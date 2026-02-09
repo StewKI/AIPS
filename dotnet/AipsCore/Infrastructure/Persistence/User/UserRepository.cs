@@ -22,7 +22,9 @@ public class UserRepository : IUserRepository
         return Domain.Models.User.User.Create(
             userEntity.Id.ToString(),
             userEntity.Email,
-            userEntity.Username);
+            userEntity.Username,
+            userEntity.CreatedAt,
+            userEntity.DeletedAt);
     }
 
     public async Task Save(Domain.Models.User.User user, CancellationToken cancellationToken = default)
@@ -34,6 +36,8 @@ public class UserRepository : IUserRepository
         {
             userEntity.Email = user.Email.EmailValue;
             userEntity.Username = user.Username.UsernameValue;
+            userEntity.CreatedAt = user.CreatedAt.CreatedAtValue;
+            userEntity.DeletedAt = user.DeletedAt.DeletedAtValue;
             
             _context.Users.Update(userEntity);
         }
@@ -44,6 +48,8 @@ public class UserRepository : IUserRepository
                 Id = new Guid(user.Id.IdValue),
                 Email = user.Email.EmailValue,
                 Username = user.Username.UsernameValue,
+                CreatedAt = user.CreatedAt.CreatedAtValue,
+                DeletedAt = user.DeletedAt.DeletedAtValue
             };
             
             _context.Users.Add(userEntity);

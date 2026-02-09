@@ -8,26 +8,36 @@ public class User
     public UserId Id { get; private set; }
     public Email Email { get; private set; }
     public Username Username { get; private set; }
+    public UserCreatedAt CreatedAt { get; private set; }
+    public UserDeletedAt DeletedAt { get; private set; }
 
-    public User(UserId id, Email email, Username username)
+    public User(UserId id, Email email, Username username, UserCreatedAt createdAt, UserDeletedAt deletedAt)
     {
         Id = id;
         Email = email;
         Username = username;
+        CreatedAt = createdAt;
+        DeletedAt = deletedAt;
     }
     
-    public static User Create(string id, string email, string username)
+    public static User Create(string id, string email, string username, DateTime createdAt, DateTime? deletedAt)
     {
         var userIdVo = new UserId(id);
         var usernameVo = new Username(username);
         var emailVo = new Email(email);
-        return new User( userIdVo, emailVo, usernameVo);
+        var createdAtVo = new UserCreatedAt(createdAt);
+        var deletedAtVo = new UserDeletedAt(deletedAt);
+        
+        return new User(userIdVo, emailVo, usernameVo, createdAtVo, deletedAtVo);
     }
     
-    public static User Create(string email, string username)
+    public static User Create(string email, string username, DateTime createdAt, DateTime? deletedAt)
     {
         var usernameVo = new Username(username);
         var emailVo = new Email(email);
-        return new User( UserId.Any(), emailVo, usernameVo);
+        var createdAtVo = new UserCreatedAt(createdAt);
+        var deletedAtVo = new UserDeletedAt(deletedAt);
+        
+        return new User(UserId.Any(), emailVo, usernameVo, createdAtVo, deletedAtVo);
     }
 }
