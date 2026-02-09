@@ -22,9 +22,14 @@ public class WhiteboardRepository : IWhiteboardRepository
 
         return Domain.Models.Whiteboard.Whiteboard.Create(
             whiteboardEntity.Id.ToString(),
-            whiteboardEntity.WhiteboardOwnerId.ToString(),
+            whiteboardEntity.OwnerId.ToString(),
             whiteboardEntity.Code,
-            whiteboardEntity.Title);
+            whiteboardEntity.Title,
+            whiteboardEntity.CreatedAt,
+            whiteboardEntity.DeletedAt,
+            whiteboardEntity.MaxParticipants,
+            whiteboardEntity.JoinPolicy,
+            whiteboardEntity.State);
     }
 
     public async Task Save(Domain.Models.Whiteboard.Whiteboard whiteboard, CancellationToken cancellationToken = default)
@@ -33,9 +38,14 @@ public class WhiteboardRepository : IWhiteboardRepository
 
         if (whiteboardEntity is not null)
         {
-            whiteboardEntity.WhiteboardOwnerId = new Guid(whiteboard.WhiteboardOwnerId.IdValue);
+            whiteboardEntity.OwnerId = new Guid(whiteboard.WhiteboardOwnerId.IdValue);
             whiteboardEntity.Code = whiteboard.Code.CodeValue;
             whiteboardEntity.Title = whiteboard.Title.TitleValue;
+            whiteboardEntity.CreatedAt = whiteboard.CreatedAt.CreatedAtValue;
+            whiteboardEntity.DeletedAt = whiteboard.DeletedAt.DeletedAtValue;
+            whiteboardEntity.MaxParticipants = whiteboard.MaxParticipants.MaxParticipantsValue;
+            whiteboardEntity.JoinPolicy = whiteboard.JoinPolicy;
+            whiteboardEntity.State = whiteboard.State;
             
             _context.Whiteboards.Update(whiteboardEntity);
         }
@@ -44,9 +54,14 @@ public class WhiteboardRepository : IWhiteboardRepository
             whiteboardEntity = new Whiteboard()
             {
                 Id = new Guid(whiteboard.Id.IdValue),
-                WhiteboardOwnerId = new Guid(whiteboard.WhiteboardOwnerId.IdValue),
+                OwnerId = new Guid(whiteboard.WhiteboardOwnerId.IdValue),
                 Code = whiteboard.Code.CodeValue,
                 Title = whiteboard.Title.TitleValue,
+                CreatedAt = whiteboard.CreatedAt.CreatedAtValue,
+                DeletedAt = whiteboard.DeletedAt.DeletedAtValue,
+                MaxParticipants = whiteboard.MaxParticipants.MaxParticipantsValue,
+                JoinPolicy = whiteboard.JoinPolicy,
+                State = whiteboard.State
             };
             
             _context.Whiteboards.Add(whiteboardEntity);

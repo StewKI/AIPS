@@ -20,7 +20,15 @@ public class CreateWhiteboardCommandHandler : ICommandHandler<CreateWhiteboardCo
     {
         var whiteboardCode = await WhiteboardCode.GenerateUniqueAsync(_whiteboardRepository);
         
-        var whiteboard = Domain.Models.Whiteboard.Whiteboard.Create(command.OwnerId, whiteboardCode.CodeValue, command.Title);
+        var whiteboard = Domain.Models.Whiteboard.Whiteboard.Create(
+            command.OwnerId,
+            whiteboardCode.CodeValue,
+            command.Title,
+            command.CreatedAt,
+            command.DeletedAt,
+            command.MaxParticipants,
+            command.JoinPolicy,
+            command.State);
 
         await _whiteboardRepository.Save(whiteboard, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

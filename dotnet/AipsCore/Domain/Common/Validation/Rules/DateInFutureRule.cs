@@ -4,10 +4,10 @@ namespace AipsCore.Domain.Common.Validation.Rules;
 
 public class DateInFutureRule : AbstractRule
 {
-    private readonly DateTime _date;
+    private readonly DateTime? _date;
     private readonly DateTime _now;
     
-    public DateInFutureRule(DateTime date) 
+    public DateInFutureRule(DateTime? date) 
     {
         _date = date;
         _now = DateTime.Now;
@@ -17,6 +17,11 @@ public class DateInFutureRule : AbstractRule
     protected override string ErrorMessage => "Date must be in the future";
     public override bool Validate()
     {
-        return _date > _now;
+        if (_date is not null)
+        {
+            return _date > _now;
+        }
+        
+        return true;
     }
 }

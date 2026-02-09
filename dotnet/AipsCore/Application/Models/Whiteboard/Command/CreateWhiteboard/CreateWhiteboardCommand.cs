@@ -1,7 +1,16 @@
 using System.Windows.Input;
 using AipsCore.Application.Abstract.Command;
+using AipsCore.Domain.Models.Whiteboard.Enums;
 using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Application.Models.Whiteboard.Command.CreateWhiteboard;
 
-public record CreateWhiteboardCommand(string OwnerId, string Title) : ICommand<WhiteboardId>;
+public record CreateWhiteboardCommand(
+    string OwnerId,
+    string Title,
+    DateTime CreatedAt,
+    DateTime DeletedAt,
+    int MaxParticipants,
+    WhiteboardJoinPolicy JoinPolicy,
+    WhiteboardState State)
+    : ICommand<WhiteboardId>;
