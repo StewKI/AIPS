@@ -7,7 +7,7 @@ namespace AipsCore.Domain.Models.Shape;
 
 public abstract class Shape
 {
-    public ShapeId Id { get; }
+    public ShapeId Id { get; init; }
     
     public WhiteboardId WhiteboardId { get; private set; }
     
@@ -23,5 +23,17 @@ public abstract class Shape
         Position = position;
         Color = color;
         WhiteboardId = whiteboardId;
+    }
+
+    protected Shape(
+        string id,
+        string whiteboardId,
+        int positionX, int positionY,
+        string color)
+    {
+        Id = new ShapeId(id);
+        Position = new Position(positionX, positionY);
+        Color = new Color(color);
+        WhiteboardId = new WhiteboardId(whiteboardId);
     }
 }
