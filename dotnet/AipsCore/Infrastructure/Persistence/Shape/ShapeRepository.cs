@@ -1,6 +1,7 @@
 using AipsCore.Domain.Models.Shape.External;
 using AipsCore.Domain.Models.Shape.ValueObjects;
 using AipsCore.Infrastructure.Persistence.Db;
+using AipsCore.Infrastructure.Persistence.Shape.Mappers;
 
 namespace AipsCore.Infrastructure.Persistence.Shape;
 
