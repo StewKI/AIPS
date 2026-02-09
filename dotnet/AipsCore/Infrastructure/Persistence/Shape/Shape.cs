@@ -13,6 +13,9 @@ public class Shape
     public Guid WhiteboardId { get; set; }
     public Whiteboard.Whiteboard Whiteboard { get; set; } = null!;
     
+    public Guid AuthorId { get; set; }
+    public User.User Author { get; set; } = null!;
+    
     public ShapeType Type { get; set; }
     
     public int PositionX { get; set; }

@@ -5,6 +5,7 @@ namespace AipsCore.Application.Models.Shape.Command.CreateRectangle;
 
 public record CreateRectangleCommand(
     string WhiteboardId,
+    string AuthorId,
     int PositionX,
     int PositionY,
     string Color,

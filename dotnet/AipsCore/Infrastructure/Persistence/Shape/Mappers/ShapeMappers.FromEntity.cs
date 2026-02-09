@@ -36,6 +36,7 @@ public static partial class ShapeMappers
         return Line.Create(
             shape.Id.ToString(),
             shape.WhiteboardId.ToString(),
+            shape.AuthorId.ToString(),
             shape.PositionX, shape.PositionY,
             shape.Color,
             shape.EndPositionX!.Value,  shape.EndPositionY!.Value,
@@ -47,6 +48,7 @@ public static partial class ShapeMappers
         return Arrow.Create(
             shape.Id.ToString(),
             shape.WhiteboardId.ToString(),
+            shape.AuthorId.ToString(),
             shape.PositionX, shape.PositionY,
             shape.Color,
             shape.EndPositionX!.Value,  shape.EndPositionY!.Value,
@@ -58,6 +60,7 @@ public static partial class ShapeMappers
         return TextShape.Create(
             shape.Id.ToString(),
             shape.WhiteboardId.ToString(),
+            shape.AuthorId.ToString(),
             shape.PositionX, shape.PositionY,
             shape.Color,
             shape.TextValue!, shape.TextSize!.Value);
