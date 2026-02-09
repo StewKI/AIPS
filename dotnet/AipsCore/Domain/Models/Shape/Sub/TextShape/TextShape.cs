@@ -20,4 +20,20 @@ public class TextShape : Shape
     }
 
     public override ShapeType ShapeType => ShapeType.Text;
+    
+    public static TextShape Create(
+        string id,
+        string whiteboardId,
+        int positionX, int positionY,
+        string color,
+        string textValue, int textSize)
+    {
+        return new TextShape(
+            new ShapeId(id),
+            new WhiteboardId(whiteboardId),
+            new Position(positionX, positionY),
+            new Color(color),
+            new TextShapeValue(textValue),
+            new TextShapeSize(textSize));
+    }
 }

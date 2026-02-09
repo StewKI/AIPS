@@ -17,4 +17,21 @@ public class Line : Shape
     }
 
     public override ShapeType ShapeType =>  ShapeType.Line;
+    
+    public static Line Create(
+        string id,
+        string whiteboardId,
+        int positionX, int positionY,
+        string color,
+        int endPositionX, int endPositionY,
+        int borderThickness)
+    {
+        return new Line(
+            new ShapeId(id),
+            new WhiteboardId(whiteboardId),
+            new Position(positionX, positionY),
+            new Color(color),
+            new Position(endPositionX, endPositionY),
+            new Thickness(borderThickness));
+    }
 }

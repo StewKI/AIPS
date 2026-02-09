@@ -20,4 +20,36 @@ public class Rectangle : Shape
         BorderThickness = borderThickness;
     }
 
+    public static Rectangle Create(
+        string id,
+        string whiteboardId,
+        int positionX, int positionY,
+        string color,
+        int endPositionX, int endPositionY,
+        int borderThickness)
+    {
+        return new Rectangle(
+            new ShapeId(id),
+            new WhiteboardId(whiteboardId),
+            new Position(positionX, positionY),
+            new Color(color),
+            new Position(endPositionX, endPositionY),
+            new Thickness(borderThickness));
+    }
+    
+    public static Rectangle Create(
+        string whiteboardId,
+        int positionX, int positionY,
+        string color,
+        int endPositionX, int endPositionY,
+        int borderThickness)
+    {
+        return new Rectangle(
+            ShapeId.Any(),
+            new WhiteboardId(whiteboardId),
+            new Position(positionX, positionY),
+            new Color(color),
+            new Position(endPositionX, endPositionY),
+            new Thickness(borderThickness));
+    }
 }
