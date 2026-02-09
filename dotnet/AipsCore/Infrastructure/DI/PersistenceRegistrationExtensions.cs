@@ -1,6 +1,7 @@
 using AipsCore.Domain.Abstract;
 using AipsCore.Domain.Models.User.External;
 using AipsCore.Domain.Models.Whiteboard.External;
+using AipsCore.Domain.Models.WhiteboardMembership.External;
 using AipsCore.Infrastructure.DI.Configuration;
 using AipsCore.Infrastructure.Persistence.Db;
 using AipsCore.Infrastructure.Persistence.User;
@@ -26,6 +27,7 @@ public static class PersistenceRegistrationExtensions
         services.AddTransient<IUnitOfWork, EfUnitOfWork>();
         services.AddTransient<IUserRepository, UserRepository>();
         services.AddTransient<IWhiteboardRepository, WhiteboardRepository>();
+        services.AddTransient<IWhiteboardMembershipRepository, IWhiteboardMembershipRepository>();
         
         return services;
     }
