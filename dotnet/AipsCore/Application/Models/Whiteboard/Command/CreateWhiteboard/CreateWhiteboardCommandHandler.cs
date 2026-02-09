@@ -18,15 +18,7 @@ public class CreateWhiteboardCommandHandler : ICommandHandler<CreateWhiteboardCo
     
     public async Task<WhiteboardId> Handle(CreateWhiteboardCommand command, CancellationToken cancellationToken = default)
     {
-        WhiteboardCode whiteboardCode;
-        bool codeExists;
-
-        do
-        {
-            whiteboardCode = GenerateUniqueWhiteboardCode();
-
-            codeExists = await _whiteboardRepository.WhiteboardCodeExists(whiteboardCode);
-        } while (codeExists);
+        var whiteboardCode = await WhiteboardCode.GenerateUniqueAsync(_whiteboardRepository);
         
         var whiteboard = Domain.Models.Whiteboard.Whiteboard.Create(command.OwnerId, whiteboardCode.CodeValue, command.Title);
 
@@ -34,19 +26,5 @@ public class CreateWhiteboardCommandHandler : ICommandHandler<CreateWhiteboardCo
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         return whiteboard.Id;
-    }
-
-    // TRENUTNO SAMO, CE SE NAPRAVI KO SERVIS IL KAKO VEC KASNIJE
-    private static WhiteboardCode GenerateUniqueWhiteboardCode()
-    {
-        var rng = new Random();
-        char[] result = new char[8];
-
-        for (int i = 0; i < result.Length; i++)
-        {
-            result[i] = (char)('0' + rng.Next(0, 10));
-        }
-        
-        return new WhiteboardCode(new string(result));
     }
 }
