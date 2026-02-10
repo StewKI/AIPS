@@ -21,6 +21,7 @@ public class CreateRectangleCommandHandler : ICommandHandler<CreateRectangleComm
     {
         var rectangle = Rectangle.Create(
             command.WhiteboardId,
+            command.AuthorId,
             command.PositionX, command.PositionY,
             command.Color,
             command.EndPositionX,
