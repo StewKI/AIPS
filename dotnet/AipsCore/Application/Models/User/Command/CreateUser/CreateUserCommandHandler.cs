@@ -18,7 +18,7 @@ public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, UserI
     
     public async Task<UserId> Handle(CreateUserCommand command, CancellationToken cancellationToken = default)
     {
-        var user = Domain.Models.User.User.Create(command.Email, command.Username); 
+        var user = Domain.Models.User.User.Create(command.Email, command.Username, command.CreatedAt, command.DeletedAt); 
         
         await _userRepository.Save(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
