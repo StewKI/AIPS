@@ -32,4 +32,8 @@ public class Whiteboard
     public WhiteboardJoinPolicy JoinPolicy { get; set; }
     
     public WhiteboardState State { get; set; }
+    
+    public ICollection<Shape.Shape> Shapes { get; set; } = new List<Shape.Shape>();
+    
+    public ICollection<WhiteboardMembership.WhiteboardMembership> Memberships { get; set; } = new List<WhiteboardMembership.WhiteboardMembership>();
 }
