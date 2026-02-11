@@ -7,7 +7,7 @@ public class UserContext : IUserContext
 {
     public UserId GetCurrentUserId()
     {
-        return new UserId(new Guid("156b58b0-d0f1-4498-b2b6-afa536b68b1a").ToString());
+        return new UserId(new Guid("52a1810c-802f-48b0-a74c-7b517807e392").ToString());
     }
 }
 
