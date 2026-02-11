@@ -1,4 +1,5 @@
 using AipsCore.Application.Abstract;
+using AipsCore.Application.Models.Whiteboard.Command.AddUserToWhiteboard;
 using AipsCore.Application.Models.Whiteboard.Command.CreateWhiteboard;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,5 +14,13 @@ public class WhiteboardController : ControllerBase
     {
         var whiteboardId = await dispatcher.Execute(command, cancellationToken);
         return Ok(whiteboardId.IdValue);
+    }
+
+    [HttpPost("adduser")]
+    public async Task<IActionResult> AddUser(AddUserToWhiteboardCommand command, IDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        await dispatcher.Execute(command, cancellationToken);
+        return Ok();
     }
 }

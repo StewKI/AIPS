@@ -24,11 +24,8 @@ public class CreateWhiteboardCommandHandler : ICommandHandler<CreateWhiteboardCo
             command.OwnerId,
             whiteboardCode.CodeValue,
             command.Title,
-            command.CreatedAt,
-            command.DeletedAt,
             command.MaxParticipants,
-            command.JoinPolicy,
-            command.State);
+            command.JoinPolicy);
 
         await _whiteboardRepository.SaveAsync(whiteboard, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
