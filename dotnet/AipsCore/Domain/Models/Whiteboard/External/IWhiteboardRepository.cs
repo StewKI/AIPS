@@ -1,11 +1,9 @@
+using AipsCore.Domain.Abstract;
 using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Domain.Models.Whiteboard.External;
 
-public interface IWhiteboardRepository
+public interface IWhiteboardRepository : IAbstractRepository<Whiteboard, WhiteboardId>
 {
-    Task<Whiteboard?> Get(WhiteboardId whiteboardId, CancellationToken cancellationToken = default);
-    Task Save(Whiteboard whiteboard, CancellationToken cancellationToken = default);
     Task<bool> WhiteboardCodeExists(WhiteboardCode whiteboardCode);
-    
 }

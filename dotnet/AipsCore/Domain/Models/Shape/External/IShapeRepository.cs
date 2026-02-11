@@ -1,9 +1,9 @@
+using AipsCore.Domain.Abstract;
 using AipsCore.Domain.Models.Shape.ValueObjects;
 
 namespace AipsCore.Domain.Models.Shape.External;
 
-public interface IShapeRepository
+public interface IShapeRepository : IAbstractRepository<Shape, ShapeId>
 {
-    Task<Shape?> Get(ShapeId id, CancellationToken cancellationToken = default);
-    Task Add(Shape shape, CancellationToken cancellationToken = default);
+    
 }
