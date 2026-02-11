@@ -17,4 +17,10 @@ public record WhiteboardMembershipEditingEnabled : AbstractValueObject
     {
         return [];
     }
+
+    public static WhiteboardMembershipEditingEnabled Enabled
+        => new WhiteboardMembershipEditingEnabled(true);
+    
+    public static WhiteboardMembershipEditingEnabled Disabled
+        => new WhiteboardMembershipEditingEnabled(false);
 }

@@ -18,6 +18,11 @@ public abstract class DomainModel<TId> where TId : DomainId
         Id = id;
     }
 
+    public string GetModelName()
+    {
+        return this.GetType().Name;
+    }
+
     public IReadOnlyList<IDomainEvent> GetDomainEvents() => _domainEvents.ToList();
     
     public void ClearDomainEvents() => _domainEvents.Clear();

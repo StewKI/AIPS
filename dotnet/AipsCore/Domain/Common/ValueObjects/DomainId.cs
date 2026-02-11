@@ -22,4 +22,9 @@ public record DomainId : AbstractValueObject
             new MinLengthRule(IdValue, 5)
         ];
     }
+
+    public override string ToString()
+    {
+        return IdValue;
+    }
 }

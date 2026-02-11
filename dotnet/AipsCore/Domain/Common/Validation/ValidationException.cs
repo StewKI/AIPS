@@ -10,4 +10,9 @@ public class ValidationException : Exception
     {
         ValidationErrors = validationErrors;
     }
+
+    public ValidationException(ValidationError validationError)
+        : this([validationError])
+    {
+    }
 }

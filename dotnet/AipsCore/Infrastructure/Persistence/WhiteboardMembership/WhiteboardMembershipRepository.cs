@@ -1,7 +1,10 @@
+using AipsCore.Domain.Models.User.ValueObjects;
+using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 using AipsCore.Domain.Models.WhiteboardMembership.External;
 using AipsCore.Domain.Models.WhiteboardMembership.ValueObjects;
 using AipsCore.Infrastructure.Persistence.Abstract;
 using AipsCore.Infrastructure.Persistence.Db;
+using Microsoft.EntityFrameworkCore;
 
 namespace AipsCore.Infrastructure.Persistence.WhiteboardMembership;
 
@@ -48,5 +51,18 @@ public class WhiteboardMembershipRepository
         entity.EditingEnabled = model.EditingEnabled.EditingEnabledValue;
         entity.CanJoin = model.CanJoin.CanJoinValue;
         entity.LastInteractedAt = model.LastInteractedAt.LastInteractedAtValue;
+    }
+
+    public async Task<Domain.Models.WhiteboardMembership.WhiteboardMembership?> GetByWhiteboardAndUserAsync(WhiteboardId whiteboardId, UserId userId, CancellationToken cancellationToken = default)
+    {
+        var whiteboardMembership = await Context.WhiteboardMemberships
+            .FirstOrDefaultAsync((entity) =>
+                    entity.WhiteboardId.ToString() == whiteboardId.ToString() &&
+                    entity.UserId.ToString() == userId.ToString(),
+                cancellationToken);
+
+        if (whiteboardMembership is null) return null;
+        
+        return MapToModel(whiteboardMembership);
     }
 }
