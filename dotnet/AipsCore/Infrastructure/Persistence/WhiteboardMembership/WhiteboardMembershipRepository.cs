@@ -57,8 +57,8 @@ public class WhiteboardMembershipRepository
     {
         var whiteboardMembership = await Context.WhiteboardMemberships
             .FirstOrDefaultAsync((entity) =>
-                    entity.WhiteboardId.ToString() == whiteboardId.ToString() &&
-                    entity.UserId.ToString() == userId.ToString(),
+                    entity.WhiteboardId.ToString() == whiteboardId.IdValue &&
+                    entity.UserId.ToString() == userId.IdValue,
                 cancellationToken);
 
         if (whiteboardMembership is null) return null;
