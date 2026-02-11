@@ -20,7 +20,7 @@ public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, UserI
     {
         var user = Domain.Models.User.User.Create(command.Email, command.Username, command.CreatedAt, command.DeletedAt); 
         
-        await _userRepository.Save(user, cancellationToken);
+        await _userRepository.SaveAsync(user, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return user.Id;

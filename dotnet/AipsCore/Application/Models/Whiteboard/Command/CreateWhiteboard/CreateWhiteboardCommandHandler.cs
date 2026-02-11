@@ -30,7 +30,7 @@ public class CreateWhiteboardCommandHandler : ICommandHandler<CreateWhiteboardCo
             command.JoinPolicy,
             command.State);
 
-        await _whiteboardRepository.Save(whiteboard, cancellationToken);
+        await _whiteboardRepository.SaveAsync(whiteboard, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         return whiteboard.Id;

@@ -26,7 +26,7 @@ public class CreateWhiteboardMembershipCommandHandler : ICommandHandler<CreateWh
             command.CanJoin, 
             command.LastInteractedAt);
 
-        await _whiteboardMembershipRepository.Save(whiteboardMembership, cancellationToken);
+        await _whiteboardMembershipRepository.SaveAsync(whiteboardMembership, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         return whiteboardMembership.Id;
