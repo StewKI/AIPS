@@ -5,51 +5,51 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AipsCore.Infrastructure.Persistence.Abstract;
 
-public abstract class AbstractRepository<TEntity, TId, TPersistenceEntity> : IAbstractRepository<TEntity, TId>
-    where TEntity : DomainEntity<TId>
+public abstract class AbstractRepository<TModel, TId, TEntity> : IAbstractRepository<TModel, TId>
+    where TModel : DomainModel<TId>
     where TId : DomainId
-    where TPersistenceEntity : class
+    where TEntity : class
 {
     protected readonly AipsDbContext Context;
-    protected readonly DbSet<TPersistenceEntity> DbSet;
+    protected readonly DbSet<TEntity> DbSet;
     
     protected AbstractRepository(AipsDbContext context)
     {
         Context = context;
-        DbSet = Context.Set<TPersistenceEntity>();
+        DbSet = Context.Set<TEntity>();
     }
     
-    public async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
+    public async Task<TModel?> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
     {
-        var persistenceEntity = await DbSet.FindAsync([new Guid(id.IdValue)], cancellationToken);
+        var entity = await DbSet.FindAsync([new Guid(id.IdValue)], cancellationToken);
         
-        return persistenceEntity != null ? MapToDomainEntity(persistenceEntity) : null;
+        return entity != null ? MapToModel(entity) : null;
     }
 
-    public async Task SaveAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public async Task SaveAsync(TModel model, CancellationToken cancellationToken = default)
     {
-        var persistenceEntity = await DbSet.FindAsync([new Guid(entity.Id.IdValue)], cancellationToken);
+        var entity = await DbSet.FindAsync([new Guid(model.Id.IdValue)], cancellationToken);
 
-        if (persistenceEntity == null)
+        if (entity == null)
         {
-            persistenceEntity = MapToPersistenceEntity(entity);
-            await DbSet.AddAsync(persistenceEntity, cancellationToken);
+            entity = MapToEntity(model);
+            await DbSet.AddAsync(entity, cancellationToken);
         }
         else
         {
-            UpdatePersistenceEntity(persistenceEntity, entity);
-            DbSet.Update(persistenceEntity);
+            UpdateEntity(entity, model);
+            DbSet.Update(entity);
         }
     }
 
-    public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public async Task AddAsync(TModel model, CancellationToken cancellationToken = default)
     {
-        var persistenceEntity = MapToPersistenceEntity(entity);
+        var entity = MapToEntity(model);
         
-        await DbSet.AddAsync(persistenceEntity, cancellationToken);
+        await DbSet.AddAsync(entity, cancellationToken);
     }
 
-    protected abstract TEntity MapToDomainEntity(TPersistenceEntity persistenceEntity);
-    protected abstract TPersistenceEntity MapToPersistenceEntity(TEntity domainEntity);
-    protected abstract void UpdatePersistenceEntity(TPersistenceEntity persistenceEntity, TEntity domainEntity);
+    protected abstract TModel MapToModel(TEntity entity);
+    protected abstract TEntity MapToEntity(TModel model);
+    protected abstract void UpdateEntity(TEntity entity, TModel model);
 }

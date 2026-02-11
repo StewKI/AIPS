@@ -5,7 +5,7 @@ using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Domain.Models.Whiteboard;
 
-public class Whiteboard : DomainEntity<WhiteboardId>
+public class Whiteboard : DomainModel<WhiteboardId>
 {
     public UserId WhiteboardOwnerId { get; private set; }
     public WhiteboardCode Code { get; private set; }

@@ -8,7 +8,7 @@ namespace AipsCore.Infrastructure.Persistence.Shape.Mappers;
 
 public static partial class ShapeMappers
 {
-    public static void UpdatePersistenceEntity(Shape entity, Domain.Models.Shape.Shape model)
+    public static void UpdateEntity(Shape entity, Domain.Models.Shape.Shape model)
     {
         entity.WhiteboardId = new Guid(model.WhiteboardId.IdValue);
         entity.PositionX = model.Position.X;
@@ -32,28 +32,28 @@ public static partial class ShapeMappers
         };
     }
 
-    private static void UpdateEntityFromRectangle(Shape entity, Rectangle rectangle)
+    public static void UpdateEntityFromRectangle(Shape entity, Rectangle rectangle)
     {
         entity.EndPositionX = rectangle.EndPosition.X;
         entity.EndPositionY = rectangle.EndPosition.Y;
         entity.Thickness = rectangle.BorderThickness.Value;
     }
 
-    private static void UpdateEntityFromLine(Shape entity, Line line)
+    public static void UpdateEntityFromLine(Shape entity, Line line)
     {
         entity.EndPositionX = line.EndPosition.X;
         entity.EndPositionY = line.EndPosition.Y;
         entity.Thickness = line.Thickness.Value;
     }
 
-    private static void UpdateEntityFromArrow(Shape entity, Arrow arrow)
+    public static void UpdateEntityFromArrow(Shape entity, Arrow arrow)
     {
         entity.EndPositionX = arrow.EndPosition.X;
         entity.EndPositionY = arrow.EndPosition.Y;
         entity.Thickness = arrow.Thickness.Value;
     }
 
-    private static void UpdateEntityFromTextShape(Shape entity, TextShape textShape)
+    public static void UpdateEntityFromTextShape(Shape entity, TextShape textShape)
     {
         entity.TextValue = textShape.TextShapeValue.Text;
         entity.TextSize = textShape.TextShapeSize.Size;

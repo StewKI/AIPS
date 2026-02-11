@@ -12,34 +12,34 @@ public class UserRepository : AbstractRepository<Domain.Models.User.User, UserId
     {
     }
 
-    protected override Domain.Models.User.User MapToDomainEntity(User persistenceEntity)
+    protected override Domain.Models.User.User MapToModel(User entity)
     {
         return Domain.Models.User.User.Create(
-            persistenceEntity.Id.ToString(),
-            persistenceEntity.Email,
-            persistenceEntity.Username,
-            persistenceEntity.CreatedAt,
-            persistenceEntity.DeletedAt
+            entity.Id.ToString(),
+            entity.Email,
+            entity.Username,
+            entity.CreatedAt,
+            entity.DeletedAt
         );
     }
 
-    protected override User MapToPersistenceEntity(Domain.Models.User.User domainEntity)
+    protected override User MapToEntity(Domain.Models.User.User model)
     {
         return new User
         {
-            Id = new Guid(domainEntity.Id.IdValue),
-            Email = domainEntity.Email.EmailValue,
-            Username = domainEntity.Username.UsernameValue,
-            CreatedAt = domainEntity.CreatedAt.CreatedAtValue,
-            DeletedAt = domainEntity.DeletedAt.DeletedAtValue
+            Id = new Guid(model.Id.IdValue),
+            Email = model.Email.EmailValue,
+            Username = model.Username.UsernameValue,
+            CreatedAt = model.CreatedAt.CreatedAtValue,
+            DeletedAt = model.DeletedAt.DeletedAtValue
         };
     }
 
-    protected override void UpdatePersistenceEntity(User persistenceEntity, Domain.Models.User.User domainEntity)
+    protected override void UpdateEntity(User entity, Domain.Models.User.User model)
     {
-        persistenceEntity.Email = domainEntity.Email.EmailValue;
-        persistenceEntity.Username = domainEntity.Username.UsernameValue;
-        persistenceEntity.CreatedAt = domainEntity.CreatedAt.CreatedAtValue;
-        persistenceEntity.DeletedAt = domainEntity.DeletedAt.DeletedAtValue;
+        entity.Email = model.Email.EmailValue;
+        entity.Username = model.Username.UsernameValue;
+        entity.CreatedAt = model.CreatedAt.CreatedAtValue;
+        entity.DeletedAt = model.DeletedAt.DeletedAtValue;
     }
 }

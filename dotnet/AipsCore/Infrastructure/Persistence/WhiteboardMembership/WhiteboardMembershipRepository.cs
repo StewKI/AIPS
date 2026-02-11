@@ -15,38 +15,38 @@ public class WhiteboardMembershipRepository
         
     }
 
-    protected override Domain.Models.WhiteboardMembership.WhiteboardMembership MapToDomainEntity(WhiteboardMembership persistenceEntity)
+    protected override Domain.Models.WhiteboardMembership.WhiteboardMembership MapToModel(WhiteboardMembership entity)
     {
         return Domain.Models.WhiteboardMembership.WhiteboardMembership.Create(
-            persistenceEntity.Id.ToString(),
-            persistenceEntity.WhiteboardId.ToString(),
-            persistenceEntity.UserId.ToString(),
-            persistenceEntity.IsBanned,
-            persistenceEntity.EditingEnabled,
-            persistenceEntity.CanJoin,
-            persistenceEntity.LastInteractedAt
+            entity.Id.ToString(),
+            entity.WhiteboardId.ToString(),
+            entity.UserId.ToString(),
+            entity.IsBanned,
+            entity.EditingEnabled,
+            entity.CanJoin,
+            entity.LastInteractedAt
         );
     }
 
-    protected override WhiteboardMembership MapToPersistenceEntity(Domain.Models.WhiteboardMembership.WhiteboardMembership domainEntity)
+    protected override WhiteboardMembership MapToEntity(Domain.Models.WhiteboardMembership.WhiteboardMembership model)
     {
         return new WhiteboardMembership
         {
-            Id = new Guid(domainEntity.Id.IdValue),
-            WhiteboardId = new Guid(domainEntity.WhiteboardId.IdValue),
-            UserId = new Guid(domainEntity.UserId.IdValue),
-            IsBanned = domainEntity.IsBanned.IsBannedValue,
-            EditingEnabled = domainEntity.EditingEnabled.EditingEnabledValue,
-            CanJoin = domainEntity.CanJoin.CanJoinValue,
-            LastInteractedAt = domainEntity.LastInteractedAt.LastInteractedAtValue
+            Id = new Guid(model.Id.IdValue),
+            WhiteboardId = new Guid(model.WhiteboardId.IdValue),
+            UserId = new Guid(model.UserId.IdValue),
+            IsBanned = model.IsBanned.IsBannedValue,
+            EditingEnabled = model.EditingEnabled.EditingEnabledValue,
+            CanJoin = model.CanJoin.CanJoinValue,
+            LastInteractedAt = model.LastInteractedAt.LastInteractedAtValue
         };
     }
 
-    protected override void UpdatePersistenceEntity(WhiteboardMembership persistenceEntity, Domain.Models.WhiteboardMembership.WhiteboardMembership domainEntity)
+    protected override void UpdateEntity(WhiteboardMembership entity, Domain.Models.WhiteboardMembership.WhiteboardMembership model)
     {
-        persistenceEntity.IsBanned = domainEntity.IsBanned.IsBannedValue;
-        persistenceEntity.EditingEnabled = domainEntity.EditingEnabled.EditingEnabledValue;
-        persistenceEntity.CanJoin = domainEntity.CanJoin.CanJoinValue;
-        persistenceEntity.LastInteractedAt = domainEntity.LastInteractedAt.LastInteractedAtValue;
+        entity.IsBanned = model.IsBanned.IsBannedValue;
+        entity.EditingEnabled = model.EditingEnabled.EditingEnabledValue;
+        entity.CanJoin = model.CanJoin.CanJoinValue;
+        entity.LastInteractedAt = model.LastInteractedAt.LastInteractedAtValue;
     }
 }

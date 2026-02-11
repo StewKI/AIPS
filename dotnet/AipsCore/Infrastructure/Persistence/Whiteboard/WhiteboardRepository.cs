@@ -15,46 +15,46 @@ public class WhiteboardRepository
         
     }
 
-    protected override Domain.Models.Whiteboard.Whiteboard MapToDomainEntity(Whiteboard persistenceEntity)
+    protected override Domain.Models.Whiteboard.Whiteboard MapToModel(Whiteboard entity)
     {
         return Domain.Models.Whiteboard.Whiteboard.Create(
-            persistenceEntity.Id.ToString(),
-            persistenceEntity.OwnerId.ToString(),
-            persistenceEntity.Code,
-            persistenceEntity.Title,
-            persistenceEntity.CreatedAt,
-            persistenceEntity.DeletedAt,
-            persistenceEntity.MaxParticipants,
-            persistenceEntity.JoinPolicy,
-            persistenceEntity.State
+            entity.Id.ToString(),
+            entity.OwnerId.ToString(),
+            entity.Code,
+            entity.Title,
+            entity.CreatedAt,
+            entity.DeletedAt,
+            entity.MaxParticipants,
+            entity.JoinPolicy,
+            entity.State
         );
     }
 
-    protected override Whiteboard MapToPersistenceEntity(Domain.Models.Whiteboard.Whiteboard domainEntity)
+    protected override Whiteboard MapToEntity(Domain.Models.Whiteboard.Whiteboard model)
     {
         return new Whiteboard
         {
-            Id = new Guid(domainEntity.Id.IdValue),
-            OwnerId = new Guid(domainEntity.WhiteboardOwnerId.IdValue),
-            Code = domainEntity.Code.CodeValue,
-            Title = domainEntity.Title.TitleValue,
-            CreatedAt = domainEntity.CreatedAt.CreatedAtValue,
-            DeletedAt = domainEntity.DeletedAt.DeletedAtValue,
-            MaxParticipants = domainEntity.MaxParticipants.MaxParticipantsValue,
-            JoinPolicy = domainEntity.JoinPolicy,
-            State = domainEntity.State
+            Id = new Guid(model.Id.IdValue),
+            OwnerId = new Guid(model.WhiteboardOwnerId.IdValue),
+            Code = model.Code.CodeValue,
+            Title = model.Title.TitleValue,
+            CreatedAt = model.CreatedAt.CreatedAtValue,
+            DeletedAt = model.DeletedAt.DeletedAtValue,
+            MaxParticipants = model.MaxParticipants.MaxParticipantsValue,
+            JoinPolicy = model.JoinPolicy,
+            State = model.State
         };
     }
 
-    protected override void UpdatePersistenceEntity(Whiteboard persistenceEntity, Domain.Models.Whiteboard.Whiteboard domainEntity)
+    protected override void UpdateEntity(Whiteboard entity, Domain.Models.Whiteboard.Whiteboard model)
     {
-        persistenceEntity.Code = domainEntity.Code.CodeValue;
-        persistenceEntity.Title = domainEntity.Title.TitleValue;
-        persistenceEntity.CreatedAt = domainEntity.CreatedAt.CreatedAtValue;
-        persistenceEntity.DeletedAt = domainEntity.DeletedAt.DeletedAtValue;
-        persistenceEntity.MaxParticipants = domainEntity.MaxParticipants.MaxParticipantsValue;
-        persistenceEntity.JoinPolicy = domainEntity.JoinPolicy;
-        persistenceEntity.State = domainEntity.State;
+        entity.Code = model.Code.CodeValue;
+        entity.Title = model.Title.TitleValue;
+        entity.CreatedAt = model.CreatedAt.CreatedAtValue;
+        entity.DeletedAt = model.DeletedAt.DeletedAtValue;
+        entity.MaxParticipants = model.MaxParticipants.MaxParticipantsValue;
+        entity.JoinPolicy = model.JoinPolicy;
+        entity.State = model.State;
     }
     
     public async Task<bool> WhiteboardCodeExists(WhiteboardCode whiteboardCode)

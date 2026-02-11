@@ -2,11 +2,11 @@ using AipsCore.Domain.Common.ValueObjects;
 
 namespace AipsCore.Domain.Abstract;
 
-public interface IAbstractRepository<TEntity, in TId>
-    where TEntity : DomainEntity<TId>
+public interface IAbstractRepository<TModel, in TId>
+    where TModel : DomainModel<TId>
     where TId : DomainId
 {
-    Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
-    Task SaveAsync(TEntity entity, CancellationToken cancellationToken = default);
-    Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
+    Task<TModel?> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
+    Task SaveAsync(TModel model, CancellationToken cancellationToken = default);
+    Task AddAsync(TModel model, CancellationToken cancellationToken = default);
 }

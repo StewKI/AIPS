@@ -9,19 +9,19 @@ namespace AipsCore.Infrastructure.Persistence.Shape.Mappers;
 public static partial class ShapeMappers
 {
     
-    public static Shape MapToPersistenceEntity(Domain.Models.Shape.Shape model)
+    public static Shape MapToEntity(Domain.Models.Shape.Shape model)
     {
         return model.ShapeType switch
         {
-            ShapeType.Rectangle => RectangleToPersistenceEntity((Rectangle)model),
-            ShapeType.Line => LineToPersistenceEntity((Line)model),
-            ShapeType.Arrow => ArrowToPersistenceEntity((Arrow)model),
-            ShapeType.Text => TextShapeToPersistenceEntity((TextShape)model),
+            ShapeType.Rectangle => RectangleToEntity((Rectangle)model),
+            ShapeType.Line => LineToEntity((Line)model),
+            ShapeType.Arrow => ArrowToEntity((Arrow)model),
+            ShapeType.Text => TextShapeToEntity((TextShape)model),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    private static Shape RectangleToPersistenceEntity(Rectangle rectangle)
+    public static Shape RectangleToEntity(Rectangle rectangle)
     {
         return new Shape
         {
@@ -38,7 +38,7 @@ public static partial class ShapeMappers
         };
     }
 
-    private static Shape LineToPersistenceEntity(Line line)
+    public static Shape LineToEntity(Line line)
     {
         return new Shape
         {
@@ -55,7 +55,7 @@ public static partial class ShapeMappers
         };
     }
 
-    private static Shape ArrowToPersistenceEntity(Arrow arrow)
+    public static Shape ArrowToEntity(Arrow arrow)
     {
         return new Shape
         {
@@ -72,7 +72,7 @@ public static partial class ShapeMappers
         };
     }
 
-    private static Shape TextShapeToPersistenceEntity(TextShape textShape)
+    public static Shape TextShapeToEntity(TextShape textShape)
     {
         return new Shape
         {

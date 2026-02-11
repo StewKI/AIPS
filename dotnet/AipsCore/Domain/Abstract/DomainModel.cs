@@ -2,18 +2,18 @@ using AipsCore.Domain.Common.ValueObjects;
 
 namespace AipsCore.Domain.Abstract;
 
-public abstract class DomainEntity<TId> where TId : DomainId
+public abstract class DomainModel<TId> where TId : DomainId
 {
     private readonly List<IDomainEvent> _domainEvents = [];
     
     public TId Id { get; init; }
     
-    protected DomainEntity()
+    protected DomainModel()
     {
         
     }
 
-    protected DomainEntity(TId id)
+    protected DomainModel(TId id)
     {
         Id = id;
     }

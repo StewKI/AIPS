@@ -14,18 +14,18 @@ public class ShapeRepository : AbstractRepository<Domain.Models.Shape.Shape, Sha
         
     }
 
-    protected override Domain.Models.Shape.Shape MapToDomainEntity(Shape persistenceEntity)
+    protected override Domain.Models.Shape.Shape MapToModel(Shape entity)
     {
-        return ShapeMappers.MapToDomainEntity(persistenceEntity);
+        return ShapeMappers.MapToEntity(entity);
     }
 
-    protected override Shape MapToPersistenceEntity(Domain.Models.Shape.Shape domainEntity)
+    protected override Shape MapToEntity(Domain.Models.Shape.Shape model)
     {
-        return ShapeMappers.MapToPersistenceEntity(domainEntity);
+        return ShapeMappers.MapToEntity(model);
     }
 
-    protected override void UpdatePersistenceEntity(Shape persistenceEntity, Domain.Models.Shape.Shape domainEntity)
+    protected override void UpdateEntity(Shape entity, Domain.Models.Shape.Shape model)
     {
-        ShapeMappers.UpdatePersistenceEntity(persistenceEntity, domainEntity);
+        ShapeMappers.UpdateEntity(entity, model);
     }
 }

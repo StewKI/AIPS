@@ -4,7 +4,7 @@ using AipsCore.Domain.Models.User.ValueObjects;
 
 namespace AipsCore.Domain.Models.User;
 
-public class User : DomainEntity<UserId>
+public class User : DomainModel<UserId>
 {
     public Email Email { get; private set; }
     public Username Username { get; private set; }

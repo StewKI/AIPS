@@ -8,19 +8,19 @@ namespace AipsCore.Infrastructure.Persistence.Shape.Mappers;
 
 public static partial class ShapeMappers
 {
-    public static Domain.Models.Shape.Shape MapToDomainEntity(Shape shape)
+    public static Domain.Models.Shape.Shape MapToEntity(Shape shape)
     {
         return shape.Type switch
         {
-            ShapeType.Rectangle => PersistenceEntityToRectangle(shape),
-            ShapeType.Line => PersistenceEntityToLine(shape),
-            ShapeType.Arrow => PersistenceEntityToArrow(shape),
-            ShapeType.Text => PersistenceEntityToTextShape(shape),
+            ShapeType.Rectangle => EntityToRectangle(shape),
+            ShapeType.Line => EntityToLine(shape),
+            ShapeType.Arrow => EntityToArrow(shape),
+            ShapeType.Text => EntityToTextShape(shape),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    private static Rectangle PersistenceEntityToRectangle(Shape shape)
+    public static Rectangle EntityToRectangle(Shape shape)
     {
         return Rectangle.Create(
             shape.Id.ToString(),
@@ -31,7 +31,7 @@ public static partial class ShapeMappers
             shape.Thickness!.Value);
     }
 
-    private static Line PersistenceEntityToLine(Shape shape)
+    public static Line EntityToLine(Shape shape)
     {
         return Line.Create(
             shape.Id.ToString(),
@@ -43,7 +43,7 @@ public static partial class ShapeMappers
             shape.Thickness!.Value);
     }
 
-    private static Arrow PersistenceEntityToArrow(Shape shape)
+    public static Arrow EntityToArrow(Shape shape)
     {
         return Arrow.Create(
             shape.Id.ToString(),
@@ -55,7 +55,7 @@ public static partial class ShapeMappers
             shape.Thickness!.Value);
     }
 
-    private static TextShape PersistenceEntityToTextShape(Shape shape)
+    public static TextShape EntityToTextShape(Shape shape)
     {
         return TextShape.Create(
             shape.Id.ToString(),
