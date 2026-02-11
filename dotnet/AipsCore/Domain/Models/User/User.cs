@@ -1,19 +1,19 @@
-﻿using AipsCore.Domain.Common.ValueObjects;
+﻿using AipsCore.Domain.Abstract;
+using AipsCore.Domain.Common.ValueObjects;
 using AipsCore.Domain.Models.User.ValueObjects;
 
 namespace AipsCore.Domain.Models.User;
 
-public class User
+public class User : DomainEntity<UserId>
 {
-    public UserId Id { get; private set; }
     public Email Email { get; private set; }
     public Username Username { get; private set; }
     public UserCreatedAt CreatedAt { get; private set; }
     public UserDeletedAt DeletedAt { get; private set; }
 
     public User(UserId id, Email email, Username username, UserCreatedAt createdAt, UserDeletedAt deletedAt)
+        : base(id)
     {
-        Id = id;
         Email = email;
         Username = username;
         CreatedAt = createdAt;
