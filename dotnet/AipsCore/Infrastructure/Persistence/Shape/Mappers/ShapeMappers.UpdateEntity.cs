@@ -38,7 +38,7 @@ public static partial class ShapeMappers
         entity.EndPositionY = rectangle.EndPosition.Y;
         entity.Thickness = rectangle.BorderThickness.Value;
     }
-    
+
     public static void UpdateEntityFromLine(Shape entity, Line line)
     {
         entity.EndPositionX = line.EndPosition.X;
@@ -52,7 +52,7 @@ public static partial class ShapeMappers
         entity.EndPositionY = arrow.EndPosition.Y;
         entity.Thickness = arrow.Thickness.Value;
     }
-    
+
     public static void UpdateEntityFromTextShape(Shape entity, TextShape textShape)
     {
         entity.TextValue = textShape.TextShapeValue.Text;

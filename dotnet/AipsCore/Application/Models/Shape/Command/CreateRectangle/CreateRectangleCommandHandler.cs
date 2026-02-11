@@ -28,7 +28,7 @@ public class CreateRectangleCommandHandler : ICommandHandler<CreateRectangleComm
             command.EndPositionY,
             command.BorderThickness);
 
-        await _shapeRepository.Add(rectangle, cancellationToken);
+        await _shapeRepository.SaveAsync(rectangle, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return rectangle.Id;

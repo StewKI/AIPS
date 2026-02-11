@@ -1,12 +1,12 @@
-﻿using AipsCore.Domain.Models.User.ValueObjects;
+﻿using AipsCore.Domain.Abstract;
+using AipsCore.Domain.Models.User.ValueObjects;
 using AipsCore.Domain.Models.Whiteboard.Enums;
 using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Domain.Models.Whiteboard;
 
-public class Whiteboard
+public class Whiteboard : DomainModel<WhiteboardId>
 {
-    public WhiteboardId Id { get; private set; }
     public UserId WhiteboardOwnerId { get; private set; }
     public WhiteboardCode Code { get; private set; }
     public WhiteboardTitle Title { get; private set; }
@@ -26,8 +26,8 @@ public class Whiteboard
         WhiteboardMaxParticipants maxParticipants,
         WhiteboardJoinPolicy joinPolicy,
         WhiteboardState state)
+        : base(id)
     {
-        Id = id;
         WhiteboardOwnerId = whiteboardOwner.Id;
         Code = code;
         Title = title;
@@ -48,8 +48,8 @@ public class Whiteboard
         WhiteboardMaxParticipants maxParticipants,
         WhiteboardJoinPolicy joinPolicy,
         WhiteboardState state)
+        : base(id)
     {
-        Id = id;
         WhiteboardOwnerId = whiteboardOwnerId;
         Code = code;
         Title = title;

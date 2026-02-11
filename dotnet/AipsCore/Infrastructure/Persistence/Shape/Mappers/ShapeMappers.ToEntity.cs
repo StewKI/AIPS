@@ -9,7 +9,7 @@ namespace AipsCore.Infrastructure.Persistence.Shape.Mappers;
 public static partial class ShapeMappers
 {
     
-    public static Shape ModelToEntity(Domain.Models.Shape.Shape model)
+    public static Shape MapToEntity(Domain.Models.Shape.Shape model)
     {
         return model.ShapeType switch
         {
@@ -23,7 +23,7 @@ public static partial class ShapeMappers
 
     public static Shape RectangleToEntity(Rectangle rectangle)
     {
-        return new Shape()
+        return new Shape
         {
             Id = new Guid(rectangle.Id.Value),
             Type = rectangle.ShapeType,
@@ -37,10 +37,10 @@ public static partial class ShapeMappers
             Thickness = rectangle.BorderThickness.Value,
         };
     }
-    
+
     public static Shape LineToEntity(Line line)
     {
-        return new Shape()
+        return new Shape
         {
             Id = new Guid(line.Id.Value),
             Type = line.ShapeType,
@@ -54,10 +54,10 @@ public static partial class ShapeMappers
             Thickness = line.Thickness.Value,
         };
     }
-    
+
     public static Shape ArrowToEntity(Arrow arrow)
     {
-        return new Shape()
+        return new Shape
         {
             Id = new Guid(arrow.Id.Value),
             Type = arrow.ShapeType,
@@ -71,10 +71,10 @@ public static partial class ShapeMappers
             Thickness = arrow.Thickness.Value,
         };
     }
-    
+
     public static Shape TextShapeToEntity(TextShape textShape)
     {
-        return new Shape()
+        return new Shape
         {
             Id = new Guid(textShape.Id.Value),
             Type = textShape.ShapeType,

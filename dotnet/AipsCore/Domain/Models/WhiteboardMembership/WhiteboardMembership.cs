@@ -1,12 +1,12 @@
+using AipsCore.Domain.Abstract;
 using AipsCore.Domain.Models.User.ValueObjects;
 using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 using AipsCore.Domain.Models.WhiteboardMembership.ValueObjects;
 
 namespace AipsCore.Domain.Models.WhiteboardMembership;
 
-public class WhiteboardMembership
+public class WhiteboardMembership : DomainModel<WhiteboardMembershipId>
 {
-    public WhiteboardMembershipId Id { get; private set; }
     public WhiteboardId WhiteboardId { get; private set; }
     public UserId UserId { get; private set; }
     public WhiteboardMembershipIsBanned IsBanned { get; private set; }
@@ -22,8 +22,8 @@ public class WhiteboardMembership
         WhiteboardMembershipEditingEnabled editingEnabled,
         WhiteboardMembershipCanJoin canJoin,
         WhiteboardMembershipLastInteractedAt lastInteractedAt)
+        : base(id)
     {
-        Id = id;
         WhiteboardId = owner.Id;
         UserId = user.Id;
         IsBanned = isBanned;
@@ -40,8 +40,8 @@ public class WhiteboardMembership
         WhiteboardMembershipEditingEnabled editingEnabled,
         WhiteboardMembershipCanJoin canJoin,
         WhiteboardMembershipLastInteractedAt lastInteractedAt)
+        : base(id)
     {
-        Id = id;
         WhiteboardId = ownerId;
         UserId = userId;
         IsBanned = isBanned;

@@ -1,58 +1,45 @@
 using AipsCore.Domain.Models.User.External;
 using AipsCore.Domain.Models.User.ValueObjects;
+using AipsCore.Infrastructure.Persistence.Abstract;
 using AipsCore.Infrastructure.Persistence.Db;
 
 namespace AipsCore.Infrastructure.Persistence.User;
 
-public class UserRepository : IUserRepository
+public class UserRepository : AbstractRepository<Domain.Models.User.User, UserId, User>, IUserRepository
 {
-    private readonly AipsDbContext _context;
-
-    public UserRepository(AipsDbContext context)
+    public UserRepository(AipsDbContext context) 
+        : base(context)
     {
-        _context = context;
     }
-    
-    public async Task<Domain.Models.User.User?> Get(UserId userId, CancellationToken cancellationToken = default)
-    {
-        var userEntity = await _context.Users.FindAsync([new Guid(userId.IdValue), cancellationToken], cancellationToken: cancellationToken);
 
-        if (userEntity is null) return null;
-        
+    protected override Domain.Models.User.User MapToModel(User entity)
+    {
         return Domain.Models.User.User.Create(
-            userEntity.Id.ToString(),
-            userEntity.Email,
-            userEntity.Username,
-            userEntity.CreatedAt,
-            userEntity.DeletedAt);
+            entity.Id.ToString(),
+            entity.Email,
+            entity.Username,
+            entity.CreatedAt,
+            entity.DeletedAt
+        );
     }
 
-    public async Task Save(Domain.Models.User.User user, CancellationToken cancellationToken = default)
+    protected override User MapToEntity(Domain.Models.User.User model)
     {
-        // ReSharper disable once MethodSupportsCancellation
-        var userEntity = await _context.Users.FindAsync(new Guid(user.Id.IdValue));
+        return new User
+        {
+            Id = new Guid(model.Id.IdValue),
+            Email = model.Email.EmailValue,
+            Username = model.Username.UsernameValue,
+            CreatedAt = model.CreatedAt.CreatedAtValue,
+            DeletedAt = model.DeletedAt.DeletedAtValue
+        };
+    }
 
-        if (userEntity is not null)
-        {
-            userEntity.Email = user.Email.EmailValue;
-            userEntity.Username = user.Username.UsernameValue;
-            userEntity.CreatedAt = user.CreatedAt.CreatedAtValue;
-            userEntity.DeletedAt = user.DeletedAt.DeletedAtValue;
-            
-            _context.Users.Update(userEntity);
-        }
-        else
-        {
-            userEntity = new User()
-            {
-                Id = new Guid(user.Id.IdValue),
-                Email = user.Email.EmailValue,
-                Username = user.Username.UsernameValue,
-                CreatedAt = user.CreatedAt.CreatedAtValue,
-                DeletedAt = user.DeletedAt.DeletedAtValue
-            };
-            
-            _context.Users.Add(userEntity);
-        }
+    protected override void UpdateEntity(User entity, Domain.Models.User.User model)
+    {
+        entity.Email = model.Email.EmailValue;
+        entity.Username = model.Username.UsernameValue;
+        entity.CreatedAt = model.CreatedAt.CreatedAtValue;
+        entity.DeletedAt = model.DeletedAt.DeletedAtValue;
     }
 }

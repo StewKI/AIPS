@@ -8,7 +8,7 @@ namespace AipsCore.Infrastructure.Persistence.Shape.Mappers;
 
 public static partial class ShapeMappers
 {
-    public static Domain.Models.Shape.Shape EntityToModel(Shape shape)
+    public static Domain.Models.Shape.Shape MapToEntity(Shape shape)
     {
         return shape.Type switch
         {
@@ -30,7 +30,7 @@ public static partial class ShapeMappers
             shape.EndPositionX!.Value,  shape.EndPositionY!.Value,
             shape.Thickness!.Value);
     }
-    
+
     public static Line EntityToLine(Shape shape)
     {
         return Line.Create(
@@ -42,7 +42,7 @@ public static partial class ShapeMappers
             shape.EndPositionX!.Value,  shape.EndPositionY!.Value,
             shape.Thickness!.Value);
     }
-    
+
     public static Arrow EntityToArrow(Shape shape)
     {
         return Arrow.Create(
@@ -54,7 +54,7 @@ public static partial class ShapeMappers
             shape.EndPositionX!.Value,  shape.EndPositionY!.Value,
             shape.Thickness!.Value);
     }
-    
+
     public static TextShape EntityToTextShape(Shape shape)
     {
         return TextShape.Create(
