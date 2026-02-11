@@ -8,9 +8,6 @@ namespace AipsCore.Application.Models.Whiteboard.Command.CreateWhiteboard;
 public record CreateWhiteboardCommand(
     string OwnerId,
     string Title,
-    DateTime CreatedAt,
-    DateTime DeletedAt,
     int MaxParticipants,
-    WhiteboardJoinPolicy JoinPolicy,
-    WhiteboardState State)
+    WhiteboardJoinPolicy JoinPolicy)
     : ICommand<WhiteboardId>;

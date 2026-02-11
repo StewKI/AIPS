@@ -95,18 +95,15 @@ public partial class Whiteboard : DomainModel<WhiteboardId>
         string ownerId,
         string code,
         string title,
-        DateTime createdAt,
-        DateTime? deletedAt,
         int maxParticipants,
-        WhiteboardJoinPolicy joinPolicy,
-        WhiteboardState state)
+        WhiteboardJoinPolicy joinPolicy)
     {
         var whiteboardId = WhiteboardId.Any();
         var whiteboardOwnerId = new UserId(ownerId);
         var whiteboardCode = new WhiteboardCode(code);
         var whiteboardTitle = new WhiteboardTitle(title);
-        var whiteboardCreatedAt = new WhiteboardCreatedAt(createdAt);
-        var whiteboardDeletedAt = new WhiteboardDeletedAt(deletedAt);
+        var whiteboardCreatedAt = new WhiteboardCreatedAt(DateTime.UtcNow);
+        var whiteboardDeletedAt = new WhiteboardDeletedAt(null);
         var whiteboardMaxParticipants = new WhiteboardMaxParticipants(maxParticipants);
         
         return new Whiteboard(
@@ -118,6 +115,6 @@ public partial class Whiteboard : DomainModel<WhiteboardId>
             whiteboardDeletedAt,
             whiteboardMaxParticipants,
             joinPolicy,
-            state);
+            WhiteboardState.Active);
     }
 }

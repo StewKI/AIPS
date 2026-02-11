@@ -24,12 +24,12 @@ public partial class Whiteboard : DomainModel<WhiteboardId>
         }
 
         membership = WhiteboardMembership.WhiteboardMembership.Create(
-            this.Id.ToString(),
-            user.Id.ToString(),
+            this.Id.IdValue,
+            user.Id.IdValue,
             false,
             false,
             this.GetCanJoin(),
-            DateTime.Now
+            DateTime.UtcNow
         );
         
         await membershipRepository.AddAsync(membership, cancellationToken);
