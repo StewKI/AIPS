@@ -8,19 +8,19 @@ namespace AipsCore.Infrastructure.Persistence.Shape.Mappers;
 
 public static partial class ShapeMappers
 {
-    public static Domain.Models.Shape.Shape EntityToModel(Shape shape)
+    public static Domain.Models.Shape.Shape MapToDomainEntity(Shape shape)
     {
         return shape.Type switch
         {
-            ShapeType.Rectangle => EntityToRectangle(shape),
-            ShapeType.Line => EntityToLine(shape),
-            ShapeType.Arrow => EntityToArrow(shape),
-            ShapeType.Text => EntityToTextShape(shape),
+            ShapeType.Rectangle => PersistenceEntityToRectangle(shape),
+            ShapeType.Line => PersistenceEntityToLine(shape),
+            ShapeType.Arrow => PersistenceEntityToArrow(shape),
+            ShapeType.Text => PersistenceEntityToTextShape(shape),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
-    public static Rectangle EntityToRectangle(Shape shape)
+    private static Rectangle PersistenceEntityToRectangle(Shape shape)
     {
         return Rectangle.Create(
             shape.Id.ToString(),
@@ -30,8 +30,8 @@ public static partial class ShapeMappers
             shape.EndPositionX!.Value,  shape.EndPositionY!.Value,
             shape.Thickness!.Value);
     }
-    
-    public static Line EntityToLine(Shape shape)
+
+    private static Line PersistenceEntityToLine(Shape shape)
     {
         return Line.Create(
             shape.Id.ToString(),
@@ -42,8 +42,8 @@ public static partial class ShapeMappers
             shape.EndPositionX!.Value,  shape.EndPositionY!.Value,
             shape.Thickness!.Value);
     }
-    
-    public static Arrow EntityToArrow(Shape shape)
+
+    private static Arrow PersistenceEntityToArrow(Shape shape)
     {
         return Arrow.Create(
             shape.Id.ToString(),
@@ -54,8 +54,8 @@ public static partial class ShapeMappers
             shape.EndPositionX!.Value,  shape.EndPositionY!.Value,
             shape.Thickness!.Value);
     }
-    
-    public static TextShape EntityToTextShape(Shape shape)
+
+    private static TextShape PersistenceEntityToTextShape(Shape shape)
     {
         return TextShape.Create(
             shape.Id.ToString(),

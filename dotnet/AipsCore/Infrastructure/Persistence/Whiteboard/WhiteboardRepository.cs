@@ -1,76 +1,64 @@
 using AipsCore.Domain.Models.Whiteboard.External;
 using AipsCore.Domain.Models.Whiteboard.ValueObjects;
+using AipsCore.Infrastructure.Persistence.Abstract;
 using AipsCore.Infrastructure.Persistence.Db;
 using Microsoft.EntityFrameworkCore;
 
 namespace AipsCore.Infrastructure.Persistence.Whiteboard;
 
-public class WhiteboardRepository : IWhiteboardRepository
+public class WhiteboardRepository 
+    : AbstractRepository<Domain.Models.Whiteboard.Whiteboard, WhiteboardId, Whiteboard>, IWhiteboardRepository
 {
-    private readonly AipsDbContext _context;
-    
-    public WhiteboardRepository(AipsDbContext context)
+    public WhiteboardRepository(AipsDbContext context) 
+        : base(context)
     {
-        _context = context;
+        
     }
-    
-    public async Task<Domain.Models.Whiteboard.Whiteboard?> Get(WhiteboardId whiteboardId, CancellationToken cancellationToken = default)
+
+    protected override Domain.Models.Whiteboard.Whiteboard MapToDomainEntity(Whiteboard persistenceEntity)
     {
-        var whiteboardEntity = await _context.Whiteboards.FindAsync([new Guid(whiteboardId.IdValue), cancellationToken], cancellationToken: cancellationToken);
-
-        if (whiteboardEntity is null) return null;
-
         return Domain.Models.Whiteboard.Whiteboard.Create(
-            whiteboardEntity.Id.ToString(),
-            whiteboardEntity.OwnerId.ToString(),
-            whiteboardEntity.Code,
-            whiteboardEntity.Title,
-            whiteboardEntity.CreatedAt,
-            whiteboardEntity.DeletedAt,
-            whiteboardEntity.MaxParticipants,
-            whiteboardEntity.JoinPolicy,
-            whiteboardEntity.State);
+            persistenceEntity.Id.ToString(),
+            persistenceEntity.OwnerId.ToString(),
+            persistenceEntity.Code,
+            persistenceEntity.Title,
+            persistenceEntity.CreatedAt,
+            persistenceEntity.DeletedAt,
+            persistenceEntity.MaxParticipants,
+            persistenceEntity.JoinPolicy,
+            persistenceEntity.State
+        );
     }
 
-    public async Task Save(Domain.Models.Whiteboard.Whiteboard whiteboard, CancellationToken cancellationToken = default)
+    protected override Whiteboard MapToPersistenceEntity(Domain.Models.Whiteboard.Whiteboard domainEntity)
     {
-        var whiteboardEntity = await _context.Whiteboards.FindAsync(new Guid(whiteboard.Id.IdValue));
-
-        if (whiteboardEntity is not null)
+        return new Whiteboard
         {
-            whiteboardEntity.OwnerId = new Guid(whiteboard.WhiteboardOwnerId.IdValue);
-            whiteboardEntity.Code = whiteboard.Code.CodeValue;
-            whiteboardEntity.Title = whiteboard.Title.TitleValue;
-            whiteboardEntity.CreatedAt = whiteboard.CreatedAt.CreatedAtValue;
-            whiteboardEntity.DeletedAt = whiteboard.DeletedAt.DeletedAtValue;
-            whiteboardEntity.MaxParticipants = whiteboard.MaxParticipants.MaxParticipantsValue;
-            whiteboardEntity.JoinPolicy = whiteboard.JoinPolicy;
-            whiteboardEntity.State = whiteboard.State;
-            
-            _context.Whiteboards.Update(whiteboardEntity);
-        }
-        else
-        {
-            whiteboardEntity = new Whiteboard()
-            {
-                Id = new Guid(whiteboard.Id.IdValue),
-                OwnerId = new Guid(whiteboard.WhiteboardOwnerId.IdValue),
-                Code = whiteboard.Code.CodeValue,
-                Title = whiteboard.Title.TitleValue,
-                CreatedAt = whiteboard.CreatedAt.CreatedAtValue,
-                DeletedAt = whiteboard.DeletedAt.DeletedAtValue,
-                MaxParticipants = whiteboard.MaxParticipants.MaxParticipantsValue,
-                JoinPolicy = whiteboard.JoinPolicy,
-                State = whiteboard.State
-            };
-            
-            _context.Whiteboards.Add(whiteboardEntity);
-        }
+            Id = new Guid(domainEntity.Id.IdValue),
+            OwnerId = new Guid(domainEntity.WhiteboardOwnerId.IdValue),
+            Code = domainEntity.Code.CodeValue,
+            Title = domainEntity.Title.TitleValue,
+            CreatedAt = domainEntity.CreatedAt.CreatedAtValue,
+            DeletedAt = domainEntity.DeletedAt.DeletedAtValue,
+            MaxParticipants = domainEntity.MaxParticipants.MaxParticipantsValue,
+            JoinPolicy = domainEntity.JoinPolicy,
+            State = domainEntity.State
+        };
     }
 
+    protected override void UpdatePersistenceEntity(Whiteboard persistenceEntity, Domain.Models.Whiteboard.Whiteboard domainEntity)
+    {
+        persistenceEntity.Code = domainEntity.Code.CodeValue;
+        persistenceEntity.Title = domainEntity.Title.TitleValue;
+        persistenceEntity.CreatedAt = domainEntity.CreatedAt.CreatedAtValue;
+        persistenceEntity.DeletedAt = domainEntity.DeletedAt.DeletedAtValue;
+        persistenceEntity.MaxParticipants = domainEntity.MaxParticipants.MaxParticipantsValue;
+        persistenceEntity.JoinPolicy = domainEntity.JoinPolicy;
+        persistenceEntity.State = domainEntity.State;
+    }
+    
     public async Task<bool> WhiteboardCodeExists(WhiteboardCode whiteboardCode)
     {
-        var codeExists = await _context.Whiteboards.AnyAsync(w => w.Code == whiteboardCode.CodeValue);
-        return codeExists;
+        return await Context.Whiteboards.AnyAsync(w => w.Code == whiteboardCode.CodeValue);
     }
 }

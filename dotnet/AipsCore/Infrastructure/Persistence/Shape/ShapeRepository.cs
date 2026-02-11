@@ -1,42 +1,31 @@
 using AipsCore.Domain.Models.Shape.External;
 using AipsCore.Domain.Models.Shape.ValueObjects;
+using AipsCore.Infrastructure.Persistence.Abstract;
 using AipsCore.Infrastructure.Persistence.Db;
 using AipsCore.Infrastructure.Persistence.Shape.Mappers;
 
 namespace AipsCore.Infrastructure.Persistence.Shape;
 
-public class ShapeRepository : IShapeRepository
+public class ShapeRepository : AbstractRepository<Domain.Models.Shape.Shape, ShapeId, Shape>, IShapeRepository
 {
-    private readonly AipsDbContext _context;
-
-    public ShapeRepository(AipsDbContext context)
+    public ShapeRepository(AipsDbContext context) 
+        : base(context)
     {
-        _context = context;
-    }
-    
-    public async Task<Domain.Models.Shape.Shape?> Get(ShapeId id, CancellationToken cancellationToken = default)
-    {
-        var entity = await _context.Shapes.FindAsync([new Guid(id.Value)], cancellationToken);
         
-        if (entity is null) return null;
-        
-        return ShapeMappers.EntityToModel(entity);
     }
 
-    public async Task Add(Domain.Models.Shape.Shape shape, CancellationToken cancellationToken = default)
+    protected override Domain.Models.Shape.Shape MapToDomainEntity(Shape persistenceEntity)
     {
-        var entity = await _context.Shapes.FindAsync([new Guid(shape.Id.Value)], cancellationToken);
+        return ShapeMappers.MapToDomainEntity(persistenceEntity);
+    }
 
-        if (entity is not null)
-        {
-            ShapeMappers.UpdateEntity(entity, shape);
-        }
-        else
-        {
-            var newEntity = ShapeMappers.ModelToEntity(shape);
-            
-            await _context.Shapes.AddAsync(newEntity, cancellationToken);
-        }
+    protected override Shape MapToPersistenceEntity(Domain.Models.Shape.Shape domainEntity)
+    {
+        return ShapeMappers.MapToPersistenceEntity(domainEntity);
+    }
 
+    protected override void UpdatePersistenceEntity(Shape persistenceEntity, Domain.Models.Shape.Shape domainEntity)
+    {
+        ShapeMappers.UpdatePersistenceEntity(persistenceEntity, domainEntity);
     }
 }
