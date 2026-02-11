@@ -1,6 +1,9 @@
 using AipsCore.Application.Abstract;
 using AipsCore.Application.Models.Whiteboard.Command.AddUserToWhiteboard;
+using AipsCore.Application.Models.Whiteboard.Command.BanUserFromWhiteboard;
 using AipsCore.Application.Models.Whiteboard.Command.CreateWhiteboard;
+using AipsCore.Application.Models.Whiteboard.Command.KickUserFromWhiteboard;
+using AipsCore.Application.Models.Whiteboard.Command.UnbanUserFromWhiteboard;
 using AipsCore.Application.Models.Whiteboard.Query.GetRecentWhiteboards;
 using AipsCore.Domain.Models.Whiteboard;
 using Microsoft.AspNetCore.Mvc;
@@ -39,5 +42,26 @@ public class WhiteboardController : ControllerBase
         var result = await _dispatcher.Execute(query, cancellationToken);
 
         return Ok(result);
+    }
+    
+    [HttpPut("banUser")]
+    public async Task<ActionResult> BanUserFromWhiteboard(BanUserFromWhiteboardCommand command, IDispatcher dispatcher, CancellationToken cancellationToken)
+    {
+        await dispatcher.Execute(command, cancellationToken);
+        return Ok();
+    }
+    
+    [HttpPut("unbanUser")]
+    public async Task<ActionResult> UnbanUserFromWhiteboard(UnbanUserFromWhiteboardCommand command, IDispatcher dispatcher, CancellationToken cancellationToken)
+    {
+        await dispatcher.Execute(command, cancellationToken);
+        return Ok();
+    }
+    
+    [HttpPut("kickUser")]
+    public async Task<ActionResult> KickUserFromWhiteboard(KickUserFromWhiteboardCommand command, IDispatcher dispatcher, CancellationToken cancellationToken)
+    {
+        await dispatcher.Execute(command, cancellationToken);
+        return Ok();
     }
 }
