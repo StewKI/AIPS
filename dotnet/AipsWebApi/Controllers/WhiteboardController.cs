@@ -45,23 +45,23 @@ public class WhiteboardController : ControllerBase
     }
     
     [HttpPut("banUser")]
-    public async Task<ActionResult> BanUserFromWhiteboard(BanUserFromWhiteboardCommand command, IDispatcher dispatcher, CancellationToken cancellationToken)
+    public async Task<ActionResult> BanUserFromWhiteboard(BanUserFromWhiteboardCommand command, CancellationToken cancellationToken)
     {
-        await dispatcher.Execute(command, cancellationToken);
+        await _dispatcher.Execute(command, cancellationToken);
         return Ok();
     }
     
     [HttpPut("unbanUser")]
-    public async Task<ActionResult> UnbanUserFromWhiteboard(UnbanUserFromWhiteboardCommand command, IDispatcher dispatcher, CancellationToken cancellationToken)
+    public async Task<ActionResult> UnbanUserFromWhiteboard(UnbanUserFromWhiteboardCommand command, CancellationToken cancellationToken)
     {
-        await dispatcher.Execute(command, cancellationToken);
+        await _dispatcher.Execute(command, cancellationToken);
         return Ok();
     }
     
     [HttpPut("kickUser")]
-    public async Task<ActionResult> KickUserFromWhiteboard(KickUserFromWhiteboardCommand command, IDispatcher dispatcher, CancellationToken cancellationToken)
+    public async Task<ActionResult> KickUserFromWhiteboard(KickUserFromWhiteboardCommand command, CancellationToken cancellationToken)
     {
-        await dispatcher.Execute(command, cancellationToken);
+        await _dispatcher.Execute(command, cancellationToken);
         return Ok();
     }
 }
