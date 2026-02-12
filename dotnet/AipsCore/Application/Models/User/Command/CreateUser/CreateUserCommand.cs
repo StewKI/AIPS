@@ -5,7 +5,5 @@ namespace AipsCore.Application.Models.User.Command.CreateUser;
 
 public record CreateUserCommand(
     string Username,
-    string Email,
-    DateTime CreatedAt,
-    DateTime DeletedAt)
+    string Email)
     : ICommand<UserId>;

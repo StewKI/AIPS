@@ -31,12 +31,12 @@ public class User : DomainModel<UserId>
         return new User(userIdVo, emailVo, usernameVo, createdAtVo, deletedAtVo);
     }
     
-    public static User Create(string email, string username, DateTime createdAt, DateTime? deletedAt)
+    public static User Create(string email, string username)
     {
         var usernameVo = new Username(username);
         var emailVo = new Email(email);
-        var createdAtVo = new UserCreatedAt(createdAt);
-        var deletedAtVo = new UserDeletedAt(deletedAt);
+        var createdAtVo = new UserCreatedAt(DateTime.UtcNow);
+        var deletedAtVo = new UserDeletedAt(null);
         
         return new User(UserId.Any(), emailVo, usernameVo, createdAtVo, deletedAtVo);
     }
