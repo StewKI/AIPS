@@ -65,8 +65,7 @@ public class UserRepository : AbstractRepository<Domain.Models.User.User, UserId
             throw new Exception($"User registration failed: {errors}");
         }
         
-        //Realno nebitno, ali postoji infrastruktura ako treba da se koristi kasnije
-        //await _userManager.AddToRoleAsync(entity, "User");
+        await _userManager.AddToRoleAsync(entity, UserRole.User.Name);
     }
 
     public async Task<LoginResult> LoginWithEmailAndPasswordAsync(string email, string password, CancellationToken cancellationToken = default)
