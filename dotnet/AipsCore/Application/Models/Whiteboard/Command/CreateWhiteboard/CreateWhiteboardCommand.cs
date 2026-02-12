@@ -6,7 +6,6 @@ using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 namespace AipsCore.Application.Models.Whiteboard.Command.CreateWhiteboard;
 
 public record CreateWhiteboardCommand(
-    string OwnerId,
     string Title,
     int MaxParticipants,
     WhiteboardJoinPolicy JoinPolicy)
