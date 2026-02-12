@@ -28,6 +28,7 @@ public static partial class ShapeMappers
             Id = new Guid(rectangle.Id.Value),
             Type = rectangle.ShapeType,
             WhiteboardId = new Guid(rectangle.WhiteboardId.IdValue),
+            AuthorId = new Guid(rectangle.AuthorId.IdValue),
             PositionX = rectangle.Position.X,
             PositionY = rectangle.Position.Y,
             Color = rectangle.Color.Value,
