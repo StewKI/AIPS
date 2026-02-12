@@ -39,4 +39,21 @@ public class TextShape : Shape
             new TextShapeValue(textValue),
             new TextShapeSize(textSize));
     }
+    
+    public static TextShape Create(
+        string whiteboardId,
+        string authorId,
+        int positionX, int positionY,
+        string color,
+        string textValue, int textSize)
+    {
+        return new TextShape(
+            ShapeId.Any(),
+            new WhiteboardId(whiteboardId),
+            new UserId(authorId),
+            new Position(positionX, positionY),
+            new Color(color),
+            new TextShapeValue(textValue),
+            new TextShapeSize(textSize));
+    }
 }

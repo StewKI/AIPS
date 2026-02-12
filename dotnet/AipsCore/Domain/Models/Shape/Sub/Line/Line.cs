@@ -38,4 +38,22 @@ public class Line : Shape
             new Position(endPositionX, endPositionY),
             new Thickness(borderThickness));
     }
+    
+    public static Line Create(
+        string whiteboardId,
+        string authorId,
+        int positionX, int positionY,
+        string color,
+        int endPositionX, int endPositionY,
+        int borderThickness)
+    {
+        return new Line(
+            ShapeId.Any(),
+            new WhiteboardId(whiteboardId),
+            new UserId(authorId),
+            new Position(positionX, positionY),
+            new Color(color),
+            new Position(endPositionX, endPositionY),
+            new Thickness(borderThickness));
+    }
 }

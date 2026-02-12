@@ -38,4 +38,22 @@ public class Arrow : Shape
             new Position(endPositionX, endPositionY),
             new Thickness(borderThickness));
     }
+    
+    public static Arrow Create(
+        string whiteboardId,
+        string authorId,
+        int positionX, int positionY,
+        string color,
+        int endPositionX, int endPositionY,
+        int borderThickness)
+    {
+        return new Arrow(
+            ShapeId.Any(),
+            new WhiteboardId(whiteboardId),
+            new UserId(authorId),
+            new Position(positionX, positionY),
+            new Color(color),
+            new Position(endPositionX, endPositionY),
+            new Thickness(borderThickness));
+    }
 }
