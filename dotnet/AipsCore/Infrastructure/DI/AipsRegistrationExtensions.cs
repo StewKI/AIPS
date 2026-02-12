@@ -14,7 +14,7 @@ public static class AipsRegistrationExtensions
 
         services.AddPersistence(configuration);
 
-        services.AddUserContext();
+        services.AddUserContext(configuration);
         
         return services;
     }
