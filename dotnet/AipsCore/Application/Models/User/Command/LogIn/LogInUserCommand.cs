@@ -1,5 +1,5 @@
 using AipsCore.Application.Abstract.Command;
-using AipsCore.Application.Authentication;
+using AipsCore.Application.Common.Authentication;
 
 namespace AipsCore.Application.Models.User.Command.LogIn;
 

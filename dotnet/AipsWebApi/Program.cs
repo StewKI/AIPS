@@ -16,10 +16,7 @@ builder.Services.AddAips(builder.Configuration);
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    await DbInitializer.SeedRolesAsync(scope.ServiceProvider);
-}
+await app.Services.InitializeInfrastructureAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

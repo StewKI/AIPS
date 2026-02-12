@@ -17,10 +17,8 @@ public record UserRole
     
     public static IEnumerable<UserRole> All() => [User, Admin];
 
-    public static UserRole FromString(string name)
+    public static UserRole? FromString(string name)
     {
-        var role = All().FirstOrDefault(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-        
-        return role ?? throw new ValidationException(UserErrors.RoleDoesNotExist(name));
+       return All().FirstOrDefault(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
     }
 }

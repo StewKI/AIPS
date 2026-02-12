@@ -7,18 +7,10 @@ namespace AipsCore.Domain.Models.User.Validation;
 
 public class UserErrors : AbstractErrors<User, UserId>
 {
-    public static ValidationError LoginErrorUserNotFoundByEmail(string email)
+    public static ValidationError InvalidCredentials()
     {
-        string code = "login_error_user_not_found_by_email";
-        string message = $"User with email '{email}' not found";
-
-        return CreateValidationError(code, message);
-    }
-    
-    public static ValidationError LoginErrorIncorrectPassword()
-    {
-        string code = "login_error_incorrect_password";
-        string message = $"Incorrect password provided";
+        string code = "invalid_credentials";
+        string message = "Invalid credentials";
 
         return CreateValidationError(code, message);
     }

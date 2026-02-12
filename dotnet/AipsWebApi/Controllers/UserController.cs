@@ -1,5 +1,5 @@
 using AipsCore.Application.Abstract;
-using AipsCore.Application.Authentication;
+using AipsCore.Application.Common.Authentication;
 using AipsCore.Application.Models.User.Command.LogIn;
 using AipsCore.Application.Models.User.Command.SignUp;
 using AipsCore.Application.Models.User.Query.GetUser;

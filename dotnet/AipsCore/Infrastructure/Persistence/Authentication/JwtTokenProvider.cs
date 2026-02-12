@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using AipsCore.Application.Abstract.UserContext;
+using AipsCore.Domain.Models.User.External;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AipsCore.Infrastructure.Persistence.Authentication;
@@ -15,7 +16,7 @@ public class JwtTokenProvider : ITokenProvider
         _jwtSettings = jwtSettings;
     }
     
-    public string Generate(Domain.Models.User.User user, IList<string> roles)
+    public string Generate(Domain.Models.User.User user, IList<UserRole> roles)
     {
         var claims = new List<Claim>
         {
@@ -25,7 +26,7 @@ public class JwtTokenProvider : ITokenProvider
         
         foreach (var role in roles)
         {
-            claims.Add(new Claim(ClaimTypes.Role, role));
+            claims.Add(new Claim(ClaimTypes.Role, role.Name));
         }
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));

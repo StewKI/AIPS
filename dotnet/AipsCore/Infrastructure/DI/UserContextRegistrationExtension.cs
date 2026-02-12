@@ -1,5 +1,8 @@
 using System.Text;
 using AipsCore.Application.Abstract.UserContext;
+using AipsCore.Application.Common.Authentication;
+using AipsCore.Domain.Models.User.Options;
+using AipsCore.Infrastructure.DI.Configuration;
 using AipsCore.Infrastructure.Persistence.Authentication;
 using AipsCore.Infrastructure.Persistence.Db;
 using AipsCore.Infrastructure.Persistence.User;
@@ -17,10 +20,10 @@ public static class UserContextRegistrationExtension
     {
         var jwtSettings = new JwtSettings
         {
-            Issuer = configuration["JWT_ISSUER"]!,
-            Audience = configuration["JWT_AUDIENCE"]!,
-            Key = configuration["JWT_KEY"]!,
-            ExpirationMinutes = int.Parse(configuration["JWT_EXPIRATION_MINUTES"] ?? "60")
+            Issuer = configuration.GetEnvJwtIssuer(),
+            Audience = configuration.GetEnvJwtAudience(),
+            Key = configuration.GetEnvJwtKey(),
+            ExpirationMinutes = configuration.GetEnvJwtExpirationMinutes()
         };
         
         services.AddSingleton(jwtSettings);
@@ -29,13 +32,13 @@ public static class UserContextRegistrationExtension
         
         services.AddIdentityCore<User>(options =>
             {
-                options.Password.RequiredLength = 8;
-                options.Password.RequireDigit = true;
-                options.Password.RequireLowercase = true;
-                options.Password.RequireUppercase = true;
-                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequiredLength = UserOptionsDefaults.PasswordRequiredLength;
+                options.Password.RequireDigit = UserOptionsDefaults.PasswordRequireDigit;
+                options.Password.RequireLowercase = UserOptionsDefaults.PasswordRequireLowercase;
+                options.Password.RequireUppercase = UserOptionsDefaults.PasswordRequireUppercase;
+                options.Password.RequireNonAlphanumeric = UserOptionsDefaults.PasswordRequireNonAlphanumeric;
 
-                options.User.RequireUniqueEmail = true;
+                options.User.RequireUniqueEmail = UserOptionsDefaults.UserRequireUniqueEmail;
             })
             .AddRoles<IdentityRole<Guid>>()
             .AddEntityFrameworkStores<AipsDbContext>()
@@ -62,6 +65,7 @@ public static class UserContextRegistrationExtension
         
         services.AddTransient<IUserContext, HttpUserContext>();
         services.AddTransient<ITokenProvider, JwtTokenProvider>();
+        services.AddTransient<IAuthService, EfAuthService>();
         
         return services;
     }
