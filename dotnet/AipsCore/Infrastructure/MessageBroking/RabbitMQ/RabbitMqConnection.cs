@@ -18,10 +18,11 @@ public class RabbitMqConnection : IRabbitMqConnection
     {
         if (_connection is null)
         {
-            throw new InvalidOperationException($"RabbitMQ connection not created for {_configuration.GetEnvRabbitMqAmqpUri()}");
+            await CreateConnectionAsync();
+            //throw new InvalidOperationException($"RabbitMQ connection not created for {_configuration.GetEnvRabbitMqAmqpUri()}");
         }
 
-        return await _connection.CreateChannelAsync(null, cancellationToken);
+        return await _connection!.CreateChannelAsync(null, cancellationToken);
     }
 
     public async Task CreateConnectionAsync()

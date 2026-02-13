@@ -1,6 +1,4 @@
-using System.Runtime.Serialization;
-
-namespace AipsCore.Application.Abstract;
+namespace AipsCore.Application.Abstract.MessageBroking;
 
 public interface IMessagePublisher
 {

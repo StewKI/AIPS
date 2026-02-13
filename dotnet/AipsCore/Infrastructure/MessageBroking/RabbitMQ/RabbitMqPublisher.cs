@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using AipsCore.Application.Abstract;
+using AipsCore.Application.Abstract.MessageBroking;
 using RabbitMQ.Client;
 
 namespace AipsCore.Infrastructure.MessageBroking.RabbitMQ;
