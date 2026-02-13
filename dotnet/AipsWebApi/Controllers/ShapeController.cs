@@ -17,32 +17,4 @@ public class ShapeController : ControllerBase
     {
         _dispatcher = dispatcher;
     }
-
-    [HttpPost("rectangle")]
-    public async Task<ActionResult<int>> CreateRectangle(CreateRectangleCommand command, CancellationToken token)
-    {
-        var result = await _dispatcher.Execute(command, token);
-        return Ok(result);
-    }
-    
-    [HttpPost("arrow")]
-    public async Task<IActionResult> CreateArrow(CreateArrowCommand command, CancellationToken cancellationToken)
-    {
-        var result = await _dispatcher.Execute(command, cancellationToken);
-        return Ok(result);
-    }
-    
-    [HttpPost("textShape")]
-    public async Task<IActionResult> CreateTextShape(CreateTextShapeCommand command, CancellationToken cancellationToken)
-    {
-        var result = await _dispatcher.Execute(command, cancellationToken);
-        return Ok(result);
-    }
-    
-    [HttpPost("line")]
-    public async Task<IActionResult> CreateLine(CreateLineCommand command, CancellationToken cancellationToken)
-    {
-        var result = await _dispatcher.Execute(command, cancellationToken);
-        return Ok(result);
-    }
 }

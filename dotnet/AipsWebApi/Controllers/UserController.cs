@@ -1,8 +1,9 @@
 using AipsCore.Application.Abstract;
-using AipsCore.Application.Models.User.Command.CreateUser;
+using AipsCore.Application.Common.Authentication;
+using AipsCore.Application.Models.User.Command.LogIn;
+using AipsCore.Application.Models.User.Command.SignUp;
 using AipsCore.Application.Models.User.Query.GetUser;
-using AipsCore.Domain.Common.Validation;
-using AipsCore.Domain.Models.User.ValueObjects;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AipsWebApi.Controllers;
@@ -18,18 +19,19 @@ public class UserController : ControllerBase
         _dispatcher = dispatcher;
     }
 
-    [HttpGet("{userId}")]
-    public async Task<IActionResult> GetUser([FromRoute] string userId, CancellationToken cancellationToken)
+    [AllowAnonymous]
+    [HttpPost("signup")]
+    public async Task<IActionResult> SignUp(SignUpUserCommand command, CancellationToken cancellationToken)
     {
-        var query = new GetUserQuery(userId);
-        var result = await _dispatcher.Execute(query, cancellationToken);
-        return Ok(result);
+        var result = await _dispatcher.Execute(command, cancellationToken);
+        return Ok(result.IdValue);
     }
-    
-    [HttpPost]
-    public async Task<ActionResult<int>> CreateUser(CreateUserCommand command, CancellationToken cancellationToken)
+
+    [AllowAnonymous]
+    [HttpPost("login")]
+    public async Task<ActionResult<string>> LogIn(LogInUserCommand command, CancellationToken cancellationToken)
     {
-        var userId = await _dispatcher.Execute(command, cancellationToken);
-        return Ok(userId.IdValue);
+        var result = await _dispatcher.Execute(command, cancellationToken);
+        return Ok(result.Value);
     }
 }

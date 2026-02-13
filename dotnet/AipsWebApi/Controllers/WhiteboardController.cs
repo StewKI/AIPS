@@ -6,6 +6,7 @@ using AipsCore.Application.Models.Whiteboard.Command.KickUserFromWhiteboard;
 using AipsCore.Application.Models.Whiteboard.Command.UnbanUserFromWhiteboard;
 using AipsCore.Application.Models.Whiteboard.Query.GetRecentWhiteboards;
 using AipsCore.Domain.Models.Whiteboard;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AipsWebApi.Controllers;
@@ -21,47 +22,11 @@ public class WhiteboardController : ControllerBase
         _dispatcher = dispatcher;
     }
     
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<int>> CreateWhiteboard(CreateWhiteboardCommand command, CancellationToken cancellationToken)
     {
         var whiteboardId = await _dispatcher.Execute(command, cancellationToken);
         return Ok(whiteboardId.IdValue);
-    }
-
-    [HttpPost("adduser")]
-    public async Task<IActionResult> AddUser(AddUserToWhiteboardCommand command,
-        CancellationToken cancellationToken)
-    {
-        await _dispatcher.Execute(command, cancellationToken);
-        return Ok();
-    }
-
-    [HttpGet("recent")]
-    public async Task<ActionResult<ICollection<Whiteboard>>> Recent(GetRecentWhiteboardsQuery query, CancellationToken cancellationToken)
-    {
-        var result = await _dispatcher.Execute(query, cancellationToken);
-
-        return Ok(result);
-    }
-    
-    [HttpPut("banUser")]
-    public async Task<ActionResult> BanUserFromWhiteboard(BanUserFromWhiteboardCommand command, CancellationToken cancellationToken)
-    {
-        await _dispatcher.Execute(command, cancellationToken);
-        return Ok();
-    }
-    
-    [HttpPut("unbanUser")]
-    public async Task<ActionResult> UnbanUserFromWhiteboard(UnbanUserFromWhiteboardCommand command, CancellationToken cancellationToken)
-    {
-        await _dispatcher.Execute(command, cancellationToken);
-        return Ok();
-    }
-    
-    [HttpPut("kickUser")]
-    public async Task<ActionResult> KickUserFromWhiteboard(KickUserFromWhiteboardCommand command, CancellationToken cancellationToken)
-    {
-        await _dispatcher.Execute(command, cancellationToken);
-        return Ok();
     }
 }
