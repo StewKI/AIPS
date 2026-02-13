@@ -1,9 +1,8 @@
 using AipsCore.Infrastructure.DI;
-using AipsCore.Infrastructure.Persistence.Db;
 using AipsWebApi.Middleware;
 using DotNetEnv;
 
-Env.Load();
+Env.Load("../../.env");
 
 var builder = WebApplication.CreateBuilder(args);
 
