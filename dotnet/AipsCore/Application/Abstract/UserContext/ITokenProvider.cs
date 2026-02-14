@@ -5,5 +5,6 @@ namespace AipsCore.Application.Abstract.UserContext;
 
 public interface ITokenProvider
 {
-    string Generate(User user, IList<UserRole> roles);
+    string GenerateAccessToken(User user, IList<UserRole> roles);
+    string GenerateRefreshToken();
 }
