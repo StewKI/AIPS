@@ -5,16 +5,15 @@ using AipsCore.Domain.Models.User.Validation;
 using AipsCore.Infrastructure.Persistence.Db;
 using AipsCore.Infrastructure.Persistence.User.Mappers;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
-namespace AipsCore.Infrastructure.Persistence.Authentication.AuthService;
+namespace AipsCore.Infrastructure.Authentication.AuthService;
 
 public class EfAuthService : IAuthService
 {
     private readonly AipsDbContext _dbContext;
-    private readonly UserManager<User.User> _userManager;
+    private readonly UserManager<Persistence.User.User> _userManager;
     
-    public EfAuthService(AipsDbContext dbContext, UserManager<User.User> userManager)
+    public EfAuthService(AipsDbContext dbContext, UserManager<Persistence.User.User> userManager)
     {
         _dbContext = dbContext;
         _userManager = userManager;

@@ -1,4 +1,4 @@
-namespace AipsCore.Infrastructure.Persistence.Authentication.Jwt;
+namespace AipsCore.Infrastructure.Authentication.Jwt;
 
 public sealed class JwtSettings
 {

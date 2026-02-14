@@ -1,8 +1,8 @@
-namespace AipsCore.Infrastructure.Persistence.Authentication.RefreshToken;
+namespace AipsCore.Infrastructure.Persistence.RefreshToken;
 
 public static class RefreshTokenMappers
 {
-    public static Application.Common.Authentication.Models.RefreshToken MapToModel(this RefreshToken entity)
+    public static Application.Common.Authentication.Models.RefreshToken MapToModel(this Persistence.RefreshToken.RefreshToken entity)
     {
         return new Application.Common.Authentication.Models.RefreshToken(
             entity.Token,

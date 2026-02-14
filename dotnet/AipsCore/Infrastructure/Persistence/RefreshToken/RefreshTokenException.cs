@@ -1,4 +1,4 @@
-namespace AipsCore.Infrastructure.Persistence.Authentication.RefreshToken;
+namespace AipsCore.Infrastructure.Persistence.RefreshToken;
 
 public class RefreshTokenException : Exception
 {

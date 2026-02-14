@@ -3,7 +3,7 @@ using AipsCore.Application.Abstract.UserContext;
 using AipsCore.Domain.Models.User.ValueObjects;
 using Microsoft.AspNetCore.Http;
 
-namespace AipsCore.Infrastructure.Persistence.Authentication.UserContext;
+namespace AipsCore.Infrastructure.Authentication.UserContext;
 
 public class HttpUserContext : IUserContext
 {

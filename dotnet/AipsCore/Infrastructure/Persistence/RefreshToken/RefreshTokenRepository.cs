@@ -1,10 +1,10 @@
 using AipsCore.Application.Abstract.UserContext;
 using AipsCore.Domain.Models.User.ValueObjects;
-using AipsCore.Infrastructure.Persistence.Authentication.Jwt;
+using AipsCore.Infrastructure.Authentication.Jwt;
 using AipsCore.Infrastructure.Persistence.Db;
 using Microsoft.EntityFrameworkCore;
 
-namespace AipsCore.Infrastructure.Persistence.Authentication.RefreshToken;
+namespace AipsCore.Infrastructure.Persistence.RefreshToken;
 
 public class RefreshTokenRepository : IRefreshTokenRepository
 {
@@ -20,7 +20,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
 
     public async Task AddAsync(string token, UserId userId, CancellationToken cancellationToken = default)
     {
-        var refreshToken = new RefreshToken()
+        var refreshToken = new Persistence.RefreshToken.RefreshToken()
         {
             Id = Guid.NewGuid(),
             Token = token,

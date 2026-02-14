@@ -6,7 +6,7 @@ using AipsCore.Application.Abstract.UserContext;
 using AipsCore.Domain.Models.User.External;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AipsCore.Infrastructure.Persistence.Authentication.Jwt;
+namespace AipsCore.Infrastructure.Authentication.Jwt;
 
 public class JwtTokenProvider : ITokenProvider
 {
