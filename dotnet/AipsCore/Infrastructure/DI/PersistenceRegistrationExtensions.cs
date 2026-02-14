@@ -36,7 +36,7 @@ public static class PersistenceRegistrationExtensions
         services.AddTransient<IWhiteboardMembershipRepository, WhiteboardMembershipRepository>();
         services.AddTransient<IShapeRepository, ShapeRepository>();
 
-        services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddTransient<IRefreshTokenManager, RefreshTokenManager>();
         
         return services;
     }

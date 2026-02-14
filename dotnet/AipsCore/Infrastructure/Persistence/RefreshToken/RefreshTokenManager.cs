@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AipsCore.Infrastructure.Persistence.RefreshToken;
 
-public class RefreshTokenRepository : IRefreshTokenRepository
+public class RefreshTokenManager : IRefreshTokenManager
 {
     private readonly AipsDbContext _dbContext;
     private readonly JwtSettings _jwtSettings;
 
-    public RefreshTokenRepository(AipsDbContext dbContext, JwtSettings jwtSettings)
+    public RefreshTokenManager(AipsDbContext dbContext, JwtSettings jwtSettings)
     {
         _dbContext = dbContext;
         _jwtSettings = jwtSettings;

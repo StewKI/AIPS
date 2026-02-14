@@ -9,18 +9,18 @@ namespace AipsCore.Application.Models.User.Command.LogIn;
 public class LogInUserCommandHandler : ICommandHandler<LogInUserCommand, LogInUserResultDto>
 {
     private readonly ITokenProvider _tokenProvider;
-    private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly IRefreshTokenManager _refreshTokenManager;
     private readonly IAuthService _authService;
     private readonly IUnitOfWork _unitOfWork;
     
     public LogInUserCommandHandler(
         ITokenProvider tokenProvider, 
-        IRefreshTokenRepository refreshTokenRepository, 
+        IRefreshTokenManager refreshTokenManager, 
         IAuthService authService, 
         IUnitOfWork unitOfWork)
     {
         _tokenProvider = tokenProvider;
-        _refreshTokenRepository = refreshTokenRepository;
+        _refreshTokenManager = refreshTokenManager;
         _authService = authService;
         _unitOfWork = unitOfWork;
     }
@@ -32,7 +32,7 @@ public class LogInUserCommandHandler : ICommandHandler<LogInUserCommand, LogInUs
         var accessToken = _tokenProvider.GenerateAccessToken(loginResult.User, loginResult.Roles);
         var refreshToken = _tokenProvider.GenerateRefreshToken();
         
-        await _refreshTokenRepository.AddAsync(refreshToken, loginResult.User.Id, cancellationToken);
+        await _refreshTokenManager.AddAsync(refreshToken, loginResult.User.Id, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new LogInUserResultDto(accessToken, refreshToken);

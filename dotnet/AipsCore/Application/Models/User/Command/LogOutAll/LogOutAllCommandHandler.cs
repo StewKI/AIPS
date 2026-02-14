@@ -5,12 +5,12 @@ namespace AipsCore.Application.Models.User.Command.LogOutAll;
 
 public class LogOutAllCommandHandler : ICommandHandler<LogOutAllCommand>
 {
-    private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly IRefreshTokenManager _refreshTokenManager;
     private readonly IUserContext _userContext;
     
-    public LogOutAllCommandHandler(IRefreshTokenRepository refreshTokenRepository, IUserContext userContext)
+    public LogOutAllCommandHandler(IRefreshTokenManager refreshTokenManager, IUserContext userContext)
     {
-        _refreshTokenRepository = refreshTokenRepository;
+        _refreshTokenManager = refreshTokenManager;
         _userContext = userContext;
     }
     
@@ -18,6 +18,6 @@ public class LogOutAllCommandHandler : ICommandHandler<LogOutAllCommand>
     {
         var userId = _userContext.GetCurrentUserId();
         
-        return _refreshTokenRepository.RevokeAllAsync(userId, cancellationToken);
+        return _refreshTokenManager.RevokeAllAsync(userId, cancellationToken);
     }
 }

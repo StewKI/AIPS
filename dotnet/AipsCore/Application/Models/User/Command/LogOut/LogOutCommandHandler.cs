@@ -5,15 +5,15 @@ namespace AipsCore.Application.Models.User.Command.LogOut;
 
 public class LogOutCommandHandler : ICommandHandler<LogOutCommand>
 {
-    private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly IRefreshTokenManager _refreshTokenManager;
     
-    public LogOutCommandHandler(IRefreshTokenRepository refreshTokenRepository)
+    public LogOutCommandHandler(IRefreshTokenManager refreshTokenManager)
     {
-        _refreshTokenRepository = refreshTokenRepository;
+        _refreshTokenManager = refreshTokenManager;
     }
     
     public async Task Handle(LogOutCommand command, CancellationToken cancellationToken = default)
     {
-        await _refreshTokenRepository.RevokeAsync(command.RefreshToken, cancellationToken);
+        await _refreshTokenManager.RevokeAsync(command.RefreshToken, cancellationToken);
     }
 }

@@ -9,33 +9,33 @@ namespace AipsCore.Application.Models.User.Command.RefreshLogIn;
 public class RefreshLogInCommandHandler : ICommandHandler<RefreshLogInCommand, LogInUserResultDto>
 {
     private readonly ITokenProvider _tokenProvider;
-    private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly IRefreshTokenManager _refreshTokenManager;
     private readonly IAuthService _authService;
     private readonly IUnitOfWork _unitOfWork;
     
     public RefreshLogInCommandHandler(
         ITokenProvider tokenProvider, 
-        IRefreshTokenRepository refreshTokenRepository,
+        IRefreshTokenManager refreshTokenManager,
         IAuthService authService,
         IUnitOfWork unitOfWork)
     {
         _tokenProvider = tokenProvider;
-        _refreshTokenRepository = refreshTokenRepository;
+        _refreshTokenManager = refreshTokenManager;
         _authService = authService;
         _unitOfWork = unitOfWork;
     }
     
     public async Task<LogInUserResultDto> Handle(RefreshLogInCommand command, CancellationToken cancellationToken = default)
     {
-        var refreshToken = await _refreshTokenRepository.GetByValueAsync(command.RefreshToken, cancellationToken);
+        var refreshToken = await _refreshTokenManager.GetByValueAsync(command.RefreshToken, cancellationToken);
         
         var loginResult = await _authService.LoginWithRefreshTokenAsync(refreshToken, cancellationToken);
 
         var newAccessToken = _tokenProvider.GenerateAccessToken(loginResult.User, loginResult.Roles);
         var newRefreshToken = _tokenProvider.GenerateRefreshToken();
         
-        await _refreshTokenRepository.RevokeAsync(refreshToken.Value, cancellationToken);
-        await _refreshTokenRepository.AddAsync(newRefreshToken, loginResult.User.Id, cancellationToken);
+        await _refreshTokenManager.RevokeAsync(refreshToken.Value, cancellationToken);
+        await _refreshTokenManager.AddAsync(newRefreshToken, loginResult.User.Id, cancellationToken);
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         

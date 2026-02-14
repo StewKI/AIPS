@@ -3,7 +3,7 @@ using AipsCore.Domain.Models.User.ValueObjects;
 
 namespace AipsCore.Application.Abstract.UserContext;
 
-public interface IRefreshTokenRepository
+public interface IRefreshTokenManager
 {
     Task AddAsync(string token, UserId userId, CancellationToken cancellationToken = default);
     Task<RefreshToken> GetByValueAsync(string token, CancellationToken cancellationToken = default);
