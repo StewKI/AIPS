@@ -1,4 +1,4 @@
-namespace AipsCore.Infrastructure.Persistence.Authentication;
+namespace AipsCore.Infrastructure.Persistence.Authentication.Jwt;
 
 public sealed class JwtSettings
 {
@@ -6,4 +6,5 @@ public sealed class JwtSettings
     public string Audience { get; init; } = null!;
     public string Key { get; init; } = null!;
     public int ExpirationMinutes { get; init; } 
+    public int RefreshTokenExpirationDays { get; init; }
 }
