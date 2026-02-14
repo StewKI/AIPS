@@ -53,6 +53,8 @@ public static class UserContextRegistrationExtension
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ClockSkew = TimeSpan.FromSeconds(30),
+                    
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
