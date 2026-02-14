@@ -40,6 +40,6 @@ public class UserController : ControllerBase
     [HttpPost("test")]
     public async Task Test(IMessagePublisher publisher)
     {
-        await publisher.PublishAsync("test", "test.test", "Test poruka");
+        await publisher.PublishAsync("Test poruka");
     }
 }
