@@ -6,6 +6,9 @@ public static class ConfigurationEnvExtensions
 {
     private const string DbConnStringKey = "DB_CONN_STRING";
     
+    private const string RabbitMqAmqpUriKey = "RABBITMQ_AMQP_URI";
+    private const string RabbitMqExchange = "RABBITMQ_EXCHANGE";
+    
     private const string JwtIssuer = "JWT_ISSUER";
     private const string JwtAudience = "JWT_AUDIENCE";
     private const string JwtKey = "JWT_KEY";
@@ -17,6 +20,16 @@ public static class ConfigurationEnvExtensions
         public string GetEnvConnectionString()
         {
             return configuration.GetEnvForSure(DbConnStringKey);
+        }
+
+        public string GetEnvRabbitMqAmqpUri()
+        {
+            return configuration.GetEnvForSure(RabbitMqAmqpUriKey);
+        }
+
+        public string GetEnvRabbitMqExchange()
+        {
+            return configuration.GetEnvForSure(RabbitMqExchange);
         }
 
         public string GetEnvJwtIssuer()

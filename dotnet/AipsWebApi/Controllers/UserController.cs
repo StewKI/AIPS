@@ -1,5 +1,7 @@
 using AipsCore.Application.Abstract;
 using AipsCore.Application.Common.Authentication.Dtos;
+using AipsCore.Application.Abstract.MessageBroking;
+using AipsCore.Application.Common.Authentication;
 using AipsCore.Application.Models.User.Command.LogIn;
 using AipsCore.Application.Models.User.Command.LogOut;
 using AipsCore.Application.Models.User.Command.LogOutAll;
@@ -59,5 +61,12 @@ public class UserController : ControllerBase
     {
         await _dispatcher.Execute(command, cancellationToken);
         return Ok();
+    }
+
+    [AllowAnonymous]
+    [HttpPost("test")]
+    public async Task Test(IMessagePublisher publisher)
+    {
+        await publisher.PublishAsync("Test poruka");
     }
 }
