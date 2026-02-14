@@ -1,7 +1,6 @@
-using AipsCore.Infrastructure.Persistence.Db;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AipsCore.Infrastructure.DI;
+namespace AipsCore.Infrastructure.Persistence.Db;
 
 public static class StartupExtensions
 {

@@ -1,4 +1,5 @@
 using AipsCore.Infrastructure.DI;
+using AipsCore.Infrastructure.Persistence.Db;
 using AipsWebApi.Middleware;
 using DotNetEnv;
 

@@ -2,8 +2,10 @@ using System.Text;
 using AipsCore.Application.Abstract.UserContext;
 using AipsCore.Application.Common.Authentication;
 using AipsCore.Domain.Models.User.Options;
+using AipsCore.Infrastructure.Authentication.AuthService;
+using AipsCore.Infrastructure.Authentication.Jwt;
+using AipsCore.Infrastructure.Authentication.UserContext;
 using AipsCore.Infrastructure.DI.Configuration;
-using AipsCore.Infrastructure.Persistence.Authentication;
 using AipsCore.Infrastructure.Persistence.Db;
 using AipsCore.Infrastructure.Persistence.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,7 +25,8 @@ public static class UserContextRegistrationExtension
             Issuer = configuration.GetEnvJwtIssuer(),
             Audience = configuration.GetEnvJwtAudience(),
             Key = configuration.GetEnvJwtKey(),
-            ExpirationMinutes = configuration.GetEnvJwtExpirationMinutes()
+            ExpirationMinutes = configuration.GetEnvJwtExpirationMinutes(),
+            RefreshTokenExpirationDays = configuration.GetEnvJwtRefreshExpirationDays()
         };
         
         services.AddSingleton(jwtSettings);
@@ -50,6 +53,8 @@ public static class UserContextRegistrationExtension
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ClockSkew = TimeSpan.FromSeconds(30),
+                    
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,

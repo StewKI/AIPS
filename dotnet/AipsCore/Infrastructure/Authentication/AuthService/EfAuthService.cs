@@ -2,17 +2,20 @@ using AipsCore.Application.Common.Authentication;
 using AipsCore.Domain.Common.Validation;
 using AipsCore.Domain.Models.User.External;
 using AipsCore.Domain.Models.User.Validation;
+using AipsCore.Infrastructure.Persistence.Db;
 using AipsCore.Infrastructure.Persistence.User.Mappers;
 using Microsoft.AspNetCore.Identity;
 
-namespace AipsCore.Infrastructure.Persistence.Authentication;
+namespace AipsCore.Infrastructure.Authentication.AuthService;
 
 public class EfAuthService : IAuthService
 {
-    private readonly UserManager<User.User> _userManager;
+    private readonly AipsDbContext _dbContext;
+    private readonly UserManager<Persistence.User.User> _userManager;
     
-    public EfAuthService(UserManager<User.User> userManager)
+    public EfAuthService(AipsDbContext dbContext, UserManager<Persistence.User.User> userManager)
     {
+        _dbContext = dbContext;
         _userManager = userManager;
     }
     
@@ -45,6 +48,30 @@ public class EfAuthService : IAuthService
         if (!isPasswordValid)
         {
             throw new ValidationException(UserErrors.InvalidCredentials());
+        }
+
+        var roles = new List<UserRole>();
+        var rolesNames = await _userManager.GetRolesAsync(entity);
+
+        foreach (var roleName in rolesNames)
+        {
+            var role = UserRole.FromString(roleName);
+            
+            if (role is null) throw new Exception($"Role {roleName} not found");
+            
+            roles.Add(role);
+        }
+        
+        return new LoginResult(entity.MapToModel(), roles);
+    }
+
+    public async Task<LoginResult> LoginWithRefreshTokenAsync(Application.Common.Authentication.Models.RefreshToken refreshToken, CancellationToken cancellationToken = default)
+    {
+        var entity = await _userManager.FindByIdAsync(refreshToken.UserId);
+
+        if (entity is null)
+        {
+            throw new ValidationException(UserErrors.InvalidCredentials()); 
         }
 
         var roles = new List<UserRole>();

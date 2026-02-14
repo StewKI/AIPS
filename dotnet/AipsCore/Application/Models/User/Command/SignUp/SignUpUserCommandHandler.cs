@@ -1,19 +1,15 @@
 using AipsCore.Application.Abstract.Command;
 using AipsCore.Application.Common.Authentication;
-using AipsCore.Domain.Abstract;
-using AipsCore.Domain.Models.User.External;
 using AipsCore.Domain.Models.User.ValueObjects;
 
 namespace AipsCore.Application.Models.User.Command.SignUp;
 
 public class SignUpUserCommandHandler : ICommandHandler<SignUpUserCommand, UserId>
 {
-    private readonly IUserRepository _userRepository;
     private readonly IAuthService _authService;
     
-    public SignUpUserCommandHandler(IUserRepository userRepository, IAuthService authService)
+    public SignUpUserCommandHandler(IAuthService authService)
     {
-        _userRepository = userRepository;
         _authService = authService;
     }
     

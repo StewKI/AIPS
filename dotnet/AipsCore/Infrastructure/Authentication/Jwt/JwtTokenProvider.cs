@@ -1,11 +1,12 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using AipsCore.Application.Abstract.UserContext;
 using AipsCore.Domain.Models.User.External;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AipsCore.Infrastructure.Persistence.Authentication;
+namespace AipsCore.Infrastructure.Authentication.Jwt;
 
 public class JwtTokenProvider : ITokenProvider
 {
@@ -16,7 +17,7 @@ public class JwtTokenProvider : ITokenProvider
         _jwtSettings = jwtSettings;
     }
     
-    public string Generate(Domain.Models.User.User user, IList<UserRole> roles)
+    public string GenerateAccessToken(Domain.Models.User.User user, IList<UserRole> roles)
     {
         var claims = new List<Claim>
         {
@@ -41,5 +42,10 @@ public class JwtTokenProvider : ITokenProvider
             signingCredentials: credentials);
         
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public string GenerateRefreshToken()
+    {
+        return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
     }
 }
