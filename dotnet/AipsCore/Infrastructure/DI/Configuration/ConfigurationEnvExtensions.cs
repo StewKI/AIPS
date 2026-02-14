@@ -10,6 +10,7 @@ public static class ConfigurationEnvExtensions
     private const string JwtAudience = "JWT_AUDIENCE";
     private const string JwtKey = "JWT_KEY";
     private const string JwtExpirationMinutes = "JWT_EXPIRATION_MINUTES";
+    private const string JwtRefreshExpirationDays = "JWT_REFRESH_TOKEN_EXPIRATION_DAYS";
 
     extension(IConfiguration configuration)
     {
@@ -36,6 +37,11 @@ public static class ConfigurationEnvExtensions
         public int GetEnvJwtExpirationMinutes()
         {
             return configuration.GetEnvInt(configuration.GetEnvOrDefault(JwtExpirationMinutes, "60"));
+        }
+
+        public int GetEnvJwtRefreshExpirationDays()
+        {
+            return configuration.GetEnvInt(configuration.GetEnvOrDefault(JwtRefreshExpirationDays, "7"));
         }
 
         private string GetEnvForSure(string key)

@@ -4,6 +4,9 @@ using AipsCore.Application.Common.Authentication;
 using AipsCore.Domain.Models.User.Options;
 using AipsCore.Infrastructure.DI.Configuration;
 using AipsCore.Infrastructure.Persistence.Authentication;
+using AipsCore.Infrastructure.Persistence.Authentication.AuthService;
+using AipsCore.Infrastructure.Persistence.Authentication.Jwt;
+using AipsCore.Infrastructure.Persistence.Authentication.UserContext;
 using AipsCore.Infrastructure.Persistence.Db;
 using AipsCore.Infrastructure.Persistence.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,7 +26,8 @@ public static class UserContextRegistrationExtension
             Issuer = configuration.GetEnvJwtIssuer(),
             Audience = configuration.GetEnvJwtAudience(),
             Key = configuration.GetEnvJwtKey(),
-            ExpirationMinutes = configuration.GetEnvJwtExpirationMinutes()
+            ExpirationMinutes = configuration.GetEnvJwtExpirationMinutes(),
+            RefreshTokenExpirationDays = configuration.GetEnvJwtRefreshExpirationDays()
         };
         
         services.AddSingleton(jwtSettings);
