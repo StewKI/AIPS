@@ -1,5 +1,7 @@
 using AipsCore.Application.Abstract;
+using AipsCore.Application.Abstract.MessageBroking;
 using AipsCore.Application.Common.Dispatcher;
+using AipsCore.Infrastructure.MessageBroking.RabbitMQ;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,6 +17,9 @@ public static class AipsRegistrationExtensions
         services.AddPersistence(configuration);
 
         services.AddUserContext(configuration);
+
+        services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
+        services.AddSingleton<IMessagePublisher, RabbitMqPublisher>();
         
         return services;
     }
