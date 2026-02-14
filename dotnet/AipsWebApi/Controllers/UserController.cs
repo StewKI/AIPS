@@ -1,6 +1,7 @@
 using AipsCore.Application.Abstract;
 using AipsCore.Application.Abstract.MessageBroking;
 using AipsCore.Application.Common.Authentication;
+using AipsCore.Application.Common.Message.TestMessage;
 using AipsCore.Application.Models.User.Command.LogIn;
 using AipsCore.Application.Models.User.Command.SignUp;
 using AipsCore.Application.Models.User.Query.GetUser;
@@ -40,6 +41,7 @@ public class UserController : ControllerBase
     [HttpPost("test")]
     public async Task Test(IMessagePublisher publisher)
     {
-        await publisher.PublishAsync("Test poruka");
+        var test = new TestMessage("ovo je test poruka");
+        await publisher.PublishAsync(test);
     }
 }
