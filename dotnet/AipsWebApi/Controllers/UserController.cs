@@ -1,7 +1,6 @@
 using AipsCore.Application.Abstract;
 using AipsCore.Application.Common.Authentication.Dtos;
 using AipsCore.Application.Abstract.MessageBroking;
-using AipsCore.Application.Common.Authentication;
 using AipsCore.Application.Models.User.Command.LogIn;
 using AipsCore.Application.Models.User.Command.LogOut;
 using AipsCore.Application.Models.User.Command.LogOutAll;
