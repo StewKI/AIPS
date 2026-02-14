@@ -20,7 +20,15 @@ public static class AipsRegistrationExtensions
 
         services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
         services.AddSingleton<IMessagePublisher, RabbitMqPublisher>();
+        services.AddSingleton<IMessageSubscriber, RabbitMqSubscriber>();
         
+        return services;
+    }
+
+    public static IServiceCollection AddAipsMessageHandlers(this IServiceCollection services)
+    {
+        services.AddMessageHandlersFromAssembly(typeof(IMessage).Assembly);
+
         return services;
     }
 }
