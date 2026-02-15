@@ -1,5 +1,6 @@
 using AipsCore.Application.Abstract;
 using AipsCore.Application.Abstract.Command;
+using AipsCore.Application.Abstract.MessageBroking;
 using AipsCore.Application.Abstract.Query;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -36,28 +37,35 @@ public sealed class Dispatcher : IDispatcher
         
         return await this.HandleWithResult<TResult>(handlerType, query, cancellationToken);
     }
+
+    public async Task Execute(IMessage message, CancellationToken cancellationToken = default)
+    {
+        var handlerType = typeof(IMessageHandler<>).MakeGenericType(message.GetType());
+
+        await this.Handle(handlerType, message, cancellationToken);
+    }
     
     #endregion
 
     #region Handle
     
-    private async Task Handle(Type handlerType, object commandOrQuery, CancellationToken cancellationToken = default)
+    private async Task Handle(Type handlerType, object dispatchingObject, CancellationToken cancellationToken = default)
     {
-        dynamic handler = this.ResolveHandler(handlerType, commandOrQuery);
+        dynamic handler = this.ResolveHandler(handlerType, dispatchingObject);
         
-        await handler.Handle((dynamic)commandOrQuery, cancellationToken);
+        await handler.Handle((dynamic)dispatchingObject, cancellationToken);
     }
     
-    private async Task<TResult> HandleWithResult<TResult>(Type handlerType, object commandOrQuery, CancellationToken cancellationToken = default)
+    private async Task<TResult> HandleWithResult<TResult>(Type handlerType, object dispatchingObject, CancellationToken cancellationToken = default)
     {
-        dynamic handler = this.ResolveHandler(handlerType, commandOrQuery);
+        dynamic handler = this.ResolveHandler(handlerType, dispatchingObject);
         
-        return await handler.Handle((dynamic)commandOrQuery, cancellationToken);
+        return await handler.Handle((dynamic)dispatchingObject, cancellationToken);
     }
     
     #endregion
 
-    private dynamic ResolveHandler(Type handlerType, object commandOrQuery)
+    private dynamic ResolveHandler(Type handlerType, object dispatchingObject)
     {
         dynamic handler;
 
@@ -67,7 +75,7 @@ public sealed class Dispatcher : IDispatcher
         }
         catch (InvalidOperationException serviceProviderException)
         {
-            throw new DispatchException(commandOrQuery, serviceProviderException);
+            throw new DispatchException(dispatchingObject, serviceProviderException);
         }
 
         return handler;
