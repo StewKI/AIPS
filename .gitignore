@@ -484,3 +484,30 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# --- Frontend (Vue / Vite / Bun) ---
+
+# Bun
+bun.lockb
+
+# Vite build output
+dist/
+
+# Vite cache
+.vite/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Local env variants
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+bun-debug.log*
+
+# Coverage
+coverage/

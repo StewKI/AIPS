@@ -1,0 +1,26 @@
+// Bootstrap variable overrides — dark theme
+$body-bg: #121212;
+$body-color: #e5e7eb;
+
+$primary: #4f9dff;
+$success: #22c55e;
+$danger: #ef4444;
+
+$card-bg: #1e1e1e;
+$card-border-color: #2a2a2a;
+
+$navbar-dark-color: #e5e7eb;
+
+$input-bg: #1e1e1e;
+$input-color: #e5e7eb;
+$input-border-color: #333;
+$input-focus-border-color: $primary;
+$input-focus-box-shadow: 0 0 0 0.2rem rgba($primary, 0.25);
+$input-placeholder-color: #6b7280;
+
+$border-color: #2a2a2a;
+
+$link-color: $primary;
+
+$btn-close-color: #e5e7eb;
+$btn-close-filter: invert(1);
