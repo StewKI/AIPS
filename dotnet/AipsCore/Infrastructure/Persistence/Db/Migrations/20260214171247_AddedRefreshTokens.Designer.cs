@@ -3,6 +3,7 @@ using System;
 using AipsCore.Infrastructure.Persistence.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AipsCore.Infrastructure.Persistence.Db.Migrations
 {
     [DbContext(typeof(AipsDbContext))]
-    partial class AipsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260214171247_AddedRefreshTokens")]
+    partial class AddedRefreshTokens
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

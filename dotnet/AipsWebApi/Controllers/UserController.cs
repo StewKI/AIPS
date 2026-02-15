@@ -1,4 +1,5 @@
 using AipsCore.Application.Abstract;
+using AipsCore.Application.Common.Authentication.Dtos;
 using AipsCore.Application.Abstract.MessageBroking;
 using AipsCore.Application.Common.Authentication;
 using AipsCore.Application.Common.Message.TestMessage;
@@ -31,10 +32,34 @@ public class UserController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<ActionResult<string>> LogIn(LogInUserCommand command, CancellationToken cancellationToken)
+    public async Task<ActionResult<LogInUserResultDto>> LogIn(LogInUserCommand command, CancellationToken cancellationToken)
     {
         var result = await _dispatcher.Execute(command, cancellationToken);
-        return Ok(result.Value);
+        return Ok(result);
+    }
+
+    [AllowAnonymous]
+    [HttpPost("refresh-login")]
+    public async Task<ActionResult<LogInUserResultDto>> RefreshLogIn(RefreshLogInCommand command, CancellationToken cancellationToken)
+    {
+        var result = await _dispatcher.Execute(command, cancellationToken);
+        return Ok(result);
+    }
+
+    [Authorize]
+    [HttpDelete("logout")]
+    public async Task<IActionResult> LogOut(LogOutCommand command, CancellationToken cancellationToken)
+    {
+        await _dispatcher.Execute(command, cancellationToken);
+        return Ok();
+    }
+    
+    [Authorize]
+    [HttpDelete("logout-all")]
+    public async Task<IActionResult> LogOutAll(LogOutAllCommand command, CancellationToken cancellationToken)
+    {
+        await _dispatcher.Execute(command, cancellationToken);
+        return Ok();
     }
 
     [AllowAnonymous]
