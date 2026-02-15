@@ -25,7 +25,7 @@ const auth = useAuthStore()
       <div id="navbarNav" class="collapse navbar-collapse">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <RouterLink class="nav-link" active-class="active" to="/">Home</RouterLink>
+            <RouterLink class="nav-link" active-class="active" to="/test">Test</RouterLink>
           </li>
           <li class="nav-item">
             <RouterLink class="nav-link" active-class="active" to="/about">About</RouterLink>
