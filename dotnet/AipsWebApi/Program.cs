@@ -14,6 +14,18 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddAips(builder.Configuration);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("frontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 
 await app.Services.InitializeInfrastructureAsync();
@@ -23,6 +35,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseCors("frontend");
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
