@@ -1,21 +1,21 @@
 using AipsCore.Application.Abstract;
 using AipsCore.Application.Common.Authentication.Dtos;
 using AipsCore.Application.Abstract.MessageBroking;
-using AipsCore.Application.Common.Authentication;
 using AipsCore.Application.Common.Message.TestMessage;
 using AipsCore.Application.Models.User.Command.LogIn;
 using AipsCore.Application.Models.User.Command.LogOut;
 using AipsCore.Application.Models.User.Command.LogOutAll;
 using AipsCore.Application.Models.User.Command.RefreshLogIn;
 using AipsCore.Application.Models.User.Command.SignUp;
-using AipsCore.Application.Models.User.Query.GetUser;
+using AipsCore.Application.Models.User.Query.GetMe;
+using AipsCore.Infrastructure.Persistence.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AipsWebApi.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("/api/[controller]")]
 public class UserController : ControllerBase
 {
     private readonly IDispatcher _dispatcher;
@@ -71,5 +71,13 @@ public class UserController : ControllerBase
     {
         var test = new TestMessage("ovo je test poruka");
         await publisher.PublishAsync(test);
+    }
+
+    [Authorize]
+    [HttpGet("me")]
+    public async Task<ActionResult<GetMeQueryDto>> GetMe(CancellationToken cancellationToken)
+    {
+        var result = await _dispatcher.Execute(new GetMeQuery(), cancellationToken);
+        return result;
     }
 }
