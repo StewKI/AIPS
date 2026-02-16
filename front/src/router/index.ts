@@ -35,6 +35,12 @@ const router = createRouter({
       component: () => import('../views/SignupView.vue'),
       meta: { guestOnly: true },
     },
+    {
+      path: '/whiteboard/:id',
+      name: 'whiteboard',
+      component: () => import('../views/WhiteboardView.vue'),
+      meta: { requiresAuth: true, hideTopBar: true },
+    },
   ],
 })
 

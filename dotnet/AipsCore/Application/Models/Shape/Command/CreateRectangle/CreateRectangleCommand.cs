@@ -4,6 +4,7 @@ using AipsCore.Domain.Models.Shape.ValueObjects;
 namespace AipsCore.Application.Models.Shape.Command.CreateRectangle;
 
 public record CreateRectangleCommand(
+    string Id,
     string WhiteboardId,
     string AuthorId,
     int PositionX,
@@ -11,4 +12,4 @@ public record CreateRectangleCommand(
     string Color,
     int EndPositionX,
     int EndPositionY,
-    int BorderThickness) : ICommand<ShapeId>;
+    int BorderThickness) : ICommand;
