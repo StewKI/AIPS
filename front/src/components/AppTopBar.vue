@@ -6,7 +6,7 @@ const auth = useAuthStore()
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark border-bottom border-secondary">
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark border-bottom border-secondary sticky-top">
     <div class="container">
       <RouterLink class="navbar-brand" to="/">AIPS</RouterLink>
 
