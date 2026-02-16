@@ -1,18 +1,16 @@
 using AipsCore.Application.Abstract;
-using AipsCore.Application.Models.Whiteboard.Command.AddUserToWhiteboard;
-using AipsCore.Application.Models.Whiteboard.Command.BanUserFromWhiteboard;
 using AipsCore.Application.Models.Whiteboard.Command.CreateWhiteboard;
-using AipsCore.Application.Models.Whiteboard.Command.KickUserFromWhiteboard;
-using AipsCore.Application.Models.Whiteboard.Command.UnbanUserFromWhiteboard;
 using AipsCore.Application.Models.Whiteboard.Query.GetRecentWhiteboards;
-using AipsCore.Domain.Models.Whiteboard;
+using AipsCore.Application.Models.Whiteboard.Query.GetWhiteboardHistory;
+using AipsCore.Application.Models.WhiteboardMembership.Command.CreateWhiteboardMembership;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Whiteboard = AipsCore.Infrastructure.Persistence.Whiteboard.Whiteboard;
 
 namespace AipsWebApi.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("/api/[controller]")]
 public class WhiteboardController : ControllerBase
 {
     private readonly IDispatcher _dispatcher;
@@ -28,5 +26,29 @@ public class WhiteboardController : ControllerBase
     {
         var whiteboardId = await _dispatcher.Execute(command, cancellationToken);
         return Ok(whiteboardId.IdValue);
+    }
+
+    [Authorize]
+    [HttpGet("history")]
+    public async Task<ActionResult<ICollection<Whiteboard>>> GetWhiteboardHistory(CancellationToken cancellationToken)
+    {
+        var whiteboards = await _dispatcher.Execute(new GetWhiteboardHistoryQuery(), cancellationToken);
+        return Ok(whiteboards);
+    }
+
+    [Authorize]
+    [HttpGet("recent")]
+    public async Task<ActionResult<ICollection<Whiteboard>>> GetRecentWhiteboards(CancellationToken cancellationToken)
+    {
+        var whiteboards = await _dispatcher.Execute(new GetRecentWhiteboardsQuery(), cancellationToken);
+        return Ok(whiteboards);
+    }
+
+    [Authorize]
+    [HttpPost("join")]
+    public async Task<ActionResult> JoinWhiteboard(CreateWhiteboardMembershipCommand command, CancellationToken cancellationToken)
+    {
+        var result = await _dispatcher.Execute(command, cancellationToken);
+        return Ok(result);
     }
 }

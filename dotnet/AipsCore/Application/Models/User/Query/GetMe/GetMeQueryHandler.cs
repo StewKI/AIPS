@@ -32,6 +32,6 @@ public class GetMeQueryHandler : IQueryHandler<GetMeQuery, GetMeQueryDto>
             throw new ValidationException(UserErrors.NotFound(new UserId(userId.IdValue)));
         }
 
-        return new GetMeQueryDto(result.UserName!);
+        return new GetMeQueryDto(result.Id.ToString(), result.UserName!);
     }
 }
