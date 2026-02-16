@@ -2,7 +2,7 @@ import {SignalRService} from "@/services/signalr.ts";
 
 
 const client = new SignalRService(
-  `http://localhost:5039/testhub`,
+  `/hubs/test`,
 );
 
 export const testHubService = {

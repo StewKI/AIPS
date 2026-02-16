@@ -1,7 +1,7 @@
 import { SignalRService } from '@/services/signalr.ts'
 import type { Rectangle, Whiteboard } from '@/types/whiteboard.ts'
 
-const client = new SignalRService(`http://localhost:5039/whiteboardhub`)
+const client = new SignalRService(`/hubs/whiteboard`)
 
 export const whiteboardHubService = {
   async connect() {

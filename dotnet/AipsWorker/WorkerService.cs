@@ -52,6 +52,8 @@ public class WorkerService : BackgroundService
         try
         {
             await _dispatcher.Execute(message, ct);
+
+            Console.WriteLine($"OK: {message.GetType().Name}");
         }
         catch (ValidationException validationException)
         {

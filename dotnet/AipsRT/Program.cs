@@ -45,7 +45,7 @@ app.UseCors("frontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapHub<TestHub>("/testhub");
-app.MapHub<WhiteboardHub>("/whiteboardhub");
+app.MapHub<TestHub>("/hubs/test");
+app.MapHub<WhiteboardHub>("/hubs/whiteboard");
 
 app.Run();
