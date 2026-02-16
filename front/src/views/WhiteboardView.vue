@@ -21,7 +21,7 @@ onUnmounted(() => {
 
 async function handleLeave() {
   await store.leaveWhiteboard()
-  router.push('/test')
+  router.back()
 }
 </script>
 
