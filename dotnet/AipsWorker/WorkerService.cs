@@ -2,6 +2,7 @@ using System.Reflection;
 using AipsCore.Application.Abstract;
 using AipsCore.Application.Abstract.MessageBroking;
 using AipsCore.Application.Common.Message.TestMessage;
+using AipsCore.Domain.Common.Validation;
 using AipsWorker.Utilities;
 using Microsoft.Extensions.Hosting;
 
@@ -48,7 +49,24 @@ public class WorkerService : BackgroundService
 
     private async Task HandleMessage<T>(T message, CancellationToken ct) where T : IMessage
     {
-        await _dispatcher.Execute(message, ct);
+        try
+        {
+            await _dispatcher.Execute(message, ct);
+        }
+        catch (ValidationException validationException)
+        {
+            Console.WriteLine("===Validation Exception: ");
+            foreach (var error in validationException.ValidationErrors)
+            {
+                Console.WriteLine(" * Code: " + error.Code);
+                Console.WriteLine(" * Message: " + error.Message);
+                Console.WriteLine("===================");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Unhandled Exception: " + ex.Message);
+        }
     }
     
     private MethodInfo GetMessageHandleMethod(Type messageType)

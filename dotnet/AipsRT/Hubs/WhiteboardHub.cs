@@ -1,5 +1,7 @@
+using AipsCore.Application.Abstract.MessageBroking;
 using AipsRT.Model.Whiteboard;
 using AipsRT.Model.Whiteboard.Shapes;
+using AipsRT.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
@@ -9,10 +11,12 @@ namespace AipsRT.Hubs;
 public class WhiteboardHub : Hub
 {
     private readonly WhiteboardManager _whiteboardManager;
+    private readonly IMessagingService _messagingService;
 
-    public WhiteboardHub(WhiteboardManager whiteboardManager)
+    public WhiteboardHub(WhiteboardManager whiteboardManager, IMessagingService messagingService)
     {
         _whiteboardManager = whiteboardManager;
+        _messagingService = messagingService;
     }
 
     public async Task JoinWhiteboard(Guid whiteboardId)
@@ -40,6 +44,10 @@ public class WhiteboardHub : Hub
     public async Task AddRectangle(Rectangle rectangle)
     {
         var whiteboard = _whiteboardManager.GetWhiteboardForUser(Guid.Parse(Context.UserIdentifier!))!;
+
+        rectangle.OwnerId = Guid.Parse(Context.UserIdentifier!);
+        
+        await _messagingService.CreatedRectangle(whiteboard.WhiteboardId, rectangle);
         
         whiteboard.AddRectangle(rectangle);
         

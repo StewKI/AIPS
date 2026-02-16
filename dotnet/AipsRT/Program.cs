@@ -1,6 +1,8 @@
 using AipsCore.Infrastructure.DI;
 using AipsRT.Hubs;
 using AipsRT.Model.Whiteboard;
+using AipsRT.Services;
+using AipsRT.Services.Interfaces;
 using DotNetEnv;
 using Microsoft.AspNetCore.SignalR;
 
@@ -16,6 +18,7 @@ builder.Services.AddAips(builder.Configuration);
 
 builder.Services.AddScoped<GetWhiteboardService>();
 builder.Services.AddSingleton<WhiteboardManager>();
+builder.Services.AddSingleton<IMessagingService, MessagingService>();
 
 builder.Services.AddCors(options =>
 {
