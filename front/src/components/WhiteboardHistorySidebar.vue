@@ -6,17 +6,6 @@ import WhiteboardHistoryList from './WhiteboardHistoryList.vue'
 
 <template>
 
-  <button
-    class="btn btn-dark position-fixed top-50 start-0 translate-middle-y rounded-0 rounded-end py-3 px-2"
-    type="button"
-    data-bs-toggle="offcanvas"
-    data-bs-target="#whiteboardSidebar"
-    aria-controls="whiteboardSidebar"
-    style="z-index: 1040; writing-mode: vertical-rl;"
-  >
-    My Whiteboards
-  </button>
-
   <div
     id="whiteboardSidebar"
     class="offcanvas offcanvas-start bg-dark text-light"

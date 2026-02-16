@@ -1,9 +1,11 @@
 <script setup lang="ts">
 
 import { onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useWhiteboardStore } from '@/stores/whiteboards'
 import RecentWhiteboardsItem from './RecentWhiteboardsItem.vue'
 
+const router = useRouter()
 const store = useWhiteboardStore()
 
 onMounted(() => {
@@ -17,7 +19,7 @@ const sortedWhiteboards = computed(() =>
 )
 
 const handleClick = (whiteboard: any) => {
-  console.log('Clicked:', whiteboard)
+  router.push({ name: 'whiteboard', params: { id: whiteboard.id } })
 }
 
 </script>
