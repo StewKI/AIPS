@@ -30,6 +30,7 @@ public class RabbitMqSubscriber : IMessageSubscriber
 
         await channel.QueueDeclareAsync(
             queue: GetQueueName<T>(),
+            autoDelete: false,
             durable: true);
         
         await channel.QueueBindAsync(

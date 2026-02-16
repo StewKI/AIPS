@@ -13,7 +13,7 @@ using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Application.Models.Shape.Command.CreateRectangle;
 
-public class CreateRectangleCommandHandler : ICommandHandler<CreateRectangleCommand, ShapeId>
+public class CreateRectangleCommandHandler : ICommandHandler<CreateRectangleCommand>
 {
     private readonly IShapeRepository _shapeRepository;
     private readonly IWhiteboardRepository _whiteboardRepository;
@@ -28,11 +28,12 @@ public class CreateRectangleCommandHandler : ICommandHandler<CreateRectangleComm
         _unitOfWork = unitOfWork;
     }
     
-    public async Task<ShapeId> Handle(CreateRectangleCommand command, CancellationToken cancellationToken = default)
+    public async Task Handle(CreateRectangleCommand command, CancellationToken cancellationToken = default)
     {
         Validate(command);
         
         var rectangle = Rectangle.Create(
+            command.Id,
             command.WhiteboardId,
             command.AuthorId,
             command.PositionX, command.PositionY,
@@ -43,8 +44,6 @@ public class CreateRectangleCommandHandler : ICommandHandler<CreateRectangleComm
 
         await _shapeRepository.SaveAsync(rectangle, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-        return rectangle.Id;
     }
 
     private void Validate(CreateRectangleCommand command)

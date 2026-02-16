@@ -1,9 +1,24 @@
+using AipsCore.Infrastructure.DI;
 using AipsRT.Hubs;
+using AipsRT.Model.Whiteboard;
+using AipsRT.Services;
+using AipsRT.Services.Interfaces;
+using DotNetEnv;
 using Microsoft.AspNetCore.SignalR;
+
+Env.Load("../../.env");
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddEnvironmentVariables();
+
 builder.Services.AddSignalR();
+
+builder.Services.AddAips(builder.Configuration);
+
+builder.Services.AddScoped<GetWhiteboardService>();
+builder.Services.AddSingleton<WhiteboardManager>();
+builder.Services.AddSingleton<IMessagingService, MessagingService>();
 
 builder.Services.AddCors(options =>
 {
@@ -26,6 +41,11 @@ app.MapGet("/test", (IHubContext<TestHub> hubContext) =>
 });
 
 app.UseCors("frontend");
-app.MapHub<TestHub>("/testhub");
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapHub<TestHub>("/hubs/test");
+app.MapHub<WhiteboardHub>("/hubs/whiteboard");
 
 app.Run();

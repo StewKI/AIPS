@@ -3,6 +3,7 @@ import {
   HubConnectionBuilder,
   HubConnectionState,
 } from "@microsoft/signalr";
+import {useAuthStore} from "@/stores/auth.ts";
 
 export class SignalRService {
   private connection: HubConnection;
@@ -10,8 +11,12 @@ export class SignalRService {
   constructor(
     hubUrl: string,
   ) {
+    const authStore = useAuthStore();
+
     this.connection = new HubConnectionBuilder()
-      .withUrl(hubUrl)
+      .withUrl(hubUrl, {
+        accessTokenFactory: () => authStore.accessToken!
+      })
       .withAutomaticReconnect()
       .build();
   }
