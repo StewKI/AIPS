@@ -5,9 +5,7 @@ namespace AipsCore.Application.Models.WhiteboardMembership.Command.CreateWhitebo
 
 public record CreateWhiteboardMembershipCommand(
     string WhiteboardId, 
-    string UserId,
     bool IsBanned,
     bool EditingEnabled,
-    bool CanJoin,
-    DateTime LastInteractedAt)
+    bool CanJoin)
     : ICommand<WhiteboardMembershipId>;
