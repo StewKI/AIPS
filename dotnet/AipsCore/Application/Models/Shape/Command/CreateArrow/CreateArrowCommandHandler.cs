@@ -5,7 +5,7 @@ using AipsCore.Domain.Models.Shape.ValueObjects;
 
 namespace AipsCore.Application.Models.Shape.Command.CreateArrow;
 
-public class CreateArrowCommandHandler : ICommandHandler<CreateArrowCommand, ShapeId>
+public class CreateArrowCommandHandler : ICommandHandler<CreateArrowCommand>
 {
     private readonly IShapeRepository _shapeRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -16,9 +16,10 @@ public class CreateArrowCommandHandler : ICommandHandler<CreateArrowCommand, Sha
         _unitOfWork = unitOfWork;
     }
     
-    public async Task<ShapeId> Handle(CreateArrowCommand command, CancellationToken cancellationToken = default)
+    public async Task Handle(CreateArrowCommand command, CancellationToken cancellationToken = default)
     {
         var arrow = Domain.Models.Shape.Sub.Arrow.Arrow.Create(
+            command.Id,
             command.WhiteboardId,
             command.AuthorId,
             command.PositionX, command.PositionY,
@@ -28,8 +29,6 @@ public class CreateArrowCommandHandler : ICommandHandler<CreateArrowCommand, Sha
             command.Thickness);
         
         await _shapeRepository.SaveAsync(arrow, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
-        return arrow.Id;
+        await _unitOfWork.SaveChangesAsync(cancellationToken); 
     }
 }

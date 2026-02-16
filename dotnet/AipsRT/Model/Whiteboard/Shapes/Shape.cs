@@ -11,4 +11,9 @@ public abstract class Shape
     public Position Position { get; set; }
     
     public string Color { get; set; }
+
+    public virtual void Move(Position newPosition)
+    {
+        Position = newPosition;
+    }
 }

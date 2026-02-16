@@ -8,6 +8,7 @@ using AipsCore.Application.Models.User.Command.LogOutAll;
 using AipsCore.Application.Models.User.Command.RefreshLogIn;
 using AipsCore.Application.Models.User.Command.SignUp;
 using AipsCore.Application.Models.User.Query.GetMe;
+using AipsCore.Application.Models.User.Query.GetUser;
 using AipsCore.Infrastructure.Persistence.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -79,5 +80,15 @@ public class UserController : ControllerBase
     {
         var result = await _dispatcher.Execute(new GetMeQuery(), cancellationToken);
         return result;
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<ActionResult<User>> GetUser(string userId, CancellationToken cancellationToken)
+    {
+        var query = new GetUserQuery(userId);
+        var result = await _dispatcher.Execute(query, cancellationToken);
+
+        return Ok(result);
     }
 }

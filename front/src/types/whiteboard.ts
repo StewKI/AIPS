@@ -39,4 +39,11 @@ export interface Whiteboard {
   textShapes: TextShape[]
 }
 
-export type ShapeTool = 'rectangle' | 'arrow' | 'line' | 'text'
+export interface MoveShapeCommand {
+  shapeId: string
+  newPositionX: number
+  newPositionY: number
+}
+
+export type ShapeTool = 'hand' | 'rectangle' | 'arrow' | 'line' | 'text'
+export type ShapeType = 'rectangle' | 'arrow' | 'line' | 'textShape'

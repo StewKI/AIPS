@@ -6,7 +6,7 @@ using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Domain.Models.Shape.Sub.Line;
 
-public class Line : Shape
+public partial class Line : Shape
 {
     public Position EndPosition { get; private set; }
     public Thickness Thickness { get; private set; }

@@ -4,6 +4,8 @@ const props = defineProps<{
   y: number
   width: number
   height: number
+  color: string
+  thickness: number
 }>()
 </script>
 
@@ -13,8 +15,8 @@ const props = defineProps<{
     :y="props.y"
     :width="props.width"
     :height="props.height"
-    stroke="#4f9dff"
-    :stroke-width="2"
+    :stroke="props.color"
+    :stroke-width="props.thickness"
     stroke-dasharray="6 3"
     fill="none"
     opacity="0.7"

@@ -6,11 +6,11 @@ using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Domain.Models.Shape.Sub.Rectangle;
 
-public class Rectangle : Shape
+public partial class Rectangle : Shape
 {
     public override ShapeType ShapeType => ShapeType.Rectangle;
     
-    public Position EndPosition { get; }
+    public Position EndPosition { get; set; }
     
     public Thickness BorderThickness { get; }
     
