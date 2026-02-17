@@ -84,7 +84,7 @@ public class UserController : ControllerBase
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<User>> GetUser(string userId, CancellationToken cancellationToken)
+    public async Task<ActionResult<GetUserQueryDto>> GetUser(string userId, CancellationToken cancellationToken)
     {
         var query = new GetUserQuery(userId);
         var result = await _dispatcher.Execute(query, cancellationToken);
