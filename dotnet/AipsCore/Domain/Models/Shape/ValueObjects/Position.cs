@@ -5,8 +5,8 @@ namespace AipsCore.Domain.Models.Shape.ValueObjects;
 
 public record Position : AbstractValueObject
 {
-    public int X { get; }
-    public int Y { get; }
+    public int X { get; set; }
+    public int Y { get; set; }
 
     public Position(int x, int y)
     {
@@ -19,5 +19,15 @@ public record Position : AbstractValueObject
         return [
             
         ];
+    }
+    
+    public static Position operator -(Position position, Position otherPosition)
+    {
+        return new Position(position.X - otherPosition.X, position.Y - otherPosition.Y);
+    }
+    
+    public static Position operator +(Position position, Position otherPosition)
+    {
+        return new Position(position.X + otherPosition.X, position.Y + otherPosition.Y);
     }
 };

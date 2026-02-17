@@ -4,6 +4,7 @@ using AipsCore.Domain.Models.Shape.ValueObjects;
 namespace AipsCore.Application.Models.Shape.Command.CreateLine;
 
 public record CreateLineCommand(
+    string Id,
     string WhiteboardId,
     string AuthorId,
     int PositionX,
@@ -11,4 +12,4 @@ public record CreateLineCommand(
     string Color,
     int EndPositionX,
     int EndPositionY,
-    int Thickness) : ICommand<ShapeId>;
+    int Thickness) : ICommand;

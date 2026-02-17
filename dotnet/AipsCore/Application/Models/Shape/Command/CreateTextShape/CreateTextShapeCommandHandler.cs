@@ -6,7 +6,7 @@ using AipsCore.Domain.Models.Shape.ValueObjects;
 
 namespace AipsCore.Application.Models.Shape.Command.CreateTextShape;
 
-public class CreateTextShapeCommandHandler : ICommandHandler<CreateTextShapeCommand, ShapeId>
+public class CreateTextShapeCommandHandler : ICommandHandler<CreateTextShapeCommand>
 {
     private readonly IShapeRepository _shapeRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -17,9 +17,10 @@ public class CreateTextShapeCommandHandler : ICommandHandler<CreateTextShapeComm
         _unitOfWork = unitOfWork;
     }
     
-    public async Task<ShapeId> Handle(CreateTextShapeCommand command, CancellationToken cancellationToken = default)
+    public async Task Handle(CreateTextShapeCommand command, CancellationToken cancellationToken = default)
     {
         var textShape = TextShape.Create(
+            command.Id,
             command.WhiteboardId,
             command.AuthorId,
             command.PositionX, 
@@ -30,7 +31,5 @@ public class CreateTextShapeCommandHandler : ICommandHandler<CreateTextShapeComm
 
         await _shapeRepository.SaveAsync(textShape, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-        return textShape.Id;
     }
 }

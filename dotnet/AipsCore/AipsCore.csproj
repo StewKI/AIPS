@@ -20,6 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Application\Models\Shape\Command\DeleteShape\" />
       <Folder Include="Domain\Models\WhiteboardMembership\Validation\" />
       <Folder Include="Infrastructure\Persistence\Db\Migrations\" />
     </ItemGroup>

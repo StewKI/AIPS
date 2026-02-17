@@ -7,7 +7,7 @@ using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Domain.Models.Shape;
 
-public abstract class Shape : DomainModel<ShapeId>
+public abstract partial class Shape : DomainModel<ShapeId>
 {
     public WhiteboardId WhiteboardId { get; private set; }
     

@@ -11,6 +11,7 @@ public static class ShapeMappingExtensions
             return new Rectangle()
             {
                 Id = shape.Id,
+                OwnerId = shape.AuthorId,
                 Position = new Position(shape.PositionX, shape.PositionY),
                 Color = shape.Color,
                 EndPosition = new Position(shape.EndPositionX!.Value, shape.EndPositionY!.Value),
@@ -23,6 +24,7 @@ public static class ShapeMappingExtensions
             return new Arrow()
             {
                 Id = shape.Id,
+                OwnerId = shape.AuthorId,
                 Position = new Position(shape.PositionX, shape.PositionY),
                 Color = shape.Color,
                 EndPosition = new Position(shape.EndPositionX!.Value, shape.EndPositionY!.Value),
@@ -35,6 +37,7 @@ public static class ShapeMappingExtensions
             return new Line()
             {
                 Id = shape.Id,
+                OwnerId = shape.AuthorId,
                 Position = new Position(shape.PositionX, shape.PositionY),
                 Color = shape.Color,
                 EndPosition = new Position(shape.EndPositionX!.Value, shape.EndPositionY!.Value),
@@ -47,6 +50,7 @@ public static class ShapeMappingExtensions
             return new TextShape()
             {
                 Id = shape.Id,
+                OwnerId = shape.AuthorId,
                 Position = new Position(shape.PositionX, shape.PositionY),
                 Color = shape.Color,
                 TextValue = shape.TextValue!,

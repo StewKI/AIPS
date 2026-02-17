@@ -25,6 +25,7 @@ public static partial class ShapeMappers
         return Rectangle.Create(
             shape.Id.ToString(),
             shape.WhiteboardId.ToString(),
+            shape.AuthorId.ToString(),
             shape.PositionX, shape.PositionY,
             shape.Color,
             shape.EndPositionX!.Value,  shape.EndPositionY!.Value,

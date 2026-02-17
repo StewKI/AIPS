@@ -10,4 +10,14 @@ public struct Position
         X = x;
         Y = y;
     }
+
+    public static Position operator -(Position position, Position otherPosition)
+    {
+        return new Position(position.X - otherPosition.X, position.Y - otherPosition.Y);
+    }
+    
+    public static Position operator +(Position position, Position otherPosition)
+    {
+        return new Position(position.X + otherPosition.X, position.Y + otherPosition.Y);
+    }
 }

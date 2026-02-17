@@ -7,4 +7,11 @@ public class Line : Shape
     public Position EndPosition { get; set; }
     
     public int Thickness { get; set; }
+    
+    public override void Move(Position newPosition)
+    {
+        var difference = newPosition - EndPosition;
+        EndPosition += difference;
+        base.Move(newPosition);
+    }
 }
