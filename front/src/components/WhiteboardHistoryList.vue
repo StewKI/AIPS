@@ -3,6 +3,7 @@ import { onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useWhiteboardsStore } from '@/stores/whiteboards'
 import WhiteboardHistoryItem from './WhiteboardHistoryItem.vue'
+import type {Whiteboard} from "@/types";
 
 const router = useRouter()
 const store = useWhiteboardsStore()
@@ -20,6 +21,11 @@ const sortedWhiteboards = computed(() =>
 const handleClick = (whiteboard: any) => {
   router.push({ name: 'whiteboard', params: { id: whiteboard.id } })
 }
+
+const handleDelete = async (whiteboard: Whiteboard) => {
+  await store.deleteWhiteboard(whiteboard.id)
+}
+
 </script>
 
 <template>
@@ -29,6 +35,7 @@ const handleClick = (whiteboard: any) => {
       :key="wb.id"
       :whiteboard="wb"
       @click="handleClick"
+      @delete="handleDelete"
     />
   </div>
   <div class="d-flex flex-column gap-3 overflow-auto h-100 w-100 p-3" v-else>
