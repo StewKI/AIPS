@@ -6,6 +6,7 @@ import { whiteboardService } from '@/services/whiteboardService'
 export const useWhiteboardsStore = defineStore('whiteboards', () => {
   const ownedWhiteboards = ref<Whiteboard[]>([])
   const recentWhiteboards = ref<Whiteboard[]>([])
+  const currentWhiteboard = ref<Whiteboard | null>(null)
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
@@ -52,6 +53,36 @@ export const useWhiteboardsStore = defineStore('whiteboards', () => {
     return newWhiteboard.id;
   }
 
+  async function deleteWhiteboard(id: string): Promise<void> {
+    isLoading.value = true
+    error.value = null
+
+    try {
+      await whiteboardService.deleteWhiteboard(id)
+      ownedWhiteboards.value = ownedWhiteboards.value.filter(wb => wb.id !== id)
+    } catch (err: any) {
+      error.value = err.message ?? 'Failed to delete whiteboard'
+      throw err
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  function getCurrentWhiteboard(): Whiteboard | null {
+    return currentWhiteboard.value
+  }
+
+  function selectWhiteboard(whiteboardId: string) {
+    currentWhiteboard.value =
+      ownedWhiteboards.value.find(wb => wb.id === whiteboardId) ||
+      recentWhiteboards.value.find(wb => wb.id === whiteboardId) ||
+      null
+  }
+
+  function deselectWhiteboard() {
+    currentWhiteboard.value = null
+  }
+
   function clearWhiteboards() {
     ownedWhiteboards.value = []
     recentWhiteboards.value = []
@@ -65,6 +96,10 @@ export const useWhiteboardsStore = defineStore('whiteboards', () => {
     getWhiteboardHistory: getWhiteboardHistory,
     getRecentWhiteboards: getRecentWhiteboards,
     createNewWhiteboard: createNewWhiteboard,
-    clearWhiteboards: clearWhiteboards
+    deleteWhiteboard: deleteWhiteboard,
+    getCurrentWhiteboard: getCurrentWhiteboard,
+    selectWhiteboard: selectWhiteboard,
+    deselectWhiteboard: deselectWhiteboard,
+    clearWhiteboards: clearWhiteboards,
   }
 })

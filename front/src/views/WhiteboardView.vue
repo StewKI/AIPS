@@ -1,32 +1,42 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, onBeforeMount, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useWhiteboardStore } from '@/stores/whiteboard.ts'
+import { useWhiteboardsStore } from "@/stores/whiteboards.ts";
 import WhiteboardToolbar from '@/components/whiteboard/WhiteboardToolbar.vue'
 import WhiteboardCanvas from '@/components/whiteboard/WhiteboardCanvas.vue'
 
 const route = useRoute()
 const router = useRouter()
-const store = useWhiteboardStore()
+const sessionStore = useWhiteboardStore()
+const infoStore = useWhiteboardsStore()
 
 const whiteboardId = route.params.id as string
 
+onBeforeMount(() => {
+  infoStore.selectWhiteboard(whiteboardId)
+})
+
 onMounted(() => {
-  store.joinWhiteboard(whiteboardId)
+  sessionStore.joinWhiteboard(whiteboardId)
+})
+
+onBeforeUnmount(() => {
+  infoStore.deselectWhiteboard()
 })
 
 onUnmounted(() => {
-  store.leaveWhiteboard()
+  sessionStore.leaveWhiteboard()
 })
 
 async function handleLeave() {
-  await store.leaveWhiteboard()
+  await sessionStore.leaveWhiteboard()
   router.back()
 }
 </script>
 
 <template>
-  <div v-if="store.isLoading" class="d-flex flex-column justify-content-center align-items-center vh-100">
+  <div v-if="sessionStore.isLoading" class="d-flex flex-column justify-content-center align-items-center vh-100">
     <div class="spinner-border text-primary mb-3" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
@@ -35,9 +45,9 @@ async function handleLeave() {
     </p>
   </div>
 
-  <div v-else-if="store.error" class="d-flex justify-content-center align-items-center vh-100">
+  <div v-else-if="sessionStore.error" class="d-flex justify-content-center align-items-center vh-100">
     <div class="alert alert-danger" role="alert">
-      {{ store.error }}
+      {{ sessionStore.error }}
     </div>
   </div>
 

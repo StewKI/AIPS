@@ -25,6 +25,7 @@ export interface AuthResponse {
 export interface Whiteboard {
   id: string
   ownerId: string
+  code: string
   title: string
   createdAt: Date
   deletedAt?: Date
