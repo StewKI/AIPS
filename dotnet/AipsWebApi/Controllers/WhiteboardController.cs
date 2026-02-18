@@ -1,6 +1,7 @@
 using AipsCore.Application.Abstract;
 using AipsCore.Application.Models.Whiteboard.Command.CreateWhiteboard;
 using AipsCore.Application.Models.Whiteboard.Query.GetRecentWhiteboards;
+using AipsCore.Application.Models.Whiteboard.Query.GetWhiteboard;
 using AipsCore.Application.Models.Whiteboard.Query.GetWhiteboardHistory;
 using AipsCore.Application.Models.WhiteboardMembership.Command.CreateWhiteboardMembership;
 using Microsoft.AspNetCore.Authorization;
@@ -22,10 +23,22 @@ public class WhiteboardController : ControllerBase
     
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<int>> CreateWhiteboard(CreateWhiteboardCommand command, CancellationToken cancellationToken)
+    public async Task<ActionResult<string>> CreateWhiteboard(CreateWhiteboardCommand command, CancellationToken cancellationToken)
     {
         var whiteboardId = await _dispatcher.Execute(command, cancellationToken);
         return Ok(whiteboardId.IdValue);
+    }
+    
+    [Authorize]
+    [HttpGet("{whiteboardId}")]
+    public async Task<ActionResult<Whiteboard>> GetWhiteboardById([FromRoute] string whiteboardId, CancellationToken cancellationToken)
+    {
+        var whiteboard = await _dispatcher.Execute(new GetWhiteboardQuery(whiteboardId), cancellationToken);
+        if (whiteboard == null)
+        {
+            return NotFound();
+        }
+        return Ok(whiteboard);
     }
 
     [Authorize]
