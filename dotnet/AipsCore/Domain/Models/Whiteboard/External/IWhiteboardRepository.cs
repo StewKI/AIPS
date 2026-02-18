@@ -6,4 +6,5 @@ namespace AipsCore.Domain.Models.Whiteboard.External;
 public interface IWhiteboardRepository : IAbstractRepository<Whiteboard, WhiteboardId>
 {
     Task<bool> WhiteboardCodeExists(WhiteboardCode whiteboardCode);
+    Task SoftDeleteAsync(WhiteboardId id, CancellationToken cancellationToken = default);
 }
