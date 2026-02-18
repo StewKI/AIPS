@@ -1,6 +1,3 @@
-// A small fetch-based HTTP client with automatic token attach and refresh-on-401.
-// This avoids circular imports by reading/writing tokens directly from localStorage.
-
 const ACCESS_TOKEN = 'auth_token'
 const REFRESH_TOKEN = 'refresh_token'
 
@@ -9,7 +6,6 @@ async function parseJsonOrThrow(res: Response) {
   try {
     return text ? JSON.parse(text) : undefined
   } catch (e) {
-    // non-JSON response
     return text
   }
 }

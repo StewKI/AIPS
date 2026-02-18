@@ -2,11 +2,11 @@
 
 import { onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useWhiteboardStore } from '@/stores/whiteboards'
+import { useWhiteboardsStore } from '@/stores/whiteboards'
 import RecentWhiteboardsItem from './RecentWhiteboardsItem.vue'
 
 const router = useRouter()
-const store = useWhiteboardStore()
+const store = useWhiteboardsStore()
 
 onMounted(() => {
   if (store.recentWhiteboards.length === 0) store.getRecentWhiteboards()

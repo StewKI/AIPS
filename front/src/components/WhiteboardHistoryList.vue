@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useWhiteboardStore } from '@/stores/whiteboards'
+import { useWhiteboardsStore } from '@/stores/whiteboards'
 import WhiteboardHistoryItem from './WhiteboardHistoryItem.vue'
 
 const router = useRouter()
-const store = useWhiteboardStore()
+const store = useWhiteboardsStore()
 
 onMounted(() => {
   if (store.ownedWhiteboards.length === 0) store.getWhiteboardHistory()
