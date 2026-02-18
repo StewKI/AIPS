@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { User, LoginCredentials, SignupCredentials, AuthResponse } from '@/types'
-import { useWhiteboardStore } from '@/stores/whiteboards'
+import { useWhiteboardsStore } from '@/stores/whiteboards'
 import { authService } from '@/services/authService'
 
 const ACCESS_TOKEN = 'auth_token'
@@ -129,7 +129,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function logout(allDevices = false) {
-    const whiteboardStore = useWhiteboardStore()
+    const whiteboardStore = useWhiteboardsStore()
     isLoading.value = true
     error.value = null
     try {

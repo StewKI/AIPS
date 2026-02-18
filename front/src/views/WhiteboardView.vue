@@ -26,10 +26,13 @@ async function handleLeave() {
 </script>
 
 <template>
-  <div v-if="store.isLoading" class="d-flex justify-content-center align-items-center vh-100">
-    <div class="spinner-border text-primary" role="status">
+  <div v-if="store.isLoading" class="d-flex flex-column justify-content-center align-items-center vh-100">
+    <div class="spinner-border text-primary mb-3" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
+    <p class="text-muted fs-5 text-center">
+      Please wait while your whiteboard is loading...
+    </p>
   </div>
 
   <div v-else-if="store.error" class="d-flex justify-content-center align-items-center vh-100">

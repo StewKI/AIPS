@@ -1,13 +1,38 @@
 <script setup lang="ts">
+
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import WhiteboardHistorySidebar from '@/components/WhiteboardHistorySidebar.vue'
 import RecentWhiteboardsPanel from '@/components/RecentWhiteboardsPanel.vue'
 import { useAuthStore } from '@/stores/auth'
+import { useWhiteboardsStore } from "@/stores/whiteboards.ts";
 
 const auth = useAuthStore()
+const whiteboards = useWhiteboardsStore()
+const router = useRouter()
+
 const joinCode = ref('')
 const whiteboardTitle = ref('')
 const showCreateModal = ref(false)
+
+async function handleCreateNewWhiteboard() {
+  if (!whiteboardTitle.value.trim()) {
+    alert('Please enter a title for the whiteboard.')
+    return
+  }
+
+  try {
+    const newWhiteboardId = await whiteboards.createNewWhiteboard(whiteboardTitle.value.trim())
+
+    showCreateModal.value = false
+    whiteboardTitle.value = ''
+
+    await router.push({ name: 'whiteboard', params: { id: newWhiteboardId } })
+  } catch (e) {
+    console.error('Failed to create new whiteboard', e)
+  }
+}
+
 </script>
 
 <template>
@@ -80,7 +105,10 @@ const showCreateModal = ref(false)
         </div>
         <div class="modal-footer border-secondary">
           <button type="button" class="btn btn-secondary" @click="showCreateModal = false">Cancel</button>
-          <button type="button" class="btn btn-primary">Create</button>
+          <button type="button" class="btn btn-primary" @click="handleCreateNewWhiteboard">
+            <span v-if="whiteboards.isLoading" class="spinner-border spinner-border-sm me-2"></span>
+            Create
+          </button>
         </div>
       </div>
     </div>

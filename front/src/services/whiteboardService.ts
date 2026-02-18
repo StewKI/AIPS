@@ -1,5 +1,5 @@
-import type { Whiteboard } from "@/types";
-import { api } from './api'
+import type {Whiteboard} from "@/types";
+import {api} from './api'
 
 export const whiteboardService = {
   async getWhiteboardHistory(): Promise<Whiteboard[]> {
@@ -10,6 +10,14 @@ export const whiteboardService = {
   async getRecentWhiteboards(): Promise<Whiteboard[]> {
     const raw = await api.get<any[]>('/api/Whiteboard/recent')
     return raw.map(mapWhiteboard)
+  },
+
+  async createNewWhiteboard(title: string): Promise<string> {
+    return await api.post<string>('/api/Whiteboard', { title: title, maxParticipants: 10, joinPolicy: 0})
+  },
+
+  async getWhiteboardById(id: string): Promise<Whiteboard> {
+    return await api.get<any>(`/api/Whiteboard/${id}`).then(mapWhiteboard)
   }
 }
 
