@@ -18,6 +18,10 @@ export const whiteboardService = {
 
   async getWhiteboardById(id: string): Promise<Whiteboard> {
     return await api.get<any>(`/api/Whiteboard/${id}`).then(mapWhiteboard)
+  },
+
+  async deleteWhiteboard(id: string): Promise<void> {
+    await api.delete(`/api/Whiteboard/${id}`)
   }
 }
 
@@ -25,6 +29,7 @@ function mapWhiteboard(raw: any): Whiteboard {
   return {
     id: raw.id,
     ownerId: raw.ownerId,
+    code: raw.code,
     title: raw.title,
     createdAt: new Date(raw.createdAt),
     deletedAt: raw.deletedAt ? new Date(raw.deletedAt) : undefined,

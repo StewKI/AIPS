@@ -1,5 +1,6 @@
 using AipsCore.Application.Abstract.Query;
 using AipsCore.Application.Abstract.UserContext;
+using AipsCore.Domain.Models.Whiteboard.Enums;
 using AipsCore.Infrastructure.Persistence.Db;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +23,7 @@ public class GetWhiteboardHistoryQueryHandler
         var userIdGuid = new Guid(_userContext.GetCurrentUserId().IdValue);
         
         return await _context.Whiteboards
-            .Where(w => w.OwnerId == userIdGuid)
+            .Where(w => w.OwnerId == userIdGuid && w.State != WhiteboardState.Deleted)
             .ToListAsync(cancellationToken);
     }
 }

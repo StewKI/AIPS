@@ -38,4 +38,12 @@ public class WhiteboardErrors : AbstractErrors<Whiteboard, WhiteboardId>
         
         return CreateValidationError(code, message);
     }
+    
+    public static ValidationError OnlyOwnerCanDeleteWhiteboard(UserId currentUserId)
+    {
+        string code = "only_owner_can_delete_whiteboard";
+        string message = $"Only owner of whiteboard can delete the whiteboard. Current user id: '{currentUserId}' is not the owner.";
+        
+        return CreateValidationError(code, message);
+    }
 }

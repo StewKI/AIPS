@@ -1,3 +1,4 @@
+using AipsCore.Domain.Models.Whiteboard.Enums;
 using AipsCore.Domain.Models.Whiteboard.External;
 using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 using AipsCore.Infrastructure.Persistence.Abstract;
@@ -60,5 +61,17 @@ public class WhiteboardRepository
     public async Task<bool> WhiteboardCodeExists(WhiteboardCode whiteboardCode)
     {
         return await Context.Whiteboards.AnyAsync(w => w.Code == whiteboardCode.CodeValue);
+    }
+
+    public async Task SoftDeleteAsync(WhiteboardId id, CancellationToken cancellationToken = default)
+    {
+        var entity = await Context.Whiteboards.FindAsync([new Guid(id.IdValue)], cancellationToken);
+        
+        if (entity != null)
+        {
+            entity.State = WhiteboardState.Deleted;
+            entity.DeletedAt = DateTime.UtcNow;
+            Context.Whiteboards.Update(entity);
+        }
     }
 }

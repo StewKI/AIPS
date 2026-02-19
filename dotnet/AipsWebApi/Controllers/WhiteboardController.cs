@@ -1,5 +1,6 @@
 using AipsCore.Application.Abstract;
 using AipsCore.Application.Models.Whiteboard.Command.CreateWhiteboard;
+using AipsCore.Application.Models.Whiteboard.Command.DeleteWhiteboard;
 using AipsCore.Application.Models.Whiteboard.Query.GetRecentWhiteboards;
 using AipsCore.Application.Models.Whiteboard.Query.GetWhiteboard;
 using AipsCore.Application.Models.Whiteboard.Query.GetWhiteboardHistory;
@@ -40,6 +41,15 @@ public class WhiteboardController : ControllerBase
         }
         return Ok(whiteboard);
     }
+
+    [Authorize]
+    [HttpDelete("{whiteboardId}")]
+    public async Task<ActionResult> DeleteWhiteboard([FromRoute] string whiteboardId, CancellationToken cancellationToken)
+    {
+        await _dispatcher.Execute(new DeleteWhiteboardCommand(whiteboardId), cancellationToken);
+        return Ok();
+    }
+
 
     [Authorize]
     [HttpGet("history")]

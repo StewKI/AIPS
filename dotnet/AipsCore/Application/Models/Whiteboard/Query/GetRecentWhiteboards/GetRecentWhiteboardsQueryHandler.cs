@@ -1,5 +1,6 @@
 using AipsCore.Application.Abstract.Query;
 using AipsCore.Application.Abstract.UserContext;
+using AipsCore.Domain.Models.Whiteboard.Enums;
 using AipsCore.Infrastructure.Persistence.Db;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,7 +33,8 @@ public class GetRecentWhiteboardsQueryHandler : IQueryHandler<GetRecentWhiteboar
             .Where(m => (
                 m.UserId == userIdGuid &&
                 m.IsBanned == false &&
-                m.Whiteboard != null
+                m.Whiteboard != null &&
+                m.Whiteboard.State != WhiteboardState.Deleted
             ))
             .OrderByDescending(m => m.LastInteractedAt)
             .Select(m => m.Whiteboard!);

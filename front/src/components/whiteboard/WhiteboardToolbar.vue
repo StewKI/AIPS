@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import {computed, ref} from 'vue'
 import { useWhiteboardStore } from '@/stores/whiteboard.ts'
+import { useWhiteboardsStore } from "@/stores/whiteboards.ts";
 import type { ShapeTool, Arrow, Line, Rectangle, TextShape } from '@/types/whiteboard.ts'
 
-const store = useWhiteboardStore()
+const sessionStore = useWhiteboardStore()
+const infoStore = useWhiteboardsStore()
 const emit = defineEmits<{ leave: [] }>()
 
 const tools: { name: ShapeTool; label: string; icon: string; enabled: boolean }[] = [
@@ -16,43 +18,60 @@ const tools: { name: ShapeTool; label: string; icon: string; enabled: boolean }[
 
 const colors = ['#4f9dff', '#ff4f4f', '#4fff4f', '#ffff4f', '#ff4fff', '#ffffff', '#ff9f4f', '#4fffff']
 
-const isReadOnly = computed(() => store.selectedTool === 'hand' && !!store.selectedShape)
+const isReadOnly = computed(() => sessionStore.selectedTool === 'hand' && !!sessionStore.selectedShape)
 
 const showProperties = computed(() => {
-  if (['rectangle', 'arrow', 'line', 'text'].includes(store.selectedTool)) return true
-  if (store.selectedTool === 'hand' && store.selectedShape) return true
+  if (['rectangle', 'arrow', 'line', 'text'].includes(sessionStore.selectedTool)) return true
+  if (sessionStore.selectedTool === 'hand' && sessionStore.selectedShape) return true
   return false
 })
 
 const showThickness = computed(() => {
-  if (['rectangle', 'arrow', 'line'].includes(store.selectedTool)) return true
-  if (isReadOnly.value && store.selectedShapeType && ['rectangle', 'arrow', 'line'].includes(store.selectedShapeType)) return true
+  if (['rectangle', 'arrow', 'line'].includes(sessionStore.selectedTool)) return true
+  if (isReadOnly.value && sessionStore.selectedShapeType && ['rectangle', 'arrow', 'line'].includes(sessionStore.selectedShapeType)) return true
   return false
 })
 
 const showTextSize = computed(() => {
-  if (store.selectedTool === 'text') return true
-  if (isReadOnly.value && store.selectedShapeType === 'textShape') return true
+  if (sessionStore.selectedTool === 'text') return true
+  if (isReadOnly.value && sessionStore.selectedShapeType === 'textShape') return true
   return false
 })
 
 const displayColor = computed(() => {
-  if (isReadOnly.value && store.selectedShape) return store.selectedShape.color
-  return store.toolColor
+  if (isReadOnly.value && sessionStore.selectedShape) return sessionStore.selectedShape.color
+  return sessionStore.toolColor
 })
 
 const displayThickness = computed(() => {
-  if (isReadOnly.value && store.selectedShape) {
-    if (store.selectedShapeType === 'rectangle') return (store.selectedShape as Rectangle).borderThickness
-    return (store.selectedShape as Arrow | Line).thickness
+  if (isReadOnly.value && sessionStore.selectedShape) {
+    if (sessionStore.selectedShapeType === 'rectangle') return (sessionStore.selectedShape as Rectangle).borderThickness
+    return (sessionStore.selectedShape as Arrow | Line).thickness
   }
-  return store.toolThickness
+  return sessionStore.toolThickness
 })
 
 const displayTextSize = computed(() => {
-  if (isReadOnly.value && store.selectedShape) return (store.selectedShape as TextShape).textSize
-  return store.toolTextSize
+  if (isReadOnly.value && sessionStore.selectedShape) return (sessionStore.selectedShape as TextShape).textSize
+  return sessionStore.toolTextSize
 })
+
+const showCopiedTooltip = ref(false)
+
+const whiteboardCode = computed(() => infoStore.getCurrentWhiteboard()?.code || '')
+
+const copyCodeToClipboard = async () => {
+  console.info(whiteboardCode.value)
+  if (!whiteboardCode.value) return
+  try {
+    await navigator.clipboard.writeText(whiteboardCode.value)
+    showCopiedTooltip.value = true
+    setTimeout(() => showCopiedTooltip.value = false, 1500)
+  } catch (err) {
+    console.error('Failed to copy:', err)
+  }
+}
+
 </script>
 
 <template>
@@ -62,10 +81,10 @@ const displayTextSize = computed(() => {
         v-for="tool in tools"
         :key="tool.name"
         class="tool-btn"
-        :class="{ active: store.selectedTool === tool.name, disabled: !tool.enabled }"
+        :class="{ active: sessionStore.selectedTool === tool.name, disabled: !tool.enabled }"
         :disabled="!tool.enabled"
         :title="tool.enabled ? tool.label : `${tool.label} (coming soon)`"
-        @click="tool.enabled && store.selectTool(tool.name)"
+        @click="tool.enabled && sessionStore.selectTool(tool.name)"
       >
         {{ tool.icon }}
       </button>
@@ -85,9 +104,9 @@ const displayTextSize = computed(() => {
             v-for="c in colors"
             :key="c"
             class="color-swatch"
-            :class="{ active: store.toolColor === c }"
+            :class="{ active: sessionStore.toolColor === c }"
             :style="{ backgroundColor: c }"
-            @click="store.setToolColor(c)"
+            @click="sessionStore.setToolColor(c)"
           />
         </div>
       </div>
@@ -101,8 +120,8 @@ const displayTextSize = computed(() => {
           min="1"
           max="10"
           step="1"
-          :value="store.toolThickness"
-          @input="store.setToolThickness(Number(($event.target as HTMLInputElement).value))"
+          :value="sessionStore.toolThickness"
+          @input="sessionStore.setToolThickness(Number(($event.target as HTMLInputElement).value))"
         />
       </div>
 
@@ -115,13 +134,29 @@ const displayTextSize = computed(() => {
           min="12"
           max="72"
           step="2"
-          :value="store.toolTextSize"
-          @input="store.setToolTextSize(Number(($event.target as HTMLInputElement).value))"
+          :value="sessionStore.toolTextSize"
+          @input="sessionStore.setToolTextSize(Number(($event.target as HTMLInputElement).value))"
         />
       </div>
     </div>
 
     <div class="toolbar-footer">
+      <div class="position-relative mb-2">
+        <button
+          class="btn btn-sm btn-outline-primary w-100"
+          @click="copyCodeToClipboard"
+          :title="whiteboardCode"
+        >
+          {{ whiteboardCode }}
+        </button>
+        <div
+          v-if="showCopiedTooltip"
+          class="tooltip-custom position-absolute start-50 translate-middle-x"
+        >
+          Code copied to clipboard
+        </div>
+      </div>
+
       <button
         class="btn btn-sm btn-outline-danger leave-btn"
         title="Leave whiteboard"
@@ -226,5 +261,18 @@ const displayTextSize = computed(() => {
 .leave-btn {
   width: 100%;
   height: 36px;
+}
+
+.tooltip-custom {
+  bottom: 110%;
+  background-color: #333;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0.9;
 }
 </style>
