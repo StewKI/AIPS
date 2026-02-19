@@ -4,7 +4,7 @@ namespace AipsCore.Domain.Models.Whiteboard;
 
 public partial class Whiteboard
 {
-    public bool IsOwnedBy(UserId userId)
+    public bool CanUserDelete(UserId userId)
     {
         return WhiteboardOwnerId.IdValue == userId.IdValue;
     }

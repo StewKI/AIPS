@@ -37,7 +37,7 @@ public class DeleteWhiteboardCommandHandler : ICommandHandler<DeleteWhiteboardCo
             throw new ValidationException(WhiteboardErrors.NotFound(whiteboardId));
         }
 
-        if (!whiteboard.IsOwnedBy(userId))
+        if (!whiteboard.CanUserDelete(userId))
         {
             throw new ValidationException(WhiteboardErrors.OnlyOwnerCanDeleteWhiteboard(userId));
         }
