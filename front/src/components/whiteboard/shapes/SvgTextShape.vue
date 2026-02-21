@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import type { TextShape } from '@/types/whiteboard.ts'
 
 const props = withDefaults(defineProps<{ textShape: TextShape; isSelected?: boolean }>(), {
@@ -7,19 +7,31 @@ const props = withDefaults(defineProps<{ textShape: TextShape; isSelected?: bool
 })
 
 const textEl = ref<SVGTextElement>()
-const bbox = ref<{ x: number; y: number; width: number; height: number } | null>(null)
+const textMetrics = ref<{ width: number; height: number; offsetX: number; offsetY: number } | null>(null)
 
-function updateBBox() {
+function measureText() {
   if (textEl.value) {
     const b = textEl.value.getBBox()
-    bbox.value = { x: b.x, y: b.y, width: b.width, height: b.height }
+    textMetrics.value = {
+      width: b.width,
+      height: b.height,
+      offsetX: b.x - props.textShape.position.x,
+      offsetY: b.y - props.textShape.position.y,
+    }
   }
 }
 
-onMounted(updateBBox)
-watch(() => props.isSelected, (val) => {
-  if (val) nextTick(updateBBox)
-}, { flush: 'post' })
+onMounted(measureText)
+watch(
+  () => [props.textShape.textValue, props.textShape.textSize],
+  () => { nextTick(measureText) },
+  { flush: 'post' },
+)
+
+const outlineX = computed(() => props.textShape.position.x + (textMetrics.value?.offsetX ?? 0) - 4)
+const outlineY = computed(() => props.textShape.position.y + (textMetrics.value?.offsetY ?? 0) - 4)
+const outlineW = computed(() => (textMetrics.value?.width ?? 0) + 8)
+const outlineH = computed(() => (textMetrics.value?.height ?? 0) + 8)
 </script>
 
 <template>
@@ -35,21 +47,21 @@ watch(() => props.isSelected, (val) => {
     >
       {{ props.textShape.textValue }}
     </text>
-    <template v-if="isSelected && bbox">
+    <template v-if="isSelected && textMetrics">
       <rect
-        :x="bbox.x - 4"
-        :y="bbox.y - 4"
-        :width="bbox.width + 8"
-        :height="bbox.height + 8"
+        :x="outlineX"
+        :y="outlineY"
+        :width="outlineW"
+        :height="outlineH"
         stroke="#4f9dff"
         stroke-width="1"
         stroke-dasharray="4 2"
         fill="none"
       />
-      <circle :cx="bbox.x - 4" :cy="bbox.y - 4" r="4" fill="white" stroke="#4f9dff" stroke-width="1.5" />
-      <circle :cx="bbox.x + bbox.width + 4" :cy="bbox.y - 4" r="4" fill="white" stroke="#4f9dff" stroke-width="1.5" />
-      <circle :cx="bbox.x - 4" :cy="bbox.y + bbox.height + 4" r="4" fill="white" stroke="#4f9dff" stroke-width="1.5" />
-      <circle :cx="bbox.x + bbox.width + 4" :cy="bbox.y + bbox.height + 4" r="4" fill="white" stroke="#4f9dff" stroke-width="1.5" />
+      <circle :cx="outlineX" :cy="outlineY" r="4" fill="white" stroke="#4f9dff" stroke-width="1.5" />
+      <circle :cx="outlineX + outlineW" :cy="outlineY" r="4" fill="white" stroke="#4f9dff" stroke-width="1.5" />
+      <circle :cx="outlineX" :cy="outlineY + outlineH" r="4" fill="white" stroke="#4f9dff" stroke-width="1.5" />
+      <circle :cx="outlineX + outlineW" :cy="outlineY + outlineH" r="4" fill="white" stroke="#4f9dff" stroke-width="1.5" />
     </template>
   </g>
 </template>

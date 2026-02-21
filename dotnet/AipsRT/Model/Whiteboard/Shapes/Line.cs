@@ -10,7 +10,7 @@ public class Line : Shape
     
     public override void Move(Position newPosition)
     {
-        var difference = newPosition - EndPosition;
+        var difference = newPosition - Position;
         EndPosition += difference;
         base.Move(newPosition);
     }
