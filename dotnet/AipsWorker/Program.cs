@@ -1,5 +1,7 @@
-﻿using AipsCore.Infrastructure.DI;
+﻿using AipsCore.Application.Abstract.MessageBroking;
+using AipsCore.Infrastructure.DI;
 using AipsWorker;
+using AipsWorker.Messages;
 using AipsWorker.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,6 +14,8 @@ builder.ConfigureServices((context, services) =>
 {
     services.AddAips(context.Configuration);
     services.AddAipsMessageHandlers();
+
+    services.AddSingleton<IMessageTypesProvider, MessageTypesProvider>();
 
     services.AddHostedService<WorkerService>();
 });
