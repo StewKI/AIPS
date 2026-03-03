@@ -11,11 +11,13 @@ namespace AipsWorker;
 public class WorkerService : BackgroundService
 {
     private readonly IDispatcher _dispatcher;
+    private readonly IMessageTypesProvider _messageTypesProvider;
     private readonly SubscribeMethodUtility _subscribeMethodUtility;
 
-    public WorkerService(IMessageSubscriber subscriber, IDispatcher dispatcher)
+    public WorkerService(IMessageSubscriber subscriber, IDispatcher dispatcher, IMessageTypesProvider messageTypesProvider)
     {
         _dispatcher = dispatcher;
+        _messageTypesProvider = messageTypesProvider;
         _subscribeMethodUtility = new SubscribeMethodUtility(subscriber);
     }
 
@@ -23,7 +25,7 @@ public class WorkerService : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         
-        var messageTypes = GetAllMessageTypes();
+        var messageTypes = _messageTypesProvider.GetAllMessageTypes();
 
         foreach (var messageType in messageTypes)
         {
@@ -31,20 +33,6 @@ public class WorkerService : BackgroundService
             
             await _subscribeMethodUtility.SubscribeToMessageTypeAsync(messageType, this, handleMethod);
         }
-    }
-
-    private IReadOnlyCollection<Type> GetAllMessageTypes()
-    {
-        var messageInterface = typeof(IMessage);
-        var assembly = messageInterface.Assembly;
-
-        return assembly
-            .GetTypes()
-            .Where(t =>
-                !t.IsAbstract &&
-                !t.IsInterface &&
-                messageInterface.IsAssignableFrom(t))
-            .ToList();
     }
 
     private async Task HandleMessage<T>(T message, CancellationToken ct) where T : IMessage
