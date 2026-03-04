@@ -1,42 +1,47 @@
-using System.Runtime.InteropServices.Swift;
-using AipsCore.Domain.Abstract;
 using AipsCore.Domain.Common.Validation;
+using AipsCore.Domain.Models.User.ValueObjects;
 using AipsCore.Domain.Models.Whiteboard.Enums;
 using AipsCore.Domain.Models.Whiteboard.Validation;
-using AipsCore.Domain.Models.Whiteboard.ValueObjects;
-using AipsCore.Domain.Models.WhiteboardMembership.External;
+using AipsCore.Domain.Models.WhiteboardMembership.Enums;
 
 namespace AipsCore.Domain.Models.Whiteboard;
 
-public partial class Whiteboard : DomainModel<WhiteboardId>
+public partial class Whiteboard 
 {
-    public async Task AddUserAsync(
-        User.User user, 
-        IWhiteboardMembershipRepository membershipRepository, 
-        CancellationToken cancellationToken = default)
+    public WhiteboardMembership.WhiteboardMembership RequestJoin(UserId userId)
     {
-        var membership 
-            = await membershipRepository.GetByWhiteboardAndUserAsync(this.Id, user.Id, cancellationToken);
+        return WhiteboardMembership.WhiteboardMembership.Create(
+            Id.IdValue,
+            userId.IdValue,
+            false,
+            DetermineJoinStatus(),
+            DateTime.UtcNow);
+    }
 
-        if (membership is not null)
+    public void RequestReJoin(WhiteboardMembership.WhiteboardMembership membership)
+    {
+        switch (membership.Status)
         {
-            throw new ValidationException(WhiteboardErrors.UserAlreadyAdded(user.Id));
+            case WhiteboardMembershipStatus.Banned:
+                throw new ValidationException(WhiteboardErrors.UserBanned(membership.UserId));
+            case WhiteboardMembershipStatus.Pending:
+                throw new ValidationException(WhiteboardErrors.UserAlreadyTryingToJoin(membership.UserId));
+            case WhiteboardMembershipStatus.Accepted:
+                break;
+            default:
+                membership.UpdateStatus(DetermineJoinStatus());
+                break;
         }
-
-        membership = WhiteboardMembership.WhiteboardMembership.Create(
-            this.Id.IdValue,
-            user.Id.IdValue,
-            false,
-            false,
-            this.GetCanJoin(),
-            DateTime.UtcNow
-        );
-        
-        await membershipRepository.AddAsync(membership, cancellationToken);
     }
 
-    private bool GetCanJoin()
+    private WhiteboardMembershipStatus DetermineJoinStatus()
     {
-        return this.JoinPolicy == WhiteboardJoinPolicy.FreeToJoin;
+        return JoinPolicy switch
+        {
+            WhiteboardJoinPolicy.FreeToJoin => WhiteboardMembershipStatus.Accepted,
+            WhiteboardJoinPolicy.RequestToJoin => WhiteboardMembershipStatus.Pending,
+            WhiteboardJoinPolicy.Private => throw new ValidationException(WhiteboardErrors.CannotJoin(Code)),
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
-}
+}  

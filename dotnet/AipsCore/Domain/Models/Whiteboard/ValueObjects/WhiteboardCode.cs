@@ -36,7 +36,7 @@ public record WhiteboardCode : AbstractValueObject
         {
             whiteboardCode = Generate();
 
-            codeExists = await whiteboardRepository.WhiteboardCodeExists(whiteboardCode);
+            codeExists = await whiteboardRepository.WhiteboardCodeExistsAsync(whiteboardCode);
         } while (codeExists);
 
         return whiteboardCode;
