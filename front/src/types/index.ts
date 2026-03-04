@@ -1,4 +1,4 @@
-import {type WhiteboardJoinPolicy, WhiteboardState} from "@/enums";
+import {MembershipStatus, type WhiteboardJoinPolicy, WhiteboardState} from "@/enums";
 
 export interface User {
   userId: string
@@ -20,6 +20,11 @@ export interface SignupCredentials {
 export interface AuthResponse {
   accessToken: string
   refreshToken: string
+}
+
+export interface JoinResult {
+  whiteboardId: string
+  status: MembershipStatus
 }
 
 export interface Whiteboard {

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { Whiteboard } from '@/types'
+import type {JoinResult, Whiteboard} from '@/types'
 import { whiteboardService } from '@/services/whiteboardService'
 
 export const useWhiteboardsStore = defineStore('whiteboards', () => {
@@ -8,6 +8,7 @@ export const useWhiteboardsStore = defineStore('whiteboards', () => {
   const recentWhiteboards = ref<Whiteboard[]>([])
   const currentWhiteboard = ref<Whiteboard | null>(null)
   const isLoading = ref(false)
+  const isWaitingToJoin = ref(false)
   const error = ref<string | null>(null)
 
   async function getWhiteboardHistory() {
@@ -53,6 +54,27 @@ export const useWhiteboardsStore = defineStore('whiteboards', () => {
     return newWhiteboard.id;
   }
 
+  async function joinWhiteboardWithCode(code: string): Promise<JoinResult> {
+    isLoading.value = true;
+
+    try {
+      return await whiteboardService.joinWhiteboard(code);
+    } catch (err: any) {
+      error.value = err.message ?? 'Failed to join whiteboard';
+      throw err;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  function startWaitingToJoin() {
+    isWaitingToJoin.value = true;
+  }
+
+  function stopWaitingToJoin() {
+    isWaitingToJoin.value = false;
+  }
+
   async function deleteWhiteboard(id: string): Promise<void> {
     isLoading.value = true
     error.value = null
@@ -92,10 +114,14 @@ export const useWhiteboardsStore = defineStore('whiteboards', () => {
     ownedWhiteboards: ownedWhiteboards,
     recentWhiteboards: recentWhiteboards,
     isLoading,
+    isWaitingToJoin,
     error,
     getWhiteboardHistory: getWhiteboardHistory,
     getRecentWhiteboards: getRecentWhiteboards,
     createNewWhiteboard: createNewWhiteboard,
+    joinWhiteboardWithCode: joinWhiteboardWithCode,
+    startWaitingToJoin: startWaitingToJoin,
+    stopWaitingToJoin: stopWaitingToJoin,
     deleteWhiteboard: deleteWhiteboard,
     getCurrentWhiteboard: getCurrentWhiteboard,
     selectWhiteboard: selectWhiteboard,
