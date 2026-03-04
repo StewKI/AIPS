@@ -1,14 +1,18 @@
 using AipsCore.Application.Abstract.MessageBroking;
+using AipsCore.Application.Common.Message.AcceptUserRequestToJoin;
 using AipsCore.Application.Common.Message.AddArrow;
 using AipsCore.Application.Common.Message.AddLine;
 using AipsCore.Application.Common.Message.AddRectangle;
 using AipsCore.Application.Common.Message.AddTextShape;
 using AipsCore.Application.Common.Message.MoveShape;
+using AipsCore.Application.Common.Message.RejectUserRequestToJoin;
 using AipsCore.Application.Models.Shape.Command.CreateArrow;
 using AipsCore.Application.Models.Shape.Command.CreateLine;
 using AipsCore.Application.Models.Shape.Command.CreateRectangle;
 using AipsCore.Application.Models.Shape.Command.CreateTextShape;
 using AipsCore.Application.Models.Shape.Command.MoveShape;
+using AipsCore.Application.Models.Whiteboard.Command.AcceptUserRequestToJoin;
+using AipsCore.Application.Models.Whiteboard.Command.RejectUserRequestToJoin;
 using AipsRT.Model.Whiteboard.Shapes;
 using AipsRT.Services.Interfaces;
 
@@ -99,5 +103,17 @@ public class MessagingService : IMessagingService
     {
         var message = new MoveShapeMessage(moveShape);
         await _messagePublisher.PublishAsync(message);
+    }
+
+    public async Task AcceptedUser(AcceptUserRequestToJoinCommand command)
+    {
+        var message = new AcceptUserRequestToJoinMessage(command);
+        await _messagePublisher.PublishAsync(message);
+    }
+
+    public async Task RejectedUser(RejectUserRequestToJoinCommand command)
+    {
+        var message = new RejectUserRequestToJoinMessage(command);
+        await _messagePublisher.PublishAsync(message);   
     }
 }

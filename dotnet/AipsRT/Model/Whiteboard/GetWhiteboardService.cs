@@ -1,6 +1,8 @@
 using AipsCore.Application.Abstract;
+using AipsCore.Application.Models.Whiteboard.Query.GetMembershipStatus;
 using AipsCore.Application.Models.Whiteboard.Query.GetWhiteboardInfoRT;
 using AipsCore.Domain.Models.Shape.Enums;
+using AipsCore.Domain.Models.WhiteboardMembership.Enums;
 using AipsRT.Model.Whiteboard.Shapes.Map;
 
 namespace AipsRT.Model.Whiteboard;

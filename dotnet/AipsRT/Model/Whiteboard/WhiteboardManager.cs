@@ -47,13 +47,42 @@ public class WhiteboardManager
         return _userInWhiteboards[userId];
     }
 
-    public void RemoveUserFromWhiteboard(Guid userId, Guid whiteboardId)
+    public void RemoveUserFromWhiteboard(Guid userId)
     {
-        _userInWhiteboards.TryRemove(whiteboardId, out _);
+        _userInWhiteboards.TryRemove(userId, out _);
     }
 
     public Whiteboard? GetWhiteboardForUser(Guid userId)
     {
         return GetWhiteboard(GetUserWhiteboard(userId));
+    }
+    
+    public void AddPendingUser(Guid userId, Guid whiteboardId)
+    {
+        var wb = GetWhiteboard(whiteboardId)!;
+        wb.AddPendingUser(userId);
+        _userInWhiteboards[userId] = whiteboardId;
+    }
+
+    public void MovePendingToAccepted(Guid userId, Guid whiteboardId)
+    {
+        var wb = GetWhiteboard(whiteboardId)!;
+        wb.AcceptUser(userId);
+    }
+
+    public void RemovePendingUser(Guid userId, Guid whiteboardId)
+    {
+        var whiteboard = GetWhiteboard(whiteboardId)!;
+        whiteboard.RejectUser(userId);
+        _userInWhiteboards.TryRemove(userId, out _);
+    }
+
+    public bool IsAccepted(Guid userId)
+    {
+        if (!_userInWhiteboards.TryGetValue(userId, out var wbId))
+            return false;
+
+        var whiteboard = GetWhiteboard(wbId);
+        return whiteboard?.IsAccepted(userId) ?? false;
     }
 }
