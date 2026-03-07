@@ -25,7 +25,7 @@ public class WhiteboardHub : Hub
     public async Task JoinWhiteboard(Guid whiteboardId)
     {
         if (!_whiteboardManager.WhiteboardExists(whiteboardId))
-            await _whiteboardManager.AddWhiteboard(whiteboardId);
+            await _whiteboardManager.LoadWhiteboard(whiteboardId);
         
         await Groups.AddToGroupAsync(Context.ConnectionId, whiteboardId.ToString());
         
@@ -127,6 +127,6 @@ public class WhiteboardHub : Hub
     {
         await MoveShape(moveShape);
         
-        await _messagingService.MoveShape(moveShape);
+        await _messagingService.MoveShape(CurrentWhiteboard.WhiteboardId, moveShape);
     }
 }

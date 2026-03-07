@@ -14,7 +14,7 @@ public class WhiteboardManager
         _scopeFactory = scopeFactory;
     }
 
-    public async Task AddWhiteboard(Guid whiteboardId)
+    public async Task LoadWhiteboard(Guid whiteboardId)
     {
         var getWhiteboardService = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<GetWhiteboardService>();
         var whiteboard = await getWhiteboardService.GetWhiteboard(whiteboardId);
