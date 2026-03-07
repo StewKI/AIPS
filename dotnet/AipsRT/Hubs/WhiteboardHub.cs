@@ -1,6 +1,10 @@
-using AipsCore.Application.Abstract.MessageBroking;
-using AipsCore.Application.Common.Message.MoveShape;
+using AipsCore.Application.Abstract;
 using AipsCore.Application.Models.Shape.Command.MoveShape;
+using AipsCore.Application.Models.Whiteboard.Command.AcceptUserRequestToJoin;
+using AipsCore.Application.Models.Whiteboard.Command.RejectUserRequestToJoin;
+using AipsCore.Application.Models.Whiteboard.Query.GetMembershipStatus;
+using AipsCore.Domain.Models.WhiteboardMembership.Enums;
+using AipsRT.Model.Memberships;
 using AipsRT.Model.Whiteboard;
 using AipsRT.Model.Whiteboard.Shapes;
 using AipsRT.Model.Whiteboard.Structs;
@@ -15,27 +19,87 @@ public class WhiteboardHub : Hub
 {
     private readonly WhiteboardManager _whiteboardManager;
     private readonly IMessagingService _messagingService;
+    private readonly MembershipService _membershipService;
 
-    public WhiteboardHub(WhiteboardManager whiteboardManager, IMessagingService messagingService)
+    public WhiteboardHub(WhiteboardManager whiteboardManager, IMessagingService messagingService, MembershipService membershipService)
     {
         _whiteboardManager = whiteboardManager;
         _messagingService = messagingService;
+        _membershipService = membershipService;
     }
 
     public async Task JoinWhiteboard(Guid whiteboardId)
     {
         if (!_whiteboardManager.WhiteboardExists(whiteboardId))
+        {
             await _whiteboardManager.LoadWhiteboard(whiteboardId);
+        }
         
         await Groups.AddToGroupAsync(Context.ConnectionId, whiteboardId.ToString());
+
+        var whiteboard = _whiteboardManager.GetWhiteboard(whiteboardId)!;
         
-        var state = _whiteboardManager.GetWhiteboard(whiteboardId)!;
+        var userId = CurrentUserId;
+        var ownerId = whiteboard.OwnerId;
         
-        _whiteboardManager.AddUserToWhiteboard(Guid.Parse(Context.UserIdentifier!), whiteboardId);
+        WhiteboardMembershipStatus status;
+
+        if (userId == ownerId)
+        {
+            status = WhiteboardMembershipStatus.Accepted;
+        }
+        else
+        {
+            status = await _membershipService.GetMembershipStatus(whiteboardId, userId);
+        }
         
-        await Clients.Caller.SendAsync("InitWhiteboard", state);
-        await Clients.GroupExcept(whiteboardId.ToString(), Context.ConnectionId)
-            .SendAsync("Joined", Context.UserIdentifier!);
+        if (status == WhiteboardMembershipStatus.Accepted)
+        {
+            _whiteboardManager.AddUserToWhiteboard(userId, whiteboardId);
+            
+            var state = _whiteboardManager.GetWhiteboard(whiteboardId)!;
+            await Clients.Caller.SendAsync("InitWhiteboard", state);
+            
+            await Clients.GroupExcept(whiteboardId.ToString(), Context.ConnectionId).SendAsync("Joined", Context.UserIdentifier!);
+        }
+        else
+        {
+            await Clients.Caller.SendAsync("WaitingForApproval", userId.ToString());
+            
+            var user = whiteboard.Users.First(u => u.UserId == userId);
+
+            await Clients.User(ownerId.ToString()).SendAsync("UserWaitingForApproval", user);
+        }
+    }
+
+    public async Task AcceptUser(Guid targetUserId)
+    {
+        var whiteboard = CurrentWhiteboard;
+
+        await _messagingService.AcceptedUser(new AcceptUserRequestToJoinCommand(whiteboard.WhiteboardId.ToString(), targetUserId.ToString()));
+        
+        await Clients.User(targetUserId.ToString()).SendAsync("Accepted");
+        await Clients.User(targetUserId.ToString()).SendAsync("InitWhiteboard", whiteboard);
+    }
+    
+    public async Task RejectUser(Guid targetUserId)
+    {
+        var whiteboard = CurrentWhiteboard;
+
+        await _messagingService.RejectedUser(new RejectUserRequestToJoinCommand(whiteboard.WhiteboardId.ToString(), targetUserId.ToString()));
+        
+        await Clients.User(targetUserId.ToString()).SendAsync("Rejected");
+    }
+    
+    public async Task CancelJoinRequest()
+    {
+        var userId = CurrentUserId;
+        var whiteboard = _whiteboardManager.GetWhiteboardForUser(userId);
+
+        if (whiteboard != null)
+        {
+            await Clients.User(whiteboard.OwnerId.ToString()).SendAsync("UserCanceledJoinRequest", userId.ToString());
+        }
     }
 
     public async Task LeaveWhiteboard(Guid whiteboardId)

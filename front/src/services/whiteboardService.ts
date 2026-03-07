@@ -1,4 +1,4 @@
-import type {Whiteboard} from "@/types";
+import type {JoinResult, Whiteboard} from "@/types";
 import {api} from './api'
 
 export const whiteboardService = {
@@ -22,6 +22,14 @@ export const whiteboardService = {
 
   async deleteWhiteboard(id: string): Promise<void> {
     await api.delete(`/api/Whiteboard/${id}`)
+  },
+
+  async joinWhiteboard(code: string): Promise<JoinResult> {
+    const raw = await api.post<any>(`/api/Whiteboard/join`, {code: code})
+    return {
+      whiteboardId: raw.whiteboardId,
+      status: raw.status
+    }
   }
 }
 

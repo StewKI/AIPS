@@ -1,10 +1,10 @@
 using AipsCore.Application.Abstract;
 using AipsCore.Application.Models.Whiteboard.Command.CreateWhiteboard;
 using AipsCore.Application.Models.Whiteboard.Command.DeleteWhiteboard;
+using AipsCore.Application.Models.Whiteboard.Command.JoinWithCode;
 using AipsCore.Application.Models.Whiteboard.Query.GetRecentWhiteboards;
 using AipsCore.Application.Models.Whiteboard.Query.GetWhiteboard;
 using AipsCore.Application.Models.Whiteboard.Query.GetWhiteboardHistory;
-using AipsCore.Application.Models.WhiteboardMembership.Command.CreateWhiteboardMembership;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Whiteboard = AipsCore.Infrastructure.Persistence.Whiteboard.Whiteboard;
@@ -69,7 +69,7 @@ public class WhiteboardController : ControllerBase
 
     [Authorize]
     [HttpPost("join")]
-    public async Task<ActionResult> JoinWhiteboard(CreateWhiteboardMembershipCommand command, CancellationToken cancellationToken)
+    public async Task<ActionResult<JoinWithCodeDto>> JoinWhiteboardWithCode(JoinWithCodeCommand command, CancellationToken cancellationToken)
     {
         var result = await _dispatcher.Execute(command, cancellationToken);
         return Ok(result);

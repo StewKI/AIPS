@@ -9,3 +9,14 @@ export enum WhiteboardState {
   Inactive,
   Deleted
 }
+
+export enum MembershipStatus {
+  Pending,
+  Accepted,
+  Rejected,
+  Active,
+  Inactive,
+  Cancelled,
+  Kicked,
+  Banned
+}

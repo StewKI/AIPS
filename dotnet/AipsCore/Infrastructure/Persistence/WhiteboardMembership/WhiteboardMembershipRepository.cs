@@ -24,9 +24,8 @@ public class WhiteboardMembershipRepository
             entity.Id.ToString(),
             entity.WhiteboardId.ToString(),
             entity.UserId.ToString(),
-            entity.IsBanned,
             entity.EditingEnabled,
-            entity.CanJoin,
+            entity.Status,
             entity.LastInteractedAt
         );
     }
@@ -38,18 +37,16 @@ public class WhiteboardMembershipRepository
             Id = new Guid(model.Id.IdValue),
             WhiteboardId = new Guid(model.WhiteboardId.IdValue),
             UserId = new Guid(model.UserId.IdValue),
-            IsBanned = model.IsBanned.IsBannedValue,
             EditingEnabled = model.EditingEnabled.EditingEnabledValue,
-            CanJoin = model.CanJoin.CanJoinValue,
+            Status = model.Status,
             LastInteractedAt = model.LastInteractedAt.LastInteractedAtValue
         };
     }
 
     protected override void UpdateEntity(WhiteboardMembership entity, Domain.Models.WhiteboardMembership.WhiteboardMembership model)
     {
-        entity.IsBanned = model.IsBanned.IsBannedValue;
         entity.EditingEnabled = model.EditingEnabled.EditingEnabledValue;
-        entity.CanJoin = model.CanJoin.CanJoinValue;
+        entity.Status = model.Status;
         entity.LastInteractedAt = model.LastInteractedAt.LastInteractedAtValue;
     }
 

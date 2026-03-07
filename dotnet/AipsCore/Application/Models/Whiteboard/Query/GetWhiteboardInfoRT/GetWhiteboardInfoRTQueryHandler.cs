@@ -34,6 +34,7 @@ public class GetWhiteboardInfoRTQueryHandler
         return _context.Whiteboards
             .Where(w => w.Id == whiteboardId)
             .Include(w => w.Memberships)
+            .ThenInclude(m => m.User)
             .Include(w => w.Owner)
             .Include(w => w.Shapes);
     }

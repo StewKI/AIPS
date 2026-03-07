@@ -1,5 +1,6 @@
 import { SignalRService } from '@/services/signalr.ts'
 import type { Arrow, Line, MoveShapeCommand, Rectangle, TextShape, Whiteboard } from '@/types/whiteboard.ts'
+import type {User} from "@/types";
 
 const client = new SignalRService(`/hubs/whiteboard`)
 
@@ -76,6 +77,38 @@ export const whiteboardHubService = {
     client.on<string>('Leaved', callback)
   },
 
+  onWaitingForApproval(callback: (userId: string) => void) {
+    client.on<string>('WaitingForApproval', callback)
+  },
+
+  onUserWaitingForApproval(callback: (user: User) => void) {
+    client.on<User>('UserWaitingForApproval', callback)
+  },
+
+  onAccepted(callback: () => void) {
+    client.on('Accepted', callback)
+  },
+
+  onRejected(callback: () => void) {
+    client.on('Rejected', callback)
+  },
+
+  onUserCanceledJoinRequest(callback: (userId: string) => void) {
+    client.on<string>('UserCanceledJoinRequest', callback)
+  },
+
+  async acceptUser(userId: string) {
+    await client.invoke('AcceptUser', userId)
+  },
+
+  async rejectUser(userId: string) {
+    await client.invoke('RejectUser', userId)
+  },
+
+  async cancelJoinRequest() {
+    await client.invoke('CancelJoinRequest')
+  },
+
   offAll() {
     client.off('InitWhiteboard')
     client.off('AddedRectangle')
@@ -85,5 +118,10 @@ export const whiteboardHubService = {
     client.off('MovedShape')
     client.off('Joined')
     client.off('Leaved')
+    client.off('WaitingForApproval')
+    client.off('UserWaitingForApproval')
+    client.off('Accepted')
+    client.off('Rejected')
+    client.off('UserCanceledJoinRequest')
   },
 }

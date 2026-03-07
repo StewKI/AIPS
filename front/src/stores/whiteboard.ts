@@ -2,9 +2,14 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { Arrow, Line, Rectangle, Shape, ShapeTool, ShapeType, TextShape, Whiteboard } from '@/types/whiteboard.ts'
 import { whiteboardHubService } from '@/services/whiteboardHubService.ts'
+import {useWhiteboardsStore} from "@/stores/whiteboards.ts";
+import router from "@/router";
+import type {User} from "@/types";
 
 export const useWhiteboardStore = defineStore('whiteboard', () => {
   const whiteboard = ref<Whiteboard | null>(null)
+  const pendingUsers = ref<User[]>([])
+
   const selectedTool = ref<ShapeTool>('hand')
   const isConnected = ref(false)
   const isLoading = ref(false)
@@ -27,6 +32,99 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
     }
   })
 
+  async function initializeSession(id: string) {
+    isLoading.value = true;
+    error.value = null;
+
+    try{
+      await whiteboardHubService.connect()
+      isConnected.value = true;
+
+      registerHubEvents()
+
+      await whiteboardHubService.joinWhiteboard(id)
+    } catch (e: any) {
+      error.value = e?.message ?? 'Failed to join whiteboard'
+      isLoading.value = false
+    }
+  }
+
+  function registerHubEvents() {
+    whiteboardHubService.onInitWhiteboard((wb) => {
+      deselectShape()
+      whiteboard.value = wb
+      isLoading.value = false
+    })
+
+    whiteboardHubService.onAddedRectangle((rectangle) => {
+      whiteboard.value?.rectangles.push(rectangle)
+    })
+
+    whiteboardHubService.onAddedArrow((arrow) => {
+      whiteboard.value?.arrows.push(arrow)
+    })
+
+    whiteboardHubService.onAddedLine((line) => {
+      whiteboard.value?.lines.push(line)
+    })
+
+    whiteboardHubService.onAddedTextShape((textShape) => {
+      whiteboard.value?.textShapes.push(textShape)
+    })
+
+    whiteboardHubService.onMovedShape((command) => {
+      applyMoveShape(command.shapeId, command.newPositionX, command.newPositionY)
+    })
+
+    whiteboardHubService.onJoined((userId) => {
+      console.log('User joined:', userId)
+    })
+
+    whiteboardHubService.onLeaved((userId) => {
+      console.log('User left:', userId)
+    })
+
+    whiteboardHubService.onWaitingForApproval(() => {
+      const infoStore = useWhiteboardsStore()
+      infoStore.startWaitingToJoin()
+    })
+
+    whiteboardHubService.onUserWaitingForApproval((user) => {
+      if (!pendingUsers.value.includes(user)) {
+        pendingUsers.value.push(user)
+      }
+    })
+
+    whiteboardHubService.onAccepted(() => {
+      const infoStore = useWhiteboardsStore()
+      infoStore.stopWaitingToJoin()
+    })
+
+    whiteboardHubService.onRejected(() => {
+      router.push('/')
+      alert('Your request to join was rejected.')
+    })
+
+    whiteboardHubService.onUserCanceledJoinRequest((userId) => {
+      pendingUsers.value = pendingUsers.value.filter(user => user.userId !== userId)
+    })
+  }
+
+  async function approveUser(userId: string) {
+    await whiteboardHubService.acceptUser(userId)
+    pendingUsers.value = pendingUsers.value.filter(user => user.userId !== userId)
+  }
+
+  async function rejectUser(userId: string) {
+    await whiteboardHubService.rejectUser(userId)
+    pendingUsers.value = pendingUsers.value.filter(user => user.userId !== userId)
+  }
+
+  async function cancelJoinRequest() {
+    await whiteboardHubService.cancelJoinRequest()
+    whiteboard.value = null
+  }
+
   async function joinWhiteboard(id: string) {
     isLoading.value = true
     error.value = null
@@ -35,39 +133,7 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
       await whiteboardHubService.connect()
       isConnected.value = true
 
-      whiteboardHubService.onInitWhiteboard((wb) => {
-        deselectShape()
-        whiteboard.value = wb
-        isLoading.value = false
-      })
-
-      whiteboardHubService.onAddedRectangle((rectangle) => {
-        whiteboard.value?.rectangles.push(rectangle)
-      })
-
-      whiteboardHubService.onAddedArrow((arrow) => {
-        whiteboard.value?.arrows.push(arrow)
-      })
-
-      whiteboardHubService.onAddedLine((line) => {
-        whiteboard.value?.lines.push(line)
-      })
-
-      whiteboardHubService.onAddedTextShape((textShape) => {
-        whiteboard.value?.textShapes.push(textShape)
-      })
-
-      whiteboardHubService.onMovedShape((command) => {
-        applyMoveShape(command.shapeId, command.newPositionX, command.newPositionY)
-      })
-
-      whiteboardHubService.onJoined((userId) => {
-        console.log('User joined:', userId)
-      })
-
-      whiteboardHubService.onLeaved((userId) => {
-        console.log('User left:', userId)
-      })
+      registerHubEvents()
 
       await whiteboardHubService.joinWhiteboard(id)
     } catch (e: any) {
@@ -184,6 +250,10 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
     toolColor,
     toolThickness,
     toolTextSize,
+    pendingUsers,
+    approveUser,
+    rejectUser,
+    cancelJoinRequest,
     joinWhiteboard,
     leaveWhiteboard,
     addRectangle,

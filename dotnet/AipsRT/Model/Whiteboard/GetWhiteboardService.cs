@@ -1,7 +1,9 @@
 using AipsCore.Application.Abstract;
 using AipsCore.Application.Models.Whiteboard.Query.GetWhiteboardInfoRT;
 using AipsCore.Domain.Models.Shape.Enums;
+using AipsCore.Domain.Models.WhiteboardMembership.Enums;
 using AipsRT.Model.Whiteboard.Shapes.Map;
+using AipsRT.Model.Users;
 
 namespace AipsRT.Model.Whiteboard;
 
@@ -27,6 +29,11 @@ public class GetWhiteboardService
             WhiteboardId = entity.Id,
             OwnerId = entity.OwnerId,
         };
+
+        foreach (var membership in entity.Memberships)
+        {
+            whiteboard.AddUser(new User(membership.UserId, membership.User!.UserName!, membership.User.Email!));
+        }
 
         foreach (var shape in entity.Shapes)
         {

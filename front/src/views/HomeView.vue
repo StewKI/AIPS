@@ -1,11 +1,12 @@
 <script setup lang="ts">
 
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import {ref} from 'vue'
+import {useRouter} from 'vue-router'
 import WhiteboardHistorySidebar from '@/components/WhiteboardHistorySidebar.vue'
 import RecentWhiteboardsPanel from '@/components/RecentWhiteboardsPanel.vue'
-import { useAuthStore } from '@/stores/auth'
-import { useWhiteboardsStore } from "@/stores/whiteboards.ts";
+import {useAuthStore} from '@/stores/auth'
+import {useWhiteboardsStore} from "@/stores/whiteboards.ts";
+import {MembershipStatus} from "@/enums";
 
 const auth = useAuthStore()
 const whiteboards = useWhiteboardsStore()
@@ -30,6 +31,27 @@ async function handleCreateNewWhiteboard() {
     await router.push({ name: 'whiteboard', params: { id: newWhiteboardId } })
   } catch (e) {
     console.error('Failed to create new whiteboard', e)
+  }
+}
+
+async function joinWithCode() {
+  if (joinCode.value.length !== 8) {
+    alert('Please enter a valid 8-digit code.')
+    return
+  }
+
+  try {
+    const joinResult = await whiteboards.joinWhiteboardWithCode(joinCode.value)
+
+    if (joinResult.status === MembershipStatus.Pending) {
+      whiteboards.startWaitingToJoin()
+    } else {
+      whiteboards.stopWaitingToJoin()
+    }
+
+    await router.push({ name: 'whiteboard', params: { id: joinResult.whiteboardId } })
+  } catch (err: any) {
+    console.error(err)
   }
 }
 
@@ -80,7 +102,7 @@ async function handleCreateNewWhiteboard() {
         pattern="[0-9]*"
         @input="joinCode = joinCode.replace(/\D/g, '')"
       />
-      <button class="btn btn-primary w-75 mt-2 d-block mx-auto">Join with code</button>
+      <button class="btn btn-primary w-75 mt-2 d-block mx-auto" @click="joinWithCode">Join with code</button>
       <div class="text-center">
         <small class="text-muted my-4 d-inline-block">or</small>
       </div>

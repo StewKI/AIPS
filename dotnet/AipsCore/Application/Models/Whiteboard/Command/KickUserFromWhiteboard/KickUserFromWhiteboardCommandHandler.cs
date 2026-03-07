@@ -4,8 +4,10 @@ using AipsCore.Domain.Abstract;
 using AipsCore.Domain.Common.Validation;
 using AipsCore.Domain.Models.User.ValueObjects;
 using AipsCore.Domain.Models.Whiteboard.External;
+using AipsCore.Domain.Models.Whiteboard.Validation;
 using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 using AipsCore.Domain.Models.WhiteboardMembership.External;
+using AipsCore.Domain.Models.WhiteboardMembership.Validation;
 
 namespace AipsCore.Application.Models.Whiteboard.Command.KickUserFromWhiteboard;
 
@@ -37,14 +39,14 @@ public class KickUserFromWhiteboardCommandHandler : ICommandHandler<KickUserFrom
 
         if (whiteboard is null)
         {
-            throw new ValidationException(KickUserFromWhiteboardCommandErrors.WhiteboardNotFound(whiteboardId));
+            throw new ValidationException(WhiteboardErrors.NotFound(whiteboardId));
         }
         
         var membership = await _whiteboardMembershipRepository.GetByWhiteboardAndUserAsync(whiteboardId, userId, cancellationToken);
 
         if (membership is null)
         {
-            throw new ValidationException(KickUserFromWhiteboardCommandErrors.WhiteboardMembershipNotFound(whiteboardId, userId));
+            throw new ValidationException(WhiteboardMembershipErrors.NotFound(whiteboardId, userId));
         }
         
         whiteboard.KickUser(_userContext.GetCurrentUserId(), membership);

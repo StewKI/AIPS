@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using AipsCore.Domain.Models.WhiteboardMembership.Enums;
 
 namespace AipsCore.Infrastructure.Persistence.WhiteboardMembership;
 
@@ -15,11 +16,9 @@ public class WhiteboardMembership
 
     public User.User? User { get; set; } = null!;
     
-    public bool IsBanned { get; set; }
-    
     public bool EditingEnabled { get; set; }
     
-    public bool CanJoin { get; set; }
+    public WhiteboardMembershipStatus Status { get; set; }
     
     public DateTime LastInteractedAt { get; set; }
 }

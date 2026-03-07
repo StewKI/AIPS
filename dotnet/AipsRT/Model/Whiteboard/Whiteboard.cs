@@ -1,12 +1,15 @@
 using AipsRT.Model.Whiteboard.Shapes;
+using AipsRT.Model.Users;
 
 namespace AipsRT.Model.Whiteboard;
 
 public class Whiteboard
 {
     public Guid WhiteboardId { get; set; }
-    
+
     public Guid OwnerId { get; set; }
+
+    public List<User> Users { get; } = [];
 
     public List<Shape> Shapes { get; } = [];
 
@@ -20,22 +23,24 @@ public class Whiteboard
         Shapes.Add(shape);
         Rectangles.Add(shape);
     }
-    
+
     public void AddArrow(Arrow shape)
     {
         Shapes.Add(shape);
         Arrows.Add(shape);
     }
-    
+
     public void AddLine(Line shape)
     {
         Shapes.Add(shape);
         Lines.Add(shape);
     }
-    
+
     public void AddTextShape(TextShape shape)
     {
         Shapes.Add(shape);
         TextShapes.Add(shape);
     }
+
+    public void AddUser(User user) => Users.Add(user);
 }

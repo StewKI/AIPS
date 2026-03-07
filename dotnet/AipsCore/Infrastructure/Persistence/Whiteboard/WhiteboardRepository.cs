@@ -58,9 +58,16 @@ public class WhiteboardRepository
         entity.State = model.State;
     }
     
-    public async Task<bool> WhiteboardCodeExists(WhiteboardCode whiteboardCode)
+    public async Task<bool> WhiteboardCodeExistsAsync(WhiteboardCode whiteboardCode)
     {
         return await Context.Whiteboards.AnyAsync(w => w.Code == whiteboardCode.CodeValue);
+    }
+
+    public async Task<Domain.Models.Whiteboard.Whiteboard?> GetByCodeAsync(WhiteboardCode whiteboardCode, CancellationToken cancellationToken = default)
+    {
+        var entity = await Context.Whiteboards.FirstOrDefaultAsync(w => w.Code == whiteboardCode.CodeValue, cancellationToken);
+
+        return entity != null ? MapToModel(entity) : null;
     }
 
     public async Task SoftDeleteAsync(WhiteboardId id, CancellationToken cancellationToken = default)

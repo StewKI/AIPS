@@ -1,6 +1,7 @@
 using AipsCore.Application.Common.Message.ErrorMessage;
 using AipsCore.Infrastructure.DI;
 using AipsRT.Hubs;
+using AipsRT.Model.Memberships;
 using AipsRT.Model.Whiteboard;
 using AipsRT.Services;
 using AipsRT.Services.Interfaces;
@@ -20,6 +21,8 @@ builder.Services.AddAipsMessageHandlers();
 
 builder.Services.AddSingleton<IErrorMessageHandleStrategy, RtErrorHandleStrategy>();
 builder.Services.AddHostedService<ErrorSubscriberBackgroundService>();
+
+builder.Services.AddTransient<MembershipService>();
 
 builder.Services.AddScoped<GetWhiteboardService>();
 builder.Services.AddSingleton<WhiteboardManager>();

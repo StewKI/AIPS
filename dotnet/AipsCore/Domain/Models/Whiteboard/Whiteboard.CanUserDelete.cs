@@ -6,6 +6,11 @@ public partial class Whiteboard
 {
     public bool CanUserDelete(UserId userId)
     {
-        return WhiteboardOwnerId.IdValue == userId.IdValue;
+        return IsOwner(userId);
+    }
+
+    public bool ShouldRequestToJoin(UserId userId)
+    {
+        return !IsOwner(userId);
     }
 }

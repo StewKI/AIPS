@@ -1,9 +1,11 @@
 using AipsCore.Application.Abstract.MessageBroking;
+using AipsCore.Application.Common.Message.AcceptUserRequestToJoin;
 using AipsCore.Application.Common.Message.AddArrow;
 using AipsCore.Application.Common.Message.AddLine;
 using AipsCore.Application.Common.Message.AddRectangle;
 using AipsCore.Application.Common.Message.AddTextShape;
 using AipsCore.Application.Common.Message.MoveShape;
+using AipsCore.Application.Common.Message.RejectUserRequestToJoin;
 
 namespace AipsWorker.Messages;
 
@@ -17,7 +19,9 @@ public class MessageTypesProvider : IMessageTypesProvider
             typeof(AddLineMessage),
             typeof(AddRectangleMessage),
             typeof(AddTextShapeMessage),
-            typeof(MoveShapeMessage)
+            typeof(MoveShapeMessage),
+            typeof(AcceptUserRequestToJoinMessage),
+            typeof(RejectUserRequestToJoinMessage)
         ];
     }
 }

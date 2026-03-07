@@ -47,9 +47,9 @@ public class WhiteboardManager
         return _userInWhiteboards[userId];
     }
 
-    public void RemoveUserFromWhiteboard(Guid userId, Guid whiteboardId)
+    public void RemoveUserFromWhiteboard(Guid userId)
     {
-        _userInWhiteboards.TryRemove(whiteboardId, out _);
+        _userInWhiteboards.TryRemove(userId, out _);
     }
 
     public Whiteboard? GetWhiteboardForUser(Guid userId)

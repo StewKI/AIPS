@@ -22,7 +22,7 @@ namespace AipsCore.Infrastructure.Persistence.Db.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("AipsCore.Infrastructure.Persistence.Authentication.RefreshToken.RefreshToken", b =>
+            modelBuilder.Entity("AipsCore.Infrastructure.Persistence.RefreshToken.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -214,17 +214,14 @@ namespace AipsCore.Infrastructure.Persistence.Db.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("CanJoin")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("EditingEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsBanned")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime>("LastInteractedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -371,7 +368,7 @@ namespace AipsCore.Infrastructure.Persistence.Db.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AipsCore.Infrastructure.Persistence.Authentication.RefreshToken.RefreshToken", b =>
+            modelBuilder.Entity("AipsCore.Infrastructure.Persistence.RefreshToken.RefreshToken", b =>
                 {
                     b.HasOne("AipsCore.Infrastructure.Persistence.User.User", "User")
                         .WithMany()

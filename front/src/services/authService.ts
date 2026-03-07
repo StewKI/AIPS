@@ -37,6 +37,6 @@ export const authService = {
     const userId = raw?.userId ?? ''
     const username = raw?.userName ?? raw?.UserName ?? raw?.username ?? raw?.name ?? ''
     const email = raw?.email ?? raw?.Email ?? ''
-    return { userId, username, email }
+    return { userId: userId, username, email }
   },
 }
