@@ -99,9 +99,9 @@ public class MessagingService : IMessagingService
         await _messagePublisher.PublishAsync(message);
     }
 
-    public async Task MoveShape(MoveShapeCommand moveShape)
+    public async Task MoveShape(Guid whiteboardId, MoveShapeCommand moveShape)
     {
-        var message = new MoveShapeMessage(moveShape);
+        var message = new MoveShapeMessage(whiteboardId, moveShape);
         await _messagePublisher.PublishAsync(message);
     }
 

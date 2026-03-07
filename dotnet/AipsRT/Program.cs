@@ -1,3 +1,4 @@
+using AipsCore.Application.Common.Message.ErrorMessage;
 using AipsCore.Infrastructure.DI;
 using AipsRT.Hubs;
 using AipsRT.Model.Whiteboard;
@@ -15,6 +16,10 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddSignalR();
 
 builder.Services.AddAips(builder.Configuration);
+builder.Services.AddAipsMessageHandlers();
+
+builder.Services.AddSingleton<IErrorMessageHandleStrategy, RtErrorHandleStrategy>();
+builder.Services.AddHostedService<ErrorSubscriberBackgroundService>();
 
 builder.Services.AddScoped<GetWhiteboardService>();
 builder.Services.AddSingleton<WhiteboardManager>();

@@ -50,6 +50,7 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
 
   function registerHubEvents() {
     whiteboardHubService.onInitWhiteboard((wb) => {
+      deselectShape()
       whiteboard.value = wb
       isLoading.value = false
     })
