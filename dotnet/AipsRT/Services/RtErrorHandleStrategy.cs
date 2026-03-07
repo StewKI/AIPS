@@ -18,7 +18,7 @@ public class RtErrorHandleStrategy : IErrorMessageHandleStrategy
     
     public async Task Handle(ErrorMessage message, CancellationToken cancellationToken)
     {
-        await _whiteboardManager.RefreshWhiteboard(message.WhiteboardId);
+        await _whiteboardManager.LoadWhiteboard(message.WhiteboardId);
         
         var whiteboard = _whiteboardManager.GetWhiteboard(message.WhiteboardId)!;
         

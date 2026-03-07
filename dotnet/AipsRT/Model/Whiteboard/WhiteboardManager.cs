@@ -32,18 +32,6 @@ public class WhiteboardManager
         _whiteboards.TryRemove(whiteboardId, out _);
     }
 
-    public async Task RefreshWhiteboard(Guid whiteboardId)
-    {
-        var whiteboard = GetWhiteboard(whiteboardId);
-
-        if (whiteboard is not null)
-        {
-            RemoveWhiteboard(whiteboardId);
-        }
-        
-        await LoadWhiteboard(whiteboardId);
-    }
-
     public Whiteboard? GetWhiteboard(Guid whiteboardId)
     {
         return _whiteboards.GetValueOrDefault(whiteboardId);
