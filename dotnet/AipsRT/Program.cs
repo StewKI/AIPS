@@ -24,7 +24,6 @@ builder.Services.AddHostedService<ErrorSubscriberBackgroundService>();
 
 builder.Services.AddTransient<MembershipService>();
 
-
 builder.Services.AddScoped<GetWhiteboardService>();
 builder.Services.AddSingleton<WhiteboardManager>();
 builder.Services.AddSingleton<IMessagingService, MessagingService>();
