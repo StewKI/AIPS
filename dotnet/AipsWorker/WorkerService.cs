@@ -1,6 +1,7 @@
 using System.Reflection;
 using AipsCore.Application.Abstract;
 using AipsCore.Application.Abstract.MessageBroking;
+using AipsCore.Application.Common.Message.ErrorMessage;
 using AipsCore.Application.Common.Message.TestMessage;
 using AipsCore.Domain.Common.Validation;
 using AipsWorker.Utilities;
@@ -12,12 +13,14 @@ public class WorkerService : BackgroundService
 {
     private readonly IDispatcher _dispatcher;
     private readonly IMessageTypesProvider _messageTypesProvider;
+    private readonly IMessagePublisher _publisher;
     private readonly SubscribeMethodUtility _subscribeMethodUtility;
 
-    public WorkerService(IMessageSubscriber subscriber, IDispatcher dispatcher, IMessageTypesProvider messageTypesProvider)
+    public WorkerService(IMessageSubscriber subscriber, IDispatcher dispatcher, IMessageTypesProvider messageTypesProvider, IMessagePublisher publisher)
     {
         _dispatcher = dispatcher;
         _messageTypesProvider = messageTypesProvider;
+        _publisher = publisher;
         _subscribeMethodUtility = new SubscribeMethodUtility(subscriber);
     }
 
@@ -45,6 +48,15 @@ public class WorkerService : BackgroundService
         }
         catch (ValidationException validationException)
         {
+            var whiteboardId = message.GetWhiteboardId();
+
+            if (whiteboardId is not null)
+            {
+                var errorMessage = new ErrorMessage(whiteboardId.Value, validationException.ValidationErrors);
+
+                await _publisher.PublishAsync(errorMessage, ct);
+            }
+            
             Console.WriteLine("===Validation Exception: ");
             foreach (var error in validationException.ValidationErrors)
             {

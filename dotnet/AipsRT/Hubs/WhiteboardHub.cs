@@ -127,6 +127,6 @@ public class WhiteboardHub : Hub
     {
         await MoveShape(moveShape);
         
-        await _messagingService.MoveShape(moveShape);
+        await _messagingService.MoveShape(CurrentWhiteboard.WhiteboardId, moveShape);
     }
 }

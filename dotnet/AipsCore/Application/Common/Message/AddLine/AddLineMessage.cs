@@ -3,4 +3,10 @@ using AipsCore.Application.Models.Shape.Command.CreateLine;
 
 namespace AipsCore.Application.Common.Message.AddLine;
 
-public record AddLineMessage(CreateLineCommand Command) : IMessage;
+public record AddLineMessage(CreateLineCommand Command) : IMessage
+{
+    public Guid? GetWhiteboardId()
+    {
+        return Guid.Parse(Command.WhiteboardId);
+    }
+}

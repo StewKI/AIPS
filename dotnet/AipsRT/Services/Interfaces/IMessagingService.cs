@@ -11,5 +11,5 @@ public interface IMessagingService
     Task CreateLine(Guid whiteboardId, Line line);
     Task CreateTextShape(Guid whiteboardId, TextShape textShape);
 
-    Task MoveShape(MoveShapeCommand moveShape);
+    Task MoveShape(Guid whiteboardId, MoveShapeCommand moveShape);
 }

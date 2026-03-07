@@ -3,4 +3,10 @@ using AipsCore.Application.Models.Shape.Command.CreateTextShape;
 
 namespace AipsCore.Application.Common.Message.AddTextShape;
 
-public record AddTextShapeMessage(CreateTextShapeCommand Command) : IMessage;
+public record AddTextShapeMessage(CreateTextShapeCommand Command) : IMessage
+{
+    public Guid? GetWhiteboardId()
+    {
+        return Guid.Parse(Command.WhiteboardId);
+    }
+}
