@@ -40,24 +40,26 @@ public class WorkerService : BackgroundService
 
     private async Task HandleMessage<T>(T message, CancellationToken ct) where T : IMessage
     {
+        Console.WriteLine($"*--------{message.GetType().Name}--------*");
+        
         try
         {
             await _dispatcher.Execute(message, ct);
 
-            Console.WriteLine($"OK: {message.GetType().Name}");
+            Console.WriteLine("OK!");
         }
         catch (ValidationException validationException)
         {
-            var whiteboardId = message.GetWhiteboardId();
-
-            if (whiteboardId is not null)
+            if (message is IWhiteboardAwareContext)
             {
-                var errorMessage = new ErrorMessage(whiteboardId.Value, validationException.ValidationErrors);
+                var whiteboardId = ((IWhiteboardAwareContext)message).GetWhiteboardId();
+                
+                var errorMessage = new ErrorMessage(whiteboardId, validationException.ValidationErrors);
 
                 await _publisher.PublishAsync(errorMessage, ct);
             }
             
-            Console.WriteLine("===Validation Exception: ");
+            Console.WriteLine("Validation Exception: ");
             foreach (var error in validationException.ValidationErrors)
             {
                 Console.WriteLine(" * Code: " + error.Code);

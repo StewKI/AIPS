@@ -25,7 +25,7 @@ public class WhiteboardHub : Hub
     public async Task JoinWhiteboard(Guid whiteboardId)
     {
         if (!_whiteboardManager.WhiteboardExists(whiteboardId))
-            await _whiteboardManager.AddWhiteboard(whiteboardId);
+            await _whiteboardManager.LoadWhiteboard(whiteboardId);
         
         await Groups.AddToGroupAsync(Context.ConnectionId, whiteboardId.ToString());
         

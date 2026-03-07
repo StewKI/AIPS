@@ -36,6 +36,7 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
       isConnected.value = true
 
       whiteboardHubService.onInitWhiteboard((wb) => {
+        deselectShape()
         whiteboard.value = wb
         isLoading.value = false
       })

@@ -14,7 +14,7 @@ public class WhiteboardManager
         _scopeFactory = scopeFactory;
     }
 
-    public async Task AddWhiteboard(Guid whiteboardId)
+    public async Task LoadWhiteboard(Guid whiteboardId)
     {
         var getWhiteboardService = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<GetWhiteboardService>();
         var whiteboard = await getWhiteboardService.GetWhiteboard(whiteboardId);
@@ -36,12 +36,12 @@ public class WhiteboardManager
     {
         var whiteboard = GetWhiteboard(whiteboardId);
 
-        if (whiteboard == null)
+        if (whiteboard is not null)
         {
             RemoveWhiteboard(whiteboardId);
         }
         
-        await AddWhiteboard(whiteboardId);
+        await LoadWhiteboard(whiteboardId);
     }
 
     public Whiteboard? GetWhiteboard(Guid whiteboardId)

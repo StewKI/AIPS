@@ -2,10 +2,4 @@ using AipsCore.Application.Abstract.MessageBroking;
 
 namespace AipsCore.Application.Common.Message.TestMessage;
 
-public record TestMessage(string Text) : IMessage
-{
-    public Guid? GetWhiteboardId()
-    {
-        return null;
-    }
-}
+public record TestMessage(string Text) : IMessage;
