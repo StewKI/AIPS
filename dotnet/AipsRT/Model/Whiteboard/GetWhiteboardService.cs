@@ -1,6 +1,7 @@
 using AipsCore.Application.Abstract;
 using AipsCore.Application.Models.Whiteboard.Query.GetWhiteboardInfoRT;
 using AipsCore.Domain.Models.Shape.Enums;
+using AipsCore.Domain.Models.WhiteboardMembership.Enums;
 using AipsRT.Model.Whiteboard.Shapes.Map;
 using AipsRT.Model.Users;
 

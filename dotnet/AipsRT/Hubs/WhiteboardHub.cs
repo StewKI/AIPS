@@ -56,7 +56,6 @@ public class WhiteboardHub : Hub
         if (status == WhiteboardMembershipStatus.Accepted)
         {
             _whiteboardManager.AddUserToWhiteboard(userId, whiteboardId);
-            whiteboard.AcceptUser(userId);
             
             var state = _whiteboardManager.GetWhiteboard(whiteboardId)!;
             await Clients.Caller.SendAsync("InitWhiteboard", state);
@@ -65,8 +64,6 @@ public class WhiteboardHub : Hub
         }
         else
         {
-            _whiteboardManager.AddPendingUser(userId, whiteboardId);
-            
             await Clients.Caller.SendAsync("WaitingForApproval", userId.ToString());
             
             var user = whiteboard.Users.First(u => u.UserId == userId);
@@ -81,8 +78,6 @@ public class WhiteboardHub : Hub
 
         await _messagingService.AcceptedUser(new AcceptUserRequestToJoinCommand(whiteboard.WhiteboardId.ToString(), targetUserId.ToString()));
         
-        _whiteboardManager.MovePendingToAccepted(targetUserId, whiteboard.WhiteboardId);
-        
         await Clients.User(targetUserId.ToString()).SendAsync("Accepted");
         await Clients.User(targetUserId.ToString()).SendAsync("InitWhiteboard", whiteboard);
     }
@@ -92,8 +87,6 @@ public class WhiteboardHub : Hub
         var whiteboard = CurrentWhiteboard;
 
         await _messagingService.RejectedUser(new RejectUserRequestToJoinCommand(whiteboard.WhiteboardId.ToString(), targetUserId.ToString()));
-        
-        _whiteboardManager.RemovePendingUser(targetUserId, whiteboard.WhiteboardId);
         
         await Clients.User(targetUserId.ToString()).SendAsync("Rejected");
     }
@@ -105,10 +98,7 @@ public class WhiteboardHub : Hub
 
         if (whiteboard != null)
         {
-            _whiteboardManager.RemovePendingUser(userId, whiteboard.WhiteboardId);
-
-            await Clients.User(whiteboard.OwnerId.ToString())
-                .SendAsync("UserCanceledJoinRequest", userId.ToString());
+            await Clients.User(whiteboard.OwnerId.ToString()).SendAsync("UserCanceledJoinRequest", userId.ToString());
         }
     }
 
@@ -134,8 +124,6 @@ public class WhiteboardHub : Hub
     
     public async Task AddRectangle(Rectangle rectangle)
     {
-        if (!_whiteboardManager.IsAccepted(CurrentUserId)) return;
-        
         rectangle.OwnerId = CurrentUserId;
         var whiteboard = CurrentWhiteboard;
         
@@ -148,8 +136,6 @@ public class WhiteboardHub : Hub
 
     public async Task AddArrow(Arrow arrow)
     {
-        if (!_whiteboardManager.IsAccepted(CurrentUserId)) return;
-        
         arrow.OwnerId = CurrentUserId;
         var whiteboard = CurrentWhiteboard;
         
@@ -162,8 +148,6 @@ public class WhiteboardHub : Hub
 
     public async Task AddLine(Line line)
     {
-        if (!_whiteboardManager.IsAccepted(CurrentUserId)) return;
-        
         line.OwnerId = CurrentUserId;
         var whiteboard = CurrentWhiteboard;
 
@@ -176,8 +160,6 @@ public class WhiteboardHub : Hub
 
     public async Task AddTextShape(TextShape textShape)
     {
-        if (!_whiteboardManager.IsAccepted(CurrentUserId)) return;
-        
         textShape.OwnerId = CurrentUserId;
         var whiteboard = CurrentWhiteboard;
         
@@ -190,8 +172,6 @@ public class WhiteboardHub : Hub
 
     public async Task MoveShape(MoveShapeCommand moveShape)
     {
-        if (!_whiteboardManager.IsAccepted(CurrentUserId)) return;
-        
         var whiteboard = CurrentWhiteboard;
         
         var shape = whiteboard.Shapes.Find(s => s.Id.ToString() == moveShape.ShapeId);
@@ -209,8 +189,6 @@ public class WhiteboardHub : Hub
     
     public async Task PlaceShape(MoveShapeCommand moveShape)
     {
-        if (!_whiteboardManager.IsAccepted(CurrentUserId)) return;
-        
         await MoveShape(moveShape);
         
         await _messagingService.MoveShape(CurrentWhiteboard.WhiteboardId, moveShape);
