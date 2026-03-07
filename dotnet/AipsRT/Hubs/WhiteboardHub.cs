@@ -4,6 +4,7 @@ using AipsCore.Application.Models.Whiteboard.Command.AcceptUserRequestToJoin;
 using AipsCore.Application.Models.Whiteboard.Command.RejectUserRequestToJoin;
 using AipsCore.Application.Models.Whiteboard.Query.GetMembershipStatus;
 using AipsCore.Domain.Models.WhiteboardMembership.Enums;
+using AipsRT.Model.Memberships;
 using AipsRT.Model.Whiteboard;
 using AipsRT.Model.Whiteboard.Shapes;
 using AipsRT.Model.Whiteboard.Structs;
@@ -18,13 +19,13 @@ public class WhiteboardHub : Hub
 {
     private readonly WhiteboardManager _whiteboardManager;
     private readonly IMessagingService _messagingService;
-    private readonly IDispatcher _dispatcher;
+    private readonly MembershipService _membershipService;
 
-    public WhiteboardHub(WhiteboardManager whiteboardManager, IMessagingService messagingService, IDispatcher dispatcher)
+    public WhiteboardHub(WhiteboardManager whiteboardManager, IMessagingService messagingService, MembershipService membershipService)
     {
         _whiteboardManager = whiteboardManager;
         _messagingService = messagingService;
-        _dispatcher = dispatcher;
+        _membershipService = membershipService;
     }
 
     public async Task JoinWhiteboard(Guid whiteboardId)
@@ -49,7 +50,7 @@ public class WhiteboardHub : Hub
         }
         else
         {
-            status = await _dispatcher.Execute(new GetMembershipStatusQuery(whiteboardId.ToString(), userId.ToString()));
+            status = await _membershipService.GetMembershipStatus(whiteboardId, userId);
         }
         
         if (status == WhiteboardMembershipStatus.Accepted)
@@ -67,8 +68,10 @@ public class WhiteboardHub : Hub
             _whiteboardManager.AddPendingUser(userId, whiteboardId);
             
             await Clients.Caller.SendAsync("WaitingForApproval", userId.ToString());
+            
+            var user = whiteboard.Users.First(u => u.UserId == userId);
 
-            await Clients.User(ownerId.ToString()).SendAsync("UserWaitingForApproval", userId.ToString());
+            await Clients.User(ownerId.ToString()).SendAsync("UserWaitingForApproval", user);
         }
     }
 

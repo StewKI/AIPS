@@ -1,5 +1,6 @@
 import { SignalRService } from '@/services/signalr.ts'
 import type { Arrow, Line, MoveShapeCommand, Rectangle, TextShape, Whiteboard } from '@/types/whiteboard.ts'
+import type {User} from "@/types";
 
 const client = new SignalRService(`/hubs/whiteboard`)
 
@@ -80,8 +81,8 @@ export const whiteboardHubService = {
     client.on<string>('WaitingForApproval', callback)
   },
 
-  onUserWaitingForApproval(callback: (userId: string) => void) {
-    client.on<string>('UserWaitingForApproval', callback)
+  onUserWaitingForApproval(callback: (user: User) => void) {
+    client.on<User>('UserWaitingForApproval', callback)
   },
 
   onAccepted(callback: () => void) {

@@ -4,10 +4,11 @@ import type { Arrow, Line, Rectangle, Shape, ShapeTool, ShapeType, TextShape, Wh
 import { whiteboardHubService } from '@/services/whiteboardHubService.ts'
 import {useWhiteboardsStore} from "@/stores/whiteboards.ts";
 import router from "@/router";
+import type {User} from "@/types";
 
 export const useWhiteboardStore = defineStore('whiteboard', () => {
   const whiteboard = ref<Whiteboard | null>(null)
-  const pendingUsers = ref<string[]>([])
+  const pendingUsers = ref<User[]>([])
 
   const selectedTool = ref<ShapeTool>('hand')
   const isConnected = ref(false)
@@ -88,9 +89,9 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
       infoStore.startWaitingToJoin()
     })
 
-    whiteboardHubService.onUserWaitingForApproval((userId) => {
-      if (!pendingUsers.value.includes(userId)) {
-        pendingUsers.value.push(userId)
+    whiteboardHubService.onUserWaitingForApproval((user) => {
+      if (!pendingUsers.value.includes(user)) {
+        pendingUsers.value.push(user)
       }
     })
 
@@ -105,18 +106,18 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
     })
 
     whiteboardHubService.onUserCanceledJoinRequest((userId) => {
-      pendingUsers.value = pendingUsers.value.filter(id => id !== userId)
+      pendingUsers.value = pendingUsers.value.filter(user => user.userId !== userId)
     })
   }
 
   async function approveUser(userId: string) {
     await whiteboardHubService.acceptUser(userId)
-    pendingUsers.value = pendingUsers.value.filter(id => id !== userId)
+    pendingUsers.value = pendingUsers.value.filter(user => user.userId !== userId)
   }
 
   async function rejectUser(userId: string) {
     await whiteboardHubService.rejectUser(userId)
-    pendingUsers.value = pendingUsers.value.filter(id => id !== userId)
+    pendingUsers.value = pendingUsers.value.filter(user => user.userId !== userId)
   }
 
   async function cancelJoinRequest() {

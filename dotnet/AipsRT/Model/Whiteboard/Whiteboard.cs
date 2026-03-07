@@ -1,4 +1,5 @@
 using AipsRT.Model.Whiteboard.Shapes;
+using AipsRT.Model.Users;
 
 namespace AipsRT.Model.Whiteboard;
 
@@ -10,6 +11,8 @@ public class Whiteboard
     
     public HashSet<Guid> AcceptedUsers { get; } = new();
     public HashSet<Guid> PendingUsers { get; } = new();
+    
+    public List<User> Users { get; } = [];
 
     public List<Shape> Shapes { get; } = [];
 
@@ -41,6 +44,8 @@ public class Whiteboard
         Shapes.Add(shape);
         TextShapes.Add(shape);
     }
+    
+    public void AddUser(User user) => Users.Add(user);
     
     public void AddPendingUser(Guid userId) => PendingUsers.Add(userId);
 

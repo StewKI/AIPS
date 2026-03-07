@@ -80,12 +80,12 @@ async function handleLeave() {
          style="z-index: 1050; width: 300px;">
       <h6 class="text-primary mb-3">Pending Join Requests ({{ sessionStore.pendingUsers.length }})</h6>
       <div class="list-group list-group-flush bg-transparent">
-        <div v-for="userId in sessionStore.pendingUsers" :key="userId"
+        <div v-for="user in sessionStore.pendingUsers" :key="user.userId"
              class="list-group-item bg-transparent text-light border-secondary d-flex justify-content-between align-items-center px-0">
-          <small class="text-truncate" :title="userId">{{ userId }}</small>
+          <small class="text-truncate" :title="user.username">{{ user.username }}</small>
           <div class="btn-group btn-group-sm">
-            <button class="btn btn-success" @click="sessionStore.approveUser(userId)">✓</button>
-            <button class="btn btn-danger" @click="sessionStore.rejectUser(userId)">✕</button>
+            <button class="btn btn-success" @click="sessionStore.approveUser(user.userId)">✓</button>
+            <button class="btn btn-danger" @click="sessionStore.rejectUser(user.userId)">✕</button>
           </div>
         </div>
       </div>

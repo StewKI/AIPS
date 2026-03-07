@@ -79,10 +79,10 @@ public class WhiteboardManager
 
     public bool IsAccepted(Guid userId)
     {
-        if (!_userInWhiteboards.TryGetValue(userId, out var wbId))
+        if (!_userInWhiteboards.TryGetValue(userId, out var whiteboardId))
             return false;
 
-        var whiteboard = GetWhiteboard(wbId);
+        var whiteboard = GetWhiteboard(whiteboardId);
         return whiteboard?.IsAccepted(userId) ?? false;
     }
 }
