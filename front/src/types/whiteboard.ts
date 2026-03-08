@@ -37,6 +37,8 @@ export interface Whiteboard {
   arrows: Arrow[]
   lines: Line[]
   textShapes: TextShape[]
+  users: import('@/types').User[]
+  activeUsers: import('@/types').User[]
 }
 
 export interface MoveShapeCommand {

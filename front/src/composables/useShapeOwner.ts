@@ -2,7 +2,7 @@ import { ref, watch, type Ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { fetchUser } from '@/services/userService'
 
-function avatarColorFromString(str: string): string {
+export function avatarColorFromString(str: string): string {
   let hash = 5381
   for (let i = 0; i < str.length; i++) {
     hash = ((hash << 5) + hash + str.charCodeAt(i)) & 0xffffffff

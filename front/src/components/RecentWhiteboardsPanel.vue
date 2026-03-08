@@ -18,7 +18,7 @@ import RecentWhiteboardsList from './RecentWhiteboardsList.vue'
       </h5>
       <button
         type="button"
-        class="btn-close btn-close-white"
+        class="btn-close"
         data-bs-dismiss="offcanvas"
         aria-label="Close"
       />

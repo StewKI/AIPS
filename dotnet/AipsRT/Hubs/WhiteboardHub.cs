@@ -5,6 +5,7 @@ using AipsCore.Application.Models.Whiteboard.Command.RejectUserRequestToJoin;
 using AipsCore.Application.Models.Whiteboard.Query.GetMembershipStatus;
 using AipsCore.Domain.Models.WhiteboardMembership.Enums;
 using AipsRT.Model.Memberships;
+using AipsRT.Model.Users;
 using AipsRT.Model.Whiteboard;
 using AipsRT.Model.Whiteboard.Shapes;
 using AipsRT.Model.Whiteboard.Structs;
@@ -28,6 +29,23 @@ public class WhiteboardHub : Hub
         _membershipService = membershipService;
     }
 
+    public override async Task OnDisconnectedAsync(Exception? exception)
+    {
+        var userId = CurrentUserId;
+        var whiteboard = _whiteboardManager.GetWhiteboardForUser(userId);
+
+        if (whiteboard != null)
+        {
+            whiteboard.RemoveActiveUser(userId);
+            _whiteboardManager.RemoveUserFromWhiteboard(userId);
+
+            await Clients.Group(whiteboard.WhiteboardId.ToString())
+                .SendAsync("Leaved", userId.ToString());
+        }
+
+        await base.OnDisconnectedAsync(exception);
+    }
+    
     public async Task JoinWhiteboard(Guid whiteboardId)
     {
         if (!_whiteboardManager.WhiteboardExists(whiteboardId))
@@ -56,11 +74,28 @@ public class WhiteboardHub : Hub
         if (status == WhiteboardMembershipStatus.Accepted)
         {
             _whiteboardManager.AddUserToWhiteboard(userId, whiteboardId);
-            
+
+            var joiningUser = whiteboard.Users.FirstOrDefault(u => u.UserId == userId);
+            if (joiningUser == null)
+            {
+                if (ownerId == userId)
+                {
+                    joiningUser = whiteboard.Owner;
+                }
+                else
+                {
+                    joiningUser = new User(userId, Context.User?.Identity?.Name ?? "Unknown",
+                        "");
+                    whiteboard.AddUser(joiningUser);
+                }
+            }
+            whiteboard.AddActiveUser(joiningUser);
+
             var state = _whiteboardManager.GetWhiteboard(whiteboardId)!;
             await Clients.Caller.SendAsync("InitWhiteboard", state);
-            
-            await Clients.GroupExcept(whiteboardId.ToString(), Context.ConnectionId).SendAsync("Joined", Context.UserIdentifier!);
+
+            await Clients.GroupExcept(whiteboardId.ToString(),
+                Context.ConnectionId).SendAsync("Joined", joiningUser);
         }
         else
         {
@@ -104,8 +139,13 @@ public class WhiteboardHub : Hub
 
     public async Task LeaveWhiteboard(Guid whiteboardId)
     {
+        var userId = CurrentUserId;
+        _whiteboardManager.RemoveUserFromWhiteboard(userId);
+        _whiteboardManager.GetWhiteboard(whiteboardId)?.RemoveActiveUser(userId);
+
         await Clients.GroupExcept(whiteboardId.ToString(), Context.ConnectionId)
             .SendAsync("Leaved", Context.UserIdentifier!);
+
     }
 
     private Guid CurrentUserId => Guid.Parse(Context.UserIdentifier!);

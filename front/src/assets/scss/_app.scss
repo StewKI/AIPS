@@ -4,3 +4,7 @@
   max-width: 420px;
   margin: 4rem auto;
 }
+
+.btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
