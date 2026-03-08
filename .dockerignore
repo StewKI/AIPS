@@ -1,0 +1,29 @@
+.git
+.gitignore
+
+# IDE
+.idea
+.vs
+.vscode
+**/.idea
+
+# Build artifacts
+**/bin
+**/obj
+front/node_modules
+front/dist
+
+# Documentation
+Docs/
+
+# Dev files
+docker/
+*.sh
+
+# Env files (secrets must not be in the image)
+.env
+deploy/.env
+
+# Misc
+**/*.user
+**/*.DotSettings.user
