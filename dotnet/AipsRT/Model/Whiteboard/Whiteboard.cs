@@ -8,9 +8,15 @@ public class Whiteboard
     public Guid WhiteboardId { get; set; }
 
     public Guid OwnerId { get; set; }
+    public User Owner { get; set; } = null!;
 
     public List<User> Users { get; } = [];
 
+    public List<User> ActiveUsers { get; } = [];
+    public void AddActiveUser(User user) => ActiveUsers.Add(user);
+    public void RemoveActiveUser(Guid userId) 
+        => ActiveUsers.RemoveAll(u => u.UserId == userId);
+    
     public List<Shape> Shapes { get; } = [];
 
     public List<Rectangle> Rectangles { get; } = [];

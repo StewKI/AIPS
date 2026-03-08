@@ -44,7 +44,7 @@ const handleConfirmDelete = (e: MouseEvent) => {
     @click="handleClick"
   >
     <div class="d-flex justify-content-between align-items-start mb-2">
-      <h5 class="mb-0 text-dark">{{ whiteboard.title }}</h5>
+      <h5 class="mb-0">{{ whiteboard.title }}</h5>
       <div class="d-flex align-items-center gap-2">
         <small class="text-muted">{{ formatDate(whiteboard.createdAt) }}</small>
         <button

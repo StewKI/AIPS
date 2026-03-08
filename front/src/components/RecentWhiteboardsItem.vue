@@ -19,7 +19,7 @@ const handleClick = () => emit('click', props.whiteboard)
     @click="handleClick"
   >
     <div class="d-flex justify-content-between align-items-start mb-2">
-      <h5 class="mb-0 text-dark">{{ whiteboard.title }}</h5>
+      <h5 class="mb-0">{{ whiteboard.title }}</h5>
       <small class="text-muted">{{ formatDate(whiteboard.createdAt) }}</small>
     </div>
   </div>

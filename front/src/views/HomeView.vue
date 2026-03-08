@@ -6,7 +6,7 @@ import WhiteboardHistorySidebar from '@/components/WhiteboardHistorySidebar.vue'
 import RecentWhiteboardsPanel from '@/components/RecentWhiteboardsPanel.vue'
 import {useAuthStore} from '@/stores/auth'
 import {useWhiteboardsStore} from "@/stores/whiteboards.ts";
-import {MembershipStatus} from "@/enums";
+import {MembershipStatus, WhiteboardJoinPolicy} from "@/enums";
 
 const auth = useAuthStore()
 const whiteboards = useWhiteboardsStore()
@@ -14,6 +14,8 @@ const router = useRouter()
 
 const joinCode = ref('')
 const whiteboardTitle = ref('')
+const selectedJoinPolicy = ref(WhiteboardJoinPolicy.FreeToJoin)
+const maxParticipants = ref(10)
 const showCreateModal = ref(false)
 
 async function handleCreateNewWhiteboard() {
@@ -27,6 +29,8 @@ async function handleCreateNewWhiteboard() {
 
     showCreateModal.value = false
     whiteboardTitle.value = ''
+    selectedJoinPolicy.value = WhiteboardJoinPolicy.FreeToJoin
+    maxParticipants.value = 10
 
     await router.push({ name: 'whiteboard', params: { id: newWhiteboardId } })
   } catch (e) {
@@ -123,6 +127,23 @@ async function joinWithCode() {
             type="text"
             class="form-control bg-dark text-light border-secondary"
             placeholder="Whiteboard title"
+          />
+          <label class="form-label mt-3 mb-1">Join Policy</label>
+          <select
+            v-model="selectedJoinPolicy"
+            class="form-select bg-dark text-light border-secondary"
+          >
+            <option :value="WhiteboardJoinPolicy.FreeToJoin">Free to Join</option>
+            <option :value="WhiteboardJoinPolicy.RequestToJoin">Request to Join</option>
+            <option :value="WhiteboardJoinPolicy.Private">Private</option>
+          </select>
+          <label class="form-label mt-3 mb-1">Max Participants</label>
+          <input
+            v-model.number="maxParticipants"
+            type="number"
+            min="2"
+            max="50"
+            class="form-control bg-dark text-light border-secondary"
           />
         </div>
         <div class="modal-footer border-secondary">

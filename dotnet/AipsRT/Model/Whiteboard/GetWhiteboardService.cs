@@ -28,6 +28,7 @@ public class GetWhiteboardService
         {
             WhiteboardId = entity.Id,
             OwnerId = entity.OwnerId,
+            Owner = new User(entity.Owner.Id, entity.Owner.UserName!, entity.Owner.Email!)
         };
 
         foreach (var membership in entity.Memberships)

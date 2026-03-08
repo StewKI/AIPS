@@ -9,6 +9,7 @@ import type {User} from "@/types";
 export const useWhiteboardStore = defineStore('whiteboard', () => {
   const whiteboard = ref<Whiteboard | null>(null)
   const pendingUsers = ref<User[]>([])
+  const connectedUsers = ref<User[]>([])
 
   const selectedTool = ref<ShapeTool>('hand')
   const isConnected = ref(false)
@@ -51,8 +52,10 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
 
   function registerHubEvents() {
     whiteboardHubService.onInitWhiteboard((wb) => {
+      console.log('InitWhiteboard payload:', JSON.stringify(wb, null, 2))
       deselectShape()
       whiteboard.value = wb
+      connectedUsers.value = wb.activeUsers ?? []
       isLoading.value = false
     })
 
@@ -76,12 +79,14 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
       applyMoveShape(command.shapeId, command.newPositionX, command.newPositionY)
     })
 
-    whiteboardHubService.onJoined((userId) => {
-      console.log('User joined:', userId)
+    whiteboardHubService.onJoined((user) => {
+      if (!connectedUsers.value.some(u => u.userId === user.userId)) {
+        connectedUsers.value.push(user)
+      }
     })
 
     whiteboardHubService.onLeaved((userId) => {
-      console.log('User left:', userId)
+      connectedUsers.value = connectedUsers.value.filter(u => u.userId !== userId)
     })
 
     whiteboardHubService.onWaitingForApproval(() => {
@@ -155,6 +160,7 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
     await whiteboardHubService.disconnect()
 
     whiteboard.value = null
+    connectedUsers.value = []
     isConnected.value = false
     selectedTool.value = 'hand'
     deselectShape()
@@ -251,6 +257,7 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
     toolThickness,
     toolTextSize,
     pendingUsers,
+    connectedUsers,
     approveUser,
     rejectUser,
     cancelJoinRequest,

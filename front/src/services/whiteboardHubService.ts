@@ -69,8 +69,8 @@ export const whiteboardHubService = {
     client.on<MoveShapeCommand>('MovedShape', callback)
   },
 
-  onJoined(callback: (userId: string) => void) {
-    client.on<string>('Joined', callback)
+  onJoined(callback: (user: User) => void) {
+    client.on<User>('Joined', callback)
   },
 
   onLeaved(callback: (userId: string) => void) {

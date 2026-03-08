@@ -2,18 +2,21 @@
 import {computed, ref} from 'vue'
 import { useWhiteboardStore } from '@/stores/whiteboard.ts'
 import { useWhiteboardsStore } from "@/stores/whiteboards.ts";
+import { useAuthStore } from '@/stores/auth'
+import { avatarColorFromString } from '@/composables/useShapeOwner'
 import type { ShapeTool, Arrow, Line, Rectangle, TextShape } from '@/types/whiteboard.ts'
 
 const sessionStore = useWhiteboardStore()
 const infoStore = useWhiteboardsStore()
+const auth = useAuthStore()
 const emit = defineEmits<{ leave: [] }>()
 
 const tools: { name: ShapeTool; label: string; icon: string; enabled: boolean }[] = [
-  { name: 'hand', label: 'Select', icon: '\u270B', enabled: true },
-  { name: 'rectangle', label: 'Rectangle', icon: '\u25AD', enabled: true },
-  { name: 'arrow', label: 'Arrow', icon: '\u2192', enabled: true },
-  { name: 'line', label: 'Line', icon: '\u2571', enabled: true },
-  { name: 'text', label: 'Text', icon: 'T', enabled: true },
+  { name: 'hand', label: 'Select', icon: 'bi-cursor', enabled: true },
+  { name: 'rectangle', label: 'Rectangle', icon: 'bi-square', enabled: true },
+  { name: 'arrow', label: 'Arrow', icon: 'bi-arrow-up-right', enabled: true },
+  { name: 'line', label: 'Line', icon: 'bi-slash-lg', enabled: true },
+  { name: 'text', label: 'Text', icon: 'bi-fonts', enabled: true },
 ]
 
 const colors = ['#4f9dff', '#ff4f4f', '#4fff4f', '#ffff4f', '#ff4fff', '#ffffff', '#ff9f4f', '#4fffff']
@@ -86,7 +89,7 @@ const copyCodeToClipboard = async () => {
         :title="tool.enabled ? tool.label : `${tool.label} (coming soon)`"
         @click="tool.enabled && sessionStore.selectTool(tool.name)"
       >
-        {{ tool.icon }}
+        <i :class="['bi', tool.icon]"></i>
       </button>
     </div>
 
@@ -141,6 +144,28 @@ const copyCodeToClipboard = async () => {
     </div>
 
     <div class="toolbar-footer">
+      <div v-if="sessionStore.connectedUsers.length" class="participants-panel">
+        <div class="property-label">Present ({{ sessionStore.connectedUsers.length }})</div>
+        <div class="participants-list">
+          <div
+            v-for="user in sessionStore.connectedUsers"
+            :key="user.userId"
+            class="participant"
+          >
+            <span
+              class="participant-avatar"
+              :style="{ backgroundColor: avatarColorFromString(user.username || user.userId) }"
+            >
+              {{ (user.username || '?').charAt(0).toUpperCase() }}
+            </span>
+            <span class="participant-name">
+              {{ user.username || 'Unknown' }}
+              <span v-if="user.userId === auth.user?.userId" class="you-label">(You)</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
       <div class="position-relative mb-2">
         <button
           class="btn btn-sm btn-outline-primary w-100"
@@ -251,6 +276,52 @@ const copyCodeToClipboard = async () => {
 .property-range {
   width: 100%;
   accent-color: #4f9dff;
+}
+
+.participants-panel {
+  margin-bottom: 12px;
+  border-bottom: 1px solid #2a2a3e;
+  padding-bottom: 10px;
+}
+
+.participants-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.participant {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.participant-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.participant-name {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.you-label {
+  color: #8a8a9e;
+  font-size: 11px;
 }
 
 .toolbar-footer {
