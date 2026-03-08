@@ -21,12 +21,14 @@ public class WhiteboardHub : Hub
     private readonly WhiteboardManager _whiteboardManager;
     private readonly IMessagingService _messagingService;
     private readonly MembershipService _membershipService;
+    private readonly GetUserService _getUserService;
 
-    public WhiteboardHub(WhiteboardManager whiteboardManager, IMessagingService messagingService, MembershipService membershipService)
+    public WhiteboardHub(WhiteboardManager whiteboardManager, IMessagingService messagingService, MembershipService membershipService, GetUserService getUserService)
     {
         _whiteboardManager = whiteboardManager;
         _messagingService = messagingService;
         _membershipService = membershipService;
+        _getUserService = getUserService;
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
@@ -71,9 +73,10 @@ public class WhiteboardHub : Hub
             status = await _membershipService.GetMembershipStatus(whiteboardId, userId);
         }
         
+        _whiteboardManager.AddUserToWhiteboard(userId, whiteboardId);
+        
         if (status == WhiteboardMembershipStatus.Accepted)
         {
-            _whiteboardManager.AddUserToWhiteboard(userId, whiteboardId);
 
             var joiningUser = whiteboard.Users.FirstOrDefault(u => u.UserId == userId);
             if (joiningUser == null)
@@ -84,8 +87,7 @@ public class WhiteboardHub : Hub
                 }
                 else
                 {
-                    joiningUser = new User(userId, Context.User?.Identity?.Name ?? "Unknown",
-                        "");
+                    joiningUser = new User(userId, Context.User?.Identity?.Name ?? "Unknown", "");
                     whiteboard.AddUser(joiningUser);
                 }
             }
@@ -101,7 +103,12 @@ public class WhiteboardHub : Hub
         {
             await Clients.Caller.SendAsync("WaitingForApproval", userId.ToString());
             
-            var user = whiteboard.Users.First(u => u.UserId == userId);
+            var user = whiteboard.Users.FirstOrDefault(u => u.UserId == userId);
+            
+            if (user == null)
+            {
+                user = await _getUserService.GetUser(userId);
+            }
 
             await Clients.User(ownerId.ToString()).SendAsync("UserWaitingForApproval", user);
         }
@@ -113,8 +120,15 @@ public class WhiteboardHub : Hub
 
         await _messagingService.AcceptedUser(new AcceptUserRequestToJoinCommand(whiteboard.WhiteboardId.ToString(), targetUserId.ToString()));
         
+        var user = whiteboard.Users.FirstOrDefault(u => u.UserId == targetUserId);
+        
+        whiteboard.AddActiveUser(user!);
+        
         await Clients.User(targetUserId.ToString()).SendAsync("Accepted");
         await Clients.User(targetUserId.ToString()).SendAsync("InitWhiteboard", whiteboard);
+
+        await Clients.GroupExcept(whiteboard.WhiteboardId.ToString(),
+            Context.ConnectionId).SendAsync("Joined", user);
     }
     
     public async Task RejectUser(Guid targetUserId)

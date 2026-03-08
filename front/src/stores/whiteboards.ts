@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type {JoinResult, Whiteboard} from '@/types'
 import { whiteboardService } from '@/services/whiteboardService'
-import type {WhiteboardJoinPolicy} from "@/enums";      
+import type {WhiteboardJoinPolicy} from "@/enums";
 
 export const useWhiteboardsStore = defineStore('whiteboards', () => {
   const ownedWhiteboards = ref<Whiteboard[]>([])
