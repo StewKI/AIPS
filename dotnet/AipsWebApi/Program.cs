@@ -3,7 +3,10 @@ using AipsCore.Infrastructure.Persistence.Db;
 using AipsWebApi.Middleware;
 using DotNetEnv;
 
-Env.Load("../../.env");
+if (File.Exists("../../.env"))
+{
+    Env.Load("../../.env");
+}
 
 var builder = WebApplication.CreateBuilder(args);
 

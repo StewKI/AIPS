@@ -9,7 +9,10 @@ using AipsRT.Services.Interfaces;
 using DotNetEnv;
 using Microsoft.AspNetCore.SignalR;
 
-Env.Load("../../.env");
+if (File.Exists("../../.env"))
+{
+    Env.Load("../../.env");
+}
 
 var builder = WebApplication.CreateBuilder(args);
 
