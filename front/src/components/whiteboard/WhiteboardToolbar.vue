@@ -143,29 +143,29 @@ const copyCodeToClipboard = async () => {
       </div>
     </div>
 
-    <div v-if="sessionStore.connectedUsers.length" class="participants-panel">
-      <div class="property-label">Participants ({{ sessionStore.connectedUsers.length }})</div>
-      <div class="participants-list">
-        <div
-          v-for="user in sessionStore.connectedUsers"
-          :key="user.userId"
-          class="participant"
-        >
-          <span
-            class="participant-avatar"
-            :style="{ backgroundColor: avatarColorFromString(user.username || user.userId) }"
+    <div class="toolbar-footer">
+      <div v-if="sessionStore.connectedUsers.length" class="participants-panel">
+        <div class="property-label">Present ({{ sessionStore.connectedUsers.length }})</div>
+        <div class="participants-list">
+          <div
+            v-for="user in sessionStore.connectedUsers"
+            :key="user.userId"
+            class="participant"
           >
-            {{ (user.username || '?').charAt(0).toUpperCase() }}
-          </span>
-          <span class="participant-name">
-            {{ user.username || 'Unknown' }}
-            <span v-if="user.userId === auth.user?.userId" class="you-label">(You)</span>
-          </span>
+            <span
+              class="participant-avatar"
+              :style="{ backgroundColor: avatarColorFromString(user.username || user.userId) }"
+            >
+              {{ (user.username || '?').charAt(0).toUpperCase() }}
+            </span>
+            <span class="participant-name">
+              {{ user.username || 'Unknown' }}
+              <span v-if="user.userId === auth.user?.userId" class="you-label">(You)</span>
+            </span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="toolbar-footer">
       <div class="position-relative mb-2">
         <button
           class="btn btn-sm btn-outline-primary w-100"
@@ -279,9 +279,9 @@ const copyCodeToClipboard = async () => {
 }
 
 .participants-panel {
-  margin-top: 12px;
-  border-top: 1px solid #2a2a3e;
-  padding-top: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #2a2a3e;
+  padding-bottom: 10px;
 }
 
 .participants-list {
