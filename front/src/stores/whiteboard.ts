@@ -51,11 +51,21 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
   }
 
   function registerHubEvents() {
+    whiteboardHubService.offAll()
+
     whiteboardHubService.onInitWhiteboard((wb) => {
       console.log('InitWhiteboard payload:', JSON.stringify(wb, null, 2))
       deselectShape()
+
       whiteboard.value = wb
-      connectedUsers.value = wb.activeUsers ?? []
+
+      const uniqueUsers = new Map()
+
+      for (const user of wb.activeUsers ?? []) {
+        uniqueUsers.set(user.userId, user)
+      }
+
+      connectedUsers.value = Array.from(uniqueUsers.values())
       isLoading.value = false
     })
 
@@ -95,7 +105,7 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
     })
 
     whiteboardHubService.onUserWaitingForApproval((user) => {
-      if (!pendingUsers.value.includes(user)) {
+      if (!pendingUsers.value.some(u => u.userId === user.userId)) {
         pendingUsers.value.push(user)
       }
     })
