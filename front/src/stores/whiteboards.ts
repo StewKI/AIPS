@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type {JoinResult, Whiteboard} from '@/types'
 import { whiteboardService } from '@/services/whiteboardService'
+import type {WhiteboardJoinPolicy} from "@/enums";      
 
 export const useWhiteboardsStore = defineStore('whiteboards', () => {
   const ownedWhiteboards = ref<Whiteboard[]>([])
@@ -35,13 +36,13 @@ export const useWhiteboardsStore = defineStore('whiteboards', () => {
     }
   }
 
-  async function createNewWhiteboard(title: string): Promise<string> {
+  async function createNewWhiteboard(title: string, joinPolicy: WhiteboardJoinPolicy, maxParticipants: number): Promise<string> {
     let newWhiteboard: Whiteboard;
     isLoading.value = true
     error.value = null
 
     try {
-      const newId = await whiteboardService.createNewWhiteboard(title)
+      const newId = await whiteboardService.createNewWhiteboard(title, joinPolicy, maxParticipants)
       newWhiteboard = await whiteboardService.getWhiteboardById(newId)
     } catch (err: any) {
       error.value = err.message ?? 'Failed to create whiteboard'

@@ -25,7 +25,11 @@ async function handleCreateNewWhiteboard() {
   }
 
   try {
-    const newWhiteboardId = await whiteboards.createNewWhiteboard(whiteboardTitle.value.trim())
+    const newWhiteboardId = await whiteboards.createNewWhiteboard(
+      whiteboardTitle.value.trim(),
+      selectedJoinPolicy.value,
+      maxParticipants.value
+    )
 
     showCreateModal.value = false
     whiteboardTitle.value = ''
