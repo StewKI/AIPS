@@ -9,6 +9,8 @@ public class Whiteboard
 
     public Guid OwnerId { get; set; }
     public User Owner { get; set; } = null!;
+    
+    public string Code {get; set;}
 
     public List<User> Users { get; } = [];
 

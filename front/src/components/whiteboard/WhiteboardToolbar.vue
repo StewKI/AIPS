@@ -23,6 +23,12 @@ const colors = ['#4f9dff', '#ff4f4f', '#4fff4f', '#ffff4f', '#ff4fff', '#ffffff'
 
 const isReadOnly = computed(() => sessionStore.selectedTool === 'hand' && !!sessionStore.selectedShape)
 
+const isOwner = computed(() => {
+  const wb = sessionStore.whiteboard
+  if (!wb || !auth.user) return false
+  return wb.ownerId === auth.user.userId
+})
+
 const showProperties = computed(() => {
   if (['rectangle', 'arrow', 'line', 'text'].includes(sessionStore.selectedTool)) return true
   if (sessionStore.selectedTool === 'hand' && sessionStore.selectedShape) return true
@@ -61,7 +67,7 @@ const displayTextSize = computed(() => {
 
 const showCopiedTooltip = ref(false)
 
-const whiteboardCode = computed(() => infoStore.getCurrentWhiteboard()?.code || '')
+const whiteboardCode = computed(() => sessionStore.whiteboard!.code)
 
 const copyCodeToClipboard = async () => {
   console.info(whiteboardCode.value)
@@ -166,7 +172,7 @@ const copyCodeToClipboard = async () => {
         </div>
       </div>
 
-      <div class="position-relative mb-2">
+      <div v-if="isOwner" class="position-relative mb-2">
         <button
           class="btn btn-sm btn-outline-primary w-100"
           @click="copyCodeToClipboard"
