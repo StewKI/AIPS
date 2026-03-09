@@ -14,8 +14,7 @@ public class Whiteboard
 
     public List<User> ActiveUsers { get; } = [];
     public void AddActiveUser(User user) => ActiveUsers.Add(user);
-    public void RemoveActiveUser(Guid userId) 
-        => ActiveUsers.RemoveAll(u => u.UserId == userId);
+    public void RemoveActiveUser(Guid userId) => ActiveUsers.RemoveAll(u => u.UserId == userId);
     
     public List<Shape> Shapes { get; } = [];
 
@@ -48,5 +47,11 @@ public class Whiteboard
         TextShapes.Add(shape);
     }
 
-    public void AddUser(User user) => Users.Add(user);
+    public void AddUser(User user)
+    {
+        if (!Users.Contains(user))
+        {
+            Users.Add(user);
+        }
+    }
 }
