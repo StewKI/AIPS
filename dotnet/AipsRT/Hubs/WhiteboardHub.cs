@@ -129,8 +129,7 @@ public class WhiteboardHub : Hub
         await Clients.User(targetUserId.ToString()).SendAsync("Accepted");
         await Clients.User(targetUserId.ToString()).SendAsync("InitWhiteboard", whiteboard);
 
-        await Clients.GroupExcept(whiteboard.WhiteboardId.ToString(),
-            Context.ConnectionId).SendAsync("Joined", user);
+        await Clients.Group(whiteboard.WhiteboardId.ToString()).SendAsync("Joined", user);
     }
     
     public async Task RejectUser(Guid targetUserId)
