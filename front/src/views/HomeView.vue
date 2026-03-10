@@ -126,7 +126,10 @@ async function joinWithCode() {
         pattern="[0-9]*"
         @input="joinCode = joinCode.replace(/\D/g, '')"
       />
-      <button class="btn btn-primary w-75 mt-2 d-block mx-auto" @click="joinWithCode">Join with code</button>
+      <button class="btn btn-primary w-75 mt-2 d-block mx-auto" :disabled="whiteboards.isLoading" @click="joinWithCode">
+        <span v-if="whiteboards.isLoading" class="spinner-border spinner-border-sm me-2"></span>
+        Join with code
+      </button>
       <div class="text-center">
         <small class="text-muted my-4 d-inline-block">or</small>
       </div>
