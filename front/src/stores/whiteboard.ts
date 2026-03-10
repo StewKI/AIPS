@@ -33,23 +33,6 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
     }
   })
 
-  async function initializeSession(id: string) {
-    isLoading.value = true;
-    error.value = null;
-
-    try{
-      await whiteboardHubService.connect()
-      isConnected.value = true;
-
-      registerHubEvents()
-
-      await whiteboardHubService.joinWhiteboard(id)
-    } catch (e: any) {
-      error.value = e?.message ?? 'Failed to join whiteboard'
-      isLoading.value = false
-    }
-  }
-
   function registerHubEvents() {
     whiteboardHubService.offAll()
 
@@ -153,7 +136,7 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
 
       await whiteboardHubService.joinWhiteboard(id)
     } catch (e: any) {
-      error.value = e?.message ?? 'Failed to join whiteboard'
+      error.value = 'Failed to join whiteboard, please try again'
       isLoading.value = false
     }
   }

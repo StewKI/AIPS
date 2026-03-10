@@ -18,7 +18,12 @@ const selectedJoinPolicy = ref(WhiteboardJoinPolicy.FreeToJoin)
 const maxParticipants = ref(10)
 const showCreateModal = ref(false)
 
+const newWhiteboardError = ref<string[]>([])
+const joinWithCodeError = ref<string[]>([])
+
 async function handleCreateNewWhiteboard() {
+  newWhiteboardError.value = []
+
   if (!whiteboardTitle.value.trim()) {
     alert('Please enter a title for the whiteboard.')
     return
@@ -37,12 +42,16 @@ async function handleCreateNewWhiteboard() {
     maxParticipants.value = 10
 
     await router.push({ name: 'whiteboard', params: { id: newWhiteboardId } })
-  } catch (e) {
-    console.error('Failed to create new whiteboard', e)
+  } catch (e: any) {
+    newWhiteboardError.value = e.messages || ['Failed to create whiteboard']
+  } finally {
+    whiteboards.isLoading = false
   }
 }
 
 async function joinWithCode() {
+  joinWithCodeError.value = []
+
   if (joinCode.value.length !== 8) {
     alert('Please enter a valid 8-digit code.')
     return
@@ -59,7 +68,7 @@ async function joinWithCode() {
 
     await router.push({ name: 'whiteboard', params: { id: joinResult.whiteboardId } })
   } catch (err: any) {
-    console.error(err)
+    joinWithCodeError.value = err.messages || ['Failed to join whiteboard with code']
   }
 }
 
@@ -99,6 +108,13 @@ async function joinWithCode() {
     style="min-height: calc(100vh - 56px);"
   >
     <div style="width: 320px;">
+
+      <div v-if="joinWithCodeError.length" class="alert alert-danger">
+        <ul>
+          <li v-for="errorMessage in joinWithCodeError" :key="errorMessage">{{ errorMessage }}</li>
+        </ul>
+      </div>
+
       <input
         v-model="joinCode"
         type="text"
@@ -126,6 +142,13 @@ async function joinWithCode() {
           <button type="button" class="btn-close btn-close-white" @click="showCreateModal = false"></button>
         </div>
         <div class="modal-body">
+
+          <div v-if="newWhiteboardError.length" class="alert alert-danger">
+            <ul>
+              <li v-for="errorMessage in newWhiteboardError" :key="errorMessage">{{ errorMessage }}</li>
+            </ul>
+          </div>
+
           <input
             v-model="whiteboardTitle"
             type="text"

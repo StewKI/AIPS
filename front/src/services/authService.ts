@@ -33,7 +33,6 @@ export const authService = {
 
   async getMe() : Promise<User> {
     const raw = await api.get<any>('/api/User/me')
-    // backend User may have fields like userName / UserName and email / Email
     const userId = raw?.userId ?? ''
     const username = raw?.userName ?? raw?.UserName ?? raw?.username ?? raw?.name ?? ''
     const email = raw?.email ?? raw?.Email ?? ''

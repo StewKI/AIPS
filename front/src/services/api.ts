@@ -72,7 +72,14 @@ async function request<T = any>(method: string, url: string, body?: any, attempt
 
   if (!res.ok) {
     const errorBody = await parseJsonOrThrow(res)
-    throw Object.assign(new Error(res.statusText || 'Request failed'), { status: res.status, body: errorBody })
+
+    if (errorBody?.errors) {
+      const messages = errorBody.errors.map((e: any) => e.message ?? e)
+
+      const err = new Error(messages[0]) as any
+      err.messages = messages
+      throw err
+    }
   }
 
   return await parseJsonOrThrow(res)

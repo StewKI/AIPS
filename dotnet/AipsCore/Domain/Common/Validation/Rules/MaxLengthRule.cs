@@ -7,7 +7,7 @@ public class MaxLengthRule : AbstractRule
 {
     private readonly string _stringValue;
     private readonly int _maximumLentgh;
-    protected override string ErrorCode => "minimum_length";
+    protected override string ErrorCode => "maximum_length";
     protected override string ErrorMessage 
         => $"Length of '{ValueObjectName}' must be at most {_maximumLentgh} characters";
 

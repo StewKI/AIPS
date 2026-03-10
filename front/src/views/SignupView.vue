@@ -9,17 +9,18 @@ const auth = useAuthStore()
 const username = ref('')
 const email = ref('')
 const password = ref('')
-const error = ref('')
+const error = ref<string[]>([])
 const loading = ref(false)
 
 async function onSubmit() {
-  error.value = ''
+  error.value = []
   loading.value = true
   try {
     await auth.signup({ username: username.value, email: email.value, password: password.value })
+    await auth.login({ email: email.value, password: password.value})
     router.push('/')
   } catch (e: any) {
-    error.value = e.message || 'Signup failed'
+    error.value = e.messages || ['Signup failed']
   } finally {
     loading.value = false
   }
@@ -31,7 +32,11 @@ async function onSubmit() {
     <div class="card-body p-4">
       <h2 class="card-title text-center mb-4">Sign Up</h2>
 
-      <div v-if="error" class="alert alert-danger">{{ error }}</div>
+      <div v-if="error.length" class="alert alert-danger">
+        <ul>
+          <li v-for="m in error" :key="m">{{ m }}</li>
+        </ul>
+      </div>
 
       <form @submit.prevent="onSubmit">
         <div class="mb-3">
