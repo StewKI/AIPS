@@ -10,12 +10,10 @@ namespace AipsCore.Infrastructure.Authentication.AuthService;
 
 public class EfAuthService : IAuthService
 {
-    private readonly AipsDbContext _dbContext;
     private readonly UserManager<Persistence.User.User> _userManager;
     
-    public EfAuthService(AipsDbContext dbContext, UserManager<Persistence.User.User> userManager)
+    public EfAuthService(UserManager<Persistence.User.User> userManager)
     {
-        _dbContext = dbContext;
         _userManager = userManager;
     }
     
@@ -27,8 +25,8 @@ public class EfAuthService : IAuthService
         
         if (!result.Succeeded)
         {
-            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-            throw new Exception($"User registration failed: {errors}");
+            var validationErrors = result.Errors.Select(e => new ValidationError(e.Code, e.Description)).ToList();
+            throw new ValidationException(validationErrors);
         }
         
         await _userManager.AddToRoleAsync(entity, UserRole.User.Name);
