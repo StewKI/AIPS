@@ -109,6 +109,7 @@ public class WhiteboardHub : Hub
             if (user == null)
             {
                 user = await _userService.GetUser(userId);
+                whiteboard.AddUser(user);
             }
 
             await Clients.User(ownerId.ToString()).SendAsync("UserWaitingForApproval", user);
