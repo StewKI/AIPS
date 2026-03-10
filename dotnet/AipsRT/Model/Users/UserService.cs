@@ -1,13 +1,14 @@
 using AipsCore.Application.Abstract;
 using AipsCore.Application.Models.User.Query.GetUser;
+using AipsCore.Application.Models.Whiteboard.Command.UserCanceledRequestToJoin;
 
 namespace AipsRT.Model.Users;
 
-public class GetUserService
+public class UserService
 {
     private readonly IDispatcher _dispatcher;
     
-    public GetUserService(IDispatcher dispatcher)
+    public UserService(IDispatcher dispatcher)
     {
         _dispatcher = dispatcher;
     }

@@ -2,6 +2,7 @@ using AipsCore.Application.Abstract;
 using AipsCore.Application.Models.Shape.Command.MoveShape;
 using AipsCore.Application.Models.Whiteboard.Command.AcceptUserRequestToJoin;
 using AipsCore.Application.Models.Whiteboard.Command.RejectUserRequestToJoin;
+using AipsCore.Application.Models.Whiteboard.Command.UserCanceledRequestToJoin;
 using AipsCore.Application.Models.Whiteboard.Query.GetMembershipStatus;
 using AipsCore.Domain.Models.WhiteboardMembership.Enums;
 using AipsRT.Model.Memberships;
@@ -21,14 +22,14 @@ public class WhiteboardHub : Hub
     private readonly WhiteboardManager _whiteboardManager;
     private readonly IMessagingService _messagingService;
     private readonly MembershipService _membershipService;
-    private readonly GetUserService _getUserService;
+    private readonly UserService _userService;
 
-    public WhiteboardHub(WhiteboardManager whiteboardManager, IMessagingService messagingService, MembershipService membershipService, GetUserService getUserService)
+    public WhiteboardHub(WhiteboardManager whiteboardManager, IMessagingService messagingService, MembershipService membershipService, UserService userService)
     {
         _whiteboardManager = whiteboardManager;
         _messagingService = messagingService;
         _membershipService = membershipService;
-        _getUserService = getUserService;
+        _userService = userService;
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
@@ -107,7 +108,7 @@ public class WhiteboardHub : Hub
             
             if (user == null)
             {
-                user = await _getUserService.GetUser(userId);
+                user = await _userService.GetUser(userId);
             }
 
             await Clients.User(ownerId.ToString()).SendAsync("UserWaitingForApproval", user);
@@ -147,6 +148,7 @@ public class WhiteboardHub : Hub
 
         if (whiteboard != null)
         {
+            await _messagingService.CancelJoinRequest(new UserCanceledRequestToJoinCommand(whiteboard.WhiteboardId.ToString(), userId.ToString()));
             await Clients.User(whiteboard.OwnerId.ToString()).SendAsync("UserCanceledJoinRequest", userId.ToString());
         }
     }

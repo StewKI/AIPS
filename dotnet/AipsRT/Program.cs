@@ -27,7 +27,7 @@ builder.Services.AddSingleton<IErrorMessageHandleStrategy, RtErrorHandleStrategy
 builder.Services.AddHostedService<ErrorSubscriberBackgroundService>();
 
 builder.Services.AddTransient<MembershipService>();
-builder.Services.AddTransient<GetUserService>();
+builder.Services.AddTransient<UserService>();
 
 builder.Services.AddScoped<GetWhiteboardService>();
 builder.Services.AddSingleton<WhiteboardManager>();

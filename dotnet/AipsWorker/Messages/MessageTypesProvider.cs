@@ -6,6 +6,7 @@ using AipsCore.Application.Common.Message.AddRectangle;
 using AipsCore.Application.Common.Message.AddTextShape;
 using AipsCore.Application.Common.Message.MoveShape;
 using AipsCore.Application.Common.Message.RejectUserRequestToJoin;
+using AipsCore.Application.Common.Message.UserCanceledRequestToJoin;
 
 namespace AipsWorker.Messages;
 
@@ -21,7 +22,8 @@ public class MessageTypesProvider : IMessageTypesProvider
             typeof(AddTextShapeMessage),
             typeof(MoveShapeMessage),
             typeof(AcceptUserRequestToJoinMessage),
-            typeof(RejectUserRequestToJoinMessage)
+            typeof(RejectUserRequestToJoinMessage),
+            typeof(UserCanceledRequestToJoinMessage)
         ];
     }
 }

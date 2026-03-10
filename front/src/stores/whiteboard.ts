@@ -113,6 +113,7 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
     whiteboardHubService.onAccepted(() => {
       const infoStore = useWhiteboardsStore()
       infoStore.stopWaitingToJoin()
+      isLoading.value = false
     })
 
     whiteboardHubService.onRejected(() => {

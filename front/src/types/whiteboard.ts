@@ -33,6 +33,7 @@ export interface TextShape extends Shape {
 export interface Whiteboard {
   whiteboardId: string
   ownerId: string
+  code: string
   rectangles: Rectangle[]
   arrows: Arrow[]
   lines: Line[]

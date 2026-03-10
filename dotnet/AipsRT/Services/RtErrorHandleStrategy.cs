@@ -18,9 +18,16 @@ public class RtErrorHandleStrategy : IErrorMessageHandleStrategy
     
     public async Task Handle(ErrorMessage message, CancellationToken cancellationToken)
     {
+        var activeUsers = _whiteboardManager.GetWhiteboard(message.WhiteboardId)!.ActiveUsers;
+        
         await _whiteboardManager.LoadWhiteboard(message.WhiteboardId);
         
         var whiteboard = _whiteboardManager.GetWhiteboard(message.WhiteboardId)!;
+
+        foreach (var user in activeUsers)
+        {
+            whiteboard.AddActiveUser(user);
+        }
         
         await _hubContext.Clients
             .Group(whiteboard.WhiteboardId.ToString())

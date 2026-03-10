@@ -6,6 +6,7 @@ using AipsCore.Application.Common.Message.AddRectangle;
 using AipsCore.Application.Common.Message.AddTextShape;
 using AipsCore.Application.Common.Message.MoveShape;
 using AipsCore.Application.Common.Message.RejectUserRequestToJoin;
+using AipsCore.Application.Common.Message.UserCanceledRequestToJoin;
 using AipsCore.Application.Models.Shape.Command.CreateArrow;
 using AipsCore.Application.Models.Shape.Command.CreateLine;
 using AipsCore.Application.Models.Shape.Command.CreateRectangle;
@@ -13,6 +14,7 @@ using AipsCore.Application.Models.Shape.Command.CreateTextShape;
 using AipsCore.Application.Models.Shape.Command.MoveShape;
 using AipsCore.Application.Models.Whiteboard.Command.AcceptUserRequestToJoin;
 using AipsCore.Application.Models.Whiteboard.Command.RejectUserRequestToJoin;
+using AipsCore.Application.Models.Whiteboard.Command.UserCanceledRequestToJoin;
 using AipsRT.Model.Whiteboard.Shapes;
 using AipsRT.Services.Interfaces;
 
@@ -115,5 +117,11 @@ public class MessagingService : IMessagingService
     {
         var message = new RejectUserRequestToJoinMessage(command);
         await _messagePublisher.PublishAsync(message);   
+    }
+
+    public async Task CancelJoinRequest(UserCanceledRequestToJoinCommand command)
+    {
+        var message = new UserCanceledRequestToJoinMessage(command);
+        await _messagePublisher.PublishAsync(message);  
     }
 }
