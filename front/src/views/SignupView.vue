@@ -17,6 +17,7 @@ async function onSubmit() {
   loading.value = true
   try {
     await auth.signup({ username: username.value, email: email.value, password: password.value })
+    await auth.login({ email: email.value, password: password.value})
     router.push('/')
   } catch (e: any) {
     error.value = e.messages || ['Signup failed']
