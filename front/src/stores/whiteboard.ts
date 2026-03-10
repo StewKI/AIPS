@@ -1,10 +1,11 @@
-import { ref, computed } from 'vue'
+import { ref, computed, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { Arrow, Line, Rectangle, Shape, ShapeTool, ShapeType, TextShape, Whiteboard } from '@/types/whiteboard.ts'
 import { whiteboardHubService } from '@/services/whiteboardHubService.ts'
 import {useWhiteboardsStore} from "@/stores/whiteboards.ts";
 import router from "@/router";
 import type {User} from "@/types";
+import { fetchUser } from '@/services/userService'
 
 export const useWhiteboardStore = defineStore('whiteboard', () => {
   const whiteboard = ref<Whiteboard | null>(null)
@@ -21,6 +22,20 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
   const toolColor = ref('#4f9dff')
   const toolThickness = ref(2)
   const toolTextSize = ref(24)
+
+  async function resolveUsername(list: Ref<User[]>, user: User): Promise<void> {
+    if (user.username && user.username !== 'Unknown') return
+
+    try {
+      const resolved = await fetchUser(user.userId)
+      const idx = list.value.findIndex(u => u.userId === user.userId)
+      if (idx !== -1 && resolved.username) {
+        list.value[idx] = { ...list.value[idx], username: resolved.username, email: resolved.email || list.value[idx].email }
+      }
+    } catch (err) {
+      console.warn(`Failed to resolve username for ${user.userId}`, err)
+    }
+  }
 
   const selectedShape = computed(() => {
     if (!selectedShapeId.value || !selectedShapeType.value || !whiteboard.value) return null
@@ -49,6 +64,9 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
       }
 
       connectedUsers.value = Array.from(uniqueUsers.values())
+      for (const user of connectedUsers.value) {
+        resolveUsername(connectedUsers, user)
+      }
       isLoading.value = false
     })
 
@@ -75,6 +93,7 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
     whiteboardHubService.onJoined((user) => {
       if (!connectedUsers.value.some(u => u.userId === user.userId)) {
         connectedUsers.value.push(user)
+        resolveUsername(connectedUsers, user)
       }
     })
 
@@ -90,6 +109,7 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
     whiteboardHubService.onUserWaitingForApproval((user) => {
       if (!pendingUsers.value.some(u => u.userId === user.userId)) {
         pendingUsers.value.push(user)
+        resolveUsername(pendingUsers, user)
       }
     })
 
