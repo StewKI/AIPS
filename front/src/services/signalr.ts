@@ -22,8 +22,23 @@ export class SignalRService {
   }
 
   async start(): Promise<void> {
-    if (this.connection.state === HubConnectionState.Disconnected) {
+    if (this.connection.state !== HubConnectionState.Disconnected) return;
+
+    try {
       await this.connection.start();
+    } catch (err: any) {
+      if (err.statusCode === 401 || err.message?.includes("401")) {
+        const authStore = useAuthStore();
+        try {
+          await authStore.tryRefresh();
+
+          await this.connection.start();
+        } catch (refreshErr) {
+          throw refreshErr;
+        }
+      } else {
+        throw err;
+      }
     }
   }
 
