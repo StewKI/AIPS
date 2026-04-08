@@ -7,36 +7,39 @@ namespace AipsCore.Infrastructure.DI;
 
 public static class HandlerRegistrationExtensions
 {
-    public static IServiceCollection AddHandlersFromAssembly(this IServiceCollection services, Assembly assembly)
+    extension(IServiceCollection services)
     {
-        var handlerInterfaces = new[]
+        public IServiceCollection AddAipsHandlersFromAssembly(Assembly assembly)
         {
-            typeof(ICommandHandler<>),
-            typeof(ICommandHandler<,>),
-            typeof(IQueryHandler<,>)
-        };
-
-        var types = assembly.GetTypes()
-            .Where(t => t is { IsAbstract: false, IsInterface: false });
-
-        foreach (var type in types)
-        {
-            var interfaces = type.GetInterfaces();
-
-            foreach (var @interface in interfaces)
+            var handlerInterfaces = new[]
             {
-                if (!@interface.IsGenericType)
-                    continue;
+                typeof(ICommandHandler<>),
+                typeof(ICommandHandler<,>),
+                typeof(IQueryHandler<,>)
+            };
 
-                var genericDef = @interface.GetGenericTypeDefinition();
+            var types = assembly.GetTypes()
+                .Where(t => t is { IsAbstract: false, IsInterface: false });
 
-                if (!handlerInterfaces.Contains(genericDef))
-                    continue;
+            foreach (var type in types)
+            {
+                var interfaces = type.GetInterfaces();
+
+                foreach (var @interface in interfaces)
+                {
+                    if (!@interface.IsGenericType)
+                        continue;
+
+                    var genericDef = @interface.GetGenericTypeDefinition();
+
+                    if (!handlerInterfaces.Contains(genericDef))
+                        continue;
                 
-                services.AddTransient(@interface, type);
+                    services.AddTransient(@interface, type);
+                }
             }
-        }
 
-        return services;
+            return services;
+        }
     }
 }
