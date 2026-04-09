@@ -1,7 +1,8 @@
 ﻿namespace AipsCore.Application.Abstract.Query;
 
-public interface IQueryHandler<in TQuery, TResult>
-    where TQuery : IQuery<TResult>
+public interface IQueryHandler<in TQuery, TQueryResult>
+    where TQuery : IQuery<TQueryResult>
+    where TQueryResult : IQueryResult
 {
-    Task<TResult> Handle(TQuery query, CancellationToken cancellationToken = default);
+    Task<TQueryResult> Handle(TQuery query, CancellationToken cancellationToken = default);
 }

@@ -16,6 +16,9 @@ public class MembershipService
     public async Task<WhiteboardMembershipStatus> GetMembershipStatus(Guid whiteboardId, Guid userId)
     {
         var query = new GetMembershipStatusQuery(whiteboardId.ToString(), userId.ToString());
-        return await _dispatcher.Execute(query);
+        
+        var result = await _dispatcher.Execute(query);
+        
+        return result.Status;
     }
 }

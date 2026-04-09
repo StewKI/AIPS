@@ -2,4 +2,4 @@ using AipsCore.Application.Abstract.Command;
 
 namespace AipsCore.Application.Models.User.Command.LogIn;
 
-public record LogInUserCommand(string Email, string Password) : ICommand<LogInUserCommandResult>;
+public record LogInUserCommandResult(string AccessToken, string RefreshToken) : ICommandResult;

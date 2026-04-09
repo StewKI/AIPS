@@ -4,21 +4,23 @@ import type {WhiteboardJoinPolicy} from "@/enums";
 
 export const whiteboardService = {
   async getWhiteboardHistory(): Promise<Whiteboard[]> {
-    const raw = await api.get<any[]>('/api/Whiteboard/history')
-    return raw.map(mapWhiteboard)
+    const result = await api.get<any>('/api/Whiteboard/history')
+    return result.whiteboards.map(mapWhiteboard)
   },
 
   async getRecentWhiteboards(): Promise<Whiteboard[]> {
-    const raw = await api.get<any[]>('/api/Whiteboard/recent')
-    return raw.map(mapWhiteboard)
+    const result = await api.get<any>('/api/Whiteboard/recent')
+    return result.whiteboards.map(mapWhiteboard)
   },
 
   async createNewWhiteboard(title: string, joinPolicy: WhiteboardJoinPolicy, maxParticipants: number): Promise<string> {
-    return await api.post<string>('/api/Whiteboard', { title: title, maxParticipants: maxParticipants, joinPolicy: joinPolicy})
+    const result = await api.post<any>('/api/Whiteboard', { title: title, maxParticipants: maxParticipants, joinPolicy: joinPolicy})
+    return result.whiteboardId
   },
 
   async getWhiteboardById(id: string): Promise<Whiteboard> {
-    return await api.get<any>(`/api/Whiteboard/${id}`).then(mapWhiteboard)
+    const result = await api.get<any>(`/api/Whiteboard/${id}`)
+    return mapWhiteboard(result.whiteboard)
   },
 
   async deleteWhiteboard(id: string): Promise<void> {

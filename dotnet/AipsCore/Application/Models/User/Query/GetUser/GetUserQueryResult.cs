@@ -2,4 +2,4 @@ using AipsCore.Application.Abstract.Query;
 
 namespace AipsCore.Application.Models.User.Query.GetUser;
 
-public record GetUserQuery(string UserId) : IQuery<GetUserQueryResult>;
+public record GetUserQueryResult(string Id, string Email, string UserName) : IQueryResult;

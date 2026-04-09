@@ -1,12 +1,11 @@
 using AipsCore.Application.Abstract.Command;
 using AipsCore.Application.Abstract.UserContext;
 using AipsCore.Application.Common.Authentication;
-using AipsCore.Application.Common.Authentication.Dtos;
 using AipsCore.Domain.Abstract;
 
 namespace AipsCore.Application.Models.User.Command.RefreshLogIn;
 
-public class RefreshLogInCommandHandler : ICommandHandler<RefreshLogInCommand, LogInUserResultDto>
+public class RefreshLogInCommandHandler : ICommandHandler<RefreshLogInCommand, RefreshLogInCommandResult>
 {
     private readonly ITokenProvider _tokenProvider;
     private readonly IRefreshTokenManager _refreshTokenManager;
@@ -25,7 +24,7 @@ public class RefreshLogInCommandHandler : ICommandHandler<RefreshLogInCommand, L
         _unitOfWork = unitOfWork;
     }
     
-    public async Task<LogInUserResultDto> Handle(RefreshLogInCommand command, CancellationToken cancellationToken = default)
+    public async Task<RefreshLogInCommandResult> Handle(RefreshLogInCommand command, CancellationToken cancellationToken = default)
     {
         var refreshToken = await _refreshTokenManager.GetByValueAsync(command.RefreshToken, cancellationToken);
         
@@ -39,6 +38,6 @@ public class RefreshLogInCommandHandler : ICommandHandler<RefreshLogInCommand, L
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         
-        return new LogInUserResultDto(newAccessToken, newRefreshToken);
+        return new RefreshLogInCommandResult(newAccessToken, newRefreshToken);
     }
 }

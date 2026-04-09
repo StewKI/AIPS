@@ -8,7 +8,7 @@ using AipsCore.Domain.Models.WhiteboardMembership.Validation;
 
 namespace AipsCore.Application.Models.Whiteboard.Query.GetMembershipStatus;
 
-public class GetMembershipStatusQueryHandler : IQueryHandler<GetMembershipStatusQuery, WhiteboardMembershipStatus>
+public class GetMembershipStatusQueryHandler : IQueryHandler<GetMembershipStatusQuery, GetMembershipStatusQueryResult>
 {
     private readonly IWhiteboardMembershipRepository _whiteboardMembershipRepository;
 
@@ -17,7 +17,7 @@ public class GetMembershipStatusQueryHandler : IQueryHandler<GetMembershipStatus
         _whiteboardMembershipRepository = whiteboardMembershipRepository;
     }
 
-    public async Task<WhiteboardMembershipStatus> Handle(GetMembershipStatusQuery query, CancellationToken cancellationToken = default)
+    public async Task<GetMembershipStatusQueryResult> Handle(GetMembershipStatusQuery query, CancellationToken cancellationToken = default)
     {
         var userId = new UserId(query.UserId);
         var whiteboardId = new WhiteboardId(query.WhiteboardId);
@@ -29,6 +29,6 @@ public class GetMembershipStatusQueryHandler : IQueryHandler<GetMembershipStatus
             throw new ValidationException(WhiteboardMembershipErrors.NotFound(whiteboardId, userId));
         }
         
-        return membership.Status;
+        return new GetMembershipStatusQueryResult(membership.Status);
     }
 }

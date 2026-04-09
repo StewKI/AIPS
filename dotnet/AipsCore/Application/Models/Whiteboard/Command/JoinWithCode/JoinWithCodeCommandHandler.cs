@@ -10,7 +10,7 @@ using AipsCore.Domain.Models.WhiteboardMembership.External;
 
 namespace AipsCore.Application.Models.Whiteboard.Command.JoinWithCode;
 
-public class JoinWithCodeCommandHandler : ICommandHandler<JoinWithCodeCommand, JoinWithCodeDto>
+public class JoinWithCodeCommandHandler : ICommandHandler<JoinWithCodeCommand, JoinWithCodeCommandResult>
 {
     private readonly IWhiteboardRepository _whiteboardRepository;
     private readonly IWhiteboardMembershipRepository _whiteboardMembershipRepository;
@@ -29,7 +29,7 @@ public class JoinWithCodeCommandHandler : ICommandHandler<JoinWithCodeCommand, J
         _userContext = userContext;
     }
 
-    public async Task<JoinWithCodeDto> Handle(JoinWithCodeCommand command, CancellationToken cancellationToken = default)
+    public async Task<JoinWithCodeCommandResult> Handle(JoinWithCodeCommand command, CancellationToken cancellationToken = default)
     {
         var userId = _userContext.GetCurrentUserId();
         
@@ -43,7 +43,7 @@ public class JoinWithCodeCommandHandler : ICommandHandler<JoinWithCodeCommand, J
 
         if (!whiteboard.ShouldRequestToJoin(userId))
         {
-            return new JoinWithCodeDto(whiteboard.Id.IdValue, WhiteboardMembershipStatus.Accepted);
+            return new JoinWithCodeCommandResult(whiteboard.Id.IdValue, WhiteboardMembershipStatus.Accepted);
         }
 
         var membership = await _whiteboardMembershipRepository.GetByWhiteboardAndUserAsync(whiteboard.Id, userId, cancellationToken);
@@ -60,6 +60,6 @@ public class JoinWithCodeCommandHandler : ICommandHandler<JoinWithCodeCommand, J
         await _whiteboardMembershipRepository.SaveAsync(membership, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         
-        return new JoinWithCodeDto(whiteboard.Id.IdValue, membership.Status);
+        return new JoinWithCodeCommandResult(whiteboard.Id.IdValue, membership.Status);
     }
 }

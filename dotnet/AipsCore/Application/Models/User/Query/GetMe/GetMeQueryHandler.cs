@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AipsCore.Application.Models.User.Query.GetMe;
 
-public class GetMeQueryHandler : IQueryHandler<GetMeQuery, GetMeQueryDto>
+public class GetMeQueryHandler : IQueryHandler<GetMeQuery, GetMeQueryResult>
 {
     private readonly AipsDbContext _context;
     private readonly IUserContext _userContext;
@@ -19,7 +19,7 @@ public class GetMeQueryHandler : IQueryHandler<GetMeQuery, GetMeQueryDto>
         _userContext = userContext;
     }
 
-    public async Task<GetMeQueryDto> Handle(GetMeQuery query, CancellationToken cancellationToken = default)
+    public async Task<GetMeQueryResult> Handle(GetMeQuery query, CancellationToken cancellationToken = default)
     {
         var userId = _userContext.GetCurrentUserId();
         
@@ -32,6 +32,6 @@ public class GetMeQueryHandler : IQueryHandler<GetMeQuery, GetMeQueryDto>
             throw new ValidationException(UserErrors.NotFound(new UserId(userId.IdValue)));
         }
 
-        return new GetMeQueryDto(result.Id.ToString(), result.UserName!);
+        return new GetMeQueryResult(result.Id.ToString(), result.UserName!);
     }
 }

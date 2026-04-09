@@ -19,7 +19,10 @@ public class GetWhiteboardService
     public async Task<Whiteboard> GetWhiteboard(Guid whiteboardId)
     {
         var query = new GetWhiteboardInfoRTQuery(whiteboardId);
-        return Map(await _dispatcher.Execute(query));
+        
+        var result = await _dispatcher.Execute(query);
+        
+        return Map(result.Whiteboard);
     }
 
     private static Whiteboard Map(AipsCore.Infrastructure.Persistence.Whiteboard.Whiteboard entity)

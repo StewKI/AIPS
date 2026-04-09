@@ -7,9 +7,11 @@ namespace AipsCore.Application.Abstract;
 public interface IDispatcher
 {
     Task Execute(ICommand command, CancellationToken cancellationToken = default);
-    Task<TResult> Execute<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default);
+    Task<TCommandResult> Execute<TCommandResult>(ICommand<TCommandResult> command, CancellationToken cancellationToken = default)
+        where TCommandResult : ICommandResult;
     
-    Task<TResult> Execute<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default);
+    Task<TQueryResult> Execute<TQueryResult>(IQuery<TQueryResult> query, CancellationToken cancellationToken = default)
+        where TQueryResult : IQueryResult;
 
     public Task Execute(IMessage message, CancellationToken cancellationToken = default);
 }

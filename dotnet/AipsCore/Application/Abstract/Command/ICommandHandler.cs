@@ -6,8 +6,9 @@ public interface ICommandHandler<in TCommand>
     Task Handle(TCommand command, CancellationToken cancellationToken = default);
 }
 
-public interface ICommandHandler<in TCommand, TResult>
-    where TCommand : ICommand<TResult>
+public interface ICommandHandler<in TCommand, TCommandResult>
+    where TCommand : ICommand<TCommandResult>
+    where TCommandResult : ICommandResult
 {
-    Task<TResult> Handle(TCommand command, CancellationToken cancellationToken = default);
+    Task<TCommandResult> Handle(TCommand command, CancellationToken cancellationToken = default);
 }

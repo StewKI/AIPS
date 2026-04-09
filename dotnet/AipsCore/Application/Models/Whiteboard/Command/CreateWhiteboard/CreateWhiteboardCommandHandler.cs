@@ -6,7 +6,8 @@ using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Application.Models.Whiteboard.Command.CreateWhiteboard;
 
-public class CreateWhiteboardCommandHandler : ICommandHandler<CreateWhiteboardCommand, WhiteboardId>
+public class CreateWhiteboardCommandHandler 
+    : ICommandHandler<CreateWhiteboardCommand, CreateWhiteboardCommandResult>
 {
     private readonly IWhiteboardRepository _whiteboardRepository;
     private readonly IUserContext _userContext;
@@ -19,7 +20,7 @@ public class CreateWhiteboardCommandHandler : ICommandHandler<CreateWhiteboardCo
         _unitOfWork = unitOfWork;
     }
     
-    public async Task<WhiteboardId> Handle(CreateWhiteboardCommand command, CancellationToken cancellationToken = default)
+    public async Task<CreateWhiteboardCommandResult> Handle(CreateWhiteboardCommand command, CancellationToken cancellationToken = default)
     {
         var whiteboardCode = await WhiteboardCode.GenerateUniqueAsync(_whiteboardRepository);
 
@@ -34,7 +35,7 @@ public class CreateWhiteboardCommandHandler : ICommandHandler<CreateWhiteboardCo
 
         await _whiteboardRepository.SaveAsync(whiteboard, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        
-        return whiteboard.Id;
+
+        return new CreateWhiteboardCommandResult(whiteboard.Id.IdValue);
     }
 }
