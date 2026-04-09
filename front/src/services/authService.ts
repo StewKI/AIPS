@@ -9,30 +9,30 @@ function normalizeAuthResponse(raw: any): AuthResponse {
 
 export const authService = {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const raw = await api.post<any>('/api/User/login', credentials)
+    const raw = await api.post<any>('/api/Auth/login', credentials)
     return normalizeAuthResponse(raw)
   },
 
   async refreshLogin(refreshToken: string): Promise<AuthResponse> {
-    const raw = await api.post<any>('/api/User/refresh-login', { refreshToken })
+    const raw = await api.post<any>('/api/Auth/refresh-login', { refreshToken })
     return normalizeAuthResponse(raw)
   },
 
   async signup(credentials: SignupCredentials): Promise<AuthResponse> {
-    const raw = await api.post<any>('/api/User/signup', credentials)
+    const raw = await api.post<any>('/api/Auth/signup', credentials)
     return normalizeAuthResponse(raw)
   },
 
   async logout(refreshToken: string): Promise<void> {
-    return api.delete<void>('/api/User/logout', {refreshToken: refreshToken})
+    return api.delete<void>('/api/Auth/logout', {refreshToken: refreshToken})
   },
 
   async logoutAll(): Promise<void> {
-    return api.delete<void>('/api/User/logout-all')
+    return api.delete<void>('/api/Auth/logout-all')
   },
 
   async getMe() : Promise<User> {
-    const raw = await api.get<any>('/api/User/me')
+    const raw = await api.get<any>('/api/Auth/me')
     const userId = raw?.userId ?? ''
     const username = raw?.userName ?? raw?.UserName ?? raw?.username ?? raw?.name ?? ''
     const email = raw?.email ?? raw?.Email ?? ''
