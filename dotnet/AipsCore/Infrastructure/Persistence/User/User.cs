@@ -1,8 +1,6 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace AipsCore.Infrastructure.Persistence.User;
-
 
 public class User : IdentityUser<Guid>
 {

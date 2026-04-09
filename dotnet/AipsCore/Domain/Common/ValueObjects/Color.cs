@@ -13,7 +13,7 @@ public record Color : AbstractValueObject
         Value = value;
     }
     
-    protected override ICollection<IRule> GetValidationRules()
+    public override ICollection<IRule> GetValidationRules()
     {
         return
         [

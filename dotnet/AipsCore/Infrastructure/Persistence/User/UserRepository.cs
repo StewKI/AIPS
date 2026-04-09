@@ -1,6 +1,4 @@
-using AipsCore.Domain.Common.Validation;
 using AipsCore.Domain.Models.User.External;
-using AipsCore.Domain.Models.User.Validation;
 using AipsCore.Domain.Models.User.ValueObjects;
 using AipsCore.Infrastructure.Persistence.Abstract;
 using AipsCore.Infrastructure.Persistence.Db;

@@ -1,24 +1,11 @@
 ﻿using AipsCore.Domain.Abstract.Rule;
-using AipsCore.Domain.Common.Validation;
+using AipsCore.Domain.Abstract.Validation;
 
 namespace AipsCore.Domain.Abstract.ValueObject;
 
-public abstract record AbstractValueObject
+public abstract record AbstractValueObject : IValidatable
 {
-    protected abstract ICollection<IRule> GetValidationRules();
+    public abstract ICollection<IRule> GetValidationRules();
 
-    protected void Validate()
-    {
-        var rules = GetValidationRules();
-        var validator = new Validator(rules, ValueObjectName);
-        
-        validator.Validate();
-
-        if (!validator.Success)
-        {
-            throw validator.GetValidationException();
-        }
-    }
-
-    private string ValueObjectName => this.GetType().Name;
+    protected void Validate() => ((IValidatable)this).Validate();
 }

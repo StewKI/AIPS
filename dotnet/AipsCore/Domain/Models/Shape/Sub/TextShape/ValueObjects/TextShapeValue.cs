@@ -12,7 +12,7 @@ public record TextShapeValue: AbstractValueObject
         Text = text;
     }
     
-    protected override ICollection<IRule> GetValidationRules()
+    public override ICollection<IRule> GetValidationRules()
     {
         return [];
     }

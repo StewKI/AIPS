@@ -21,7 +21,7 @@ public record Username : AbstractValueObject
     private const int MinimumLength = 8;
     private const int MaximumLength = 20;
 
-    protected override ICollection<IRule> GetValidationRules()
+    public override ICollection<IRule> GetValidationRules()
     {
         return
         [

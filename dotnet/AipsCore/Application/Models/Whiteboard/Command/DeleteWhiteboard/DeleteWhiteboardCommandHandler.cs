@@ -1,15 +1,16 @@
 using AipsCore.Application.Abstract.Command;
 using AipsCore.Application.Abstract.UserContext;
 using AipsCore.Domain.Abstract;
-using AipsCore.Domain.Abstract.Validation;
-using AipsCore.Domain.Common.Validation;
+using AipsCore.Domain.Abstract.Rule;
+using AipsCore.Domain.Common.Validation.Rules;
 using AipsCore.Domain.Models.Whiteboard.External;
-using AipsCore.Domain.Models.Whiteboard.Validation;
+using AipsCore.Domain.Models.Whiteboard.Validation.Rules;
 using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Application.Models.Whiteboard.Command.DeleteWhiteboard;
 
-public class DeleteWhiteboardCommandHandler : ICommandHandler<DeleteWhiteboardCommand>
+public class DeleteWhiteboardCommandHandler 
+    : AbstractCommandHandler<DeleteWhiteboardCommand, DeleteWhiteboardCommandHandlerContext>
 {
     private readonly IUserContext _userContext;
     private readonly IWhiteboardRepository _whiteboardRepository;
@@ -25,24 +26,28 @@ public class DeleteWhiteboardCommandHandler : ICommandHandler<DeleteWhiteboardCo
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Handle(DeleteWhiteboardCommand command, CancellationToken cancellationToken = default)
+    protected override async Task<DeleteWhiteboardCommandHandlerContext> Prepare(DeleteWhiteboardCommand command, CancellationToken cancellationToken = default)
     {
         var whiteboardId = new WhiteboardId(command.WhiteboardId);
         var userId = _userContext.GetCurrentUserId();
 
         var whiteboard = await _whiteboardRepository.GetByIdAsync(whiteboardId, cancellationToken);
-
-        if (whiteboard is null)
-        {
-            throw new ValidationException(WhiteboardErrors.NotFound(whiteboardId));
-        }
-
-        if (!whiteboard.CanUserDelete(userId))
-        {
-            throw new ValidationException(WhiteboardErrors.OnlyOwnerCanDeleteWhiteboard(userId));
-        }
         
-        await _whiteboardRepository.SoftDeleteAsync(whiteboardId, cancellationToken);
+        return new DeleteWhiteboardCommandHandlerContext(whiteboardId, userId, whiteboard);
+    }
+
+    protected override async Task HandleInternal(DeleteWhiteboardCommand command, DeleteWhiteboardCommandHandlerContext context, CancellationToken cancellationToken = default)
+    {
+        await _whiteboardRepository.SoftDeleteAsync(context.WhiteboardId, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    public override ICollection<IRule> GetValidationRules(DeleteWhiteboardCommand command, DeleteWhiteboardCommandHandlerContext context)
+    {
+        return
+        [
+            new DomainModelExistsRule<Domain.Models.Whiteboard.Whiteboard, WhiteboardId>(context.Whiteboard, context.WhiteboardId),
+            new OnlyOwnerCanDeleteWhiteboardRule(context.Whiteboard!, context.UserId)
+        ];
     }
 }
