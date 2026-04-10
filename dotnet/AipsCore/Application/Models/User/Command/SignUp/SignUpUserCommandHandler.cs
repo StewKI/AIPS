@@ -1,11 +1,13 @@
 using AipsCore.Application.Abstract.Command;
 using AipsCore.Application.Abstract.UserContext;
 using AipsCore.Application.Common.Authentication;
+using AipsCore.Application.Common.Command.Context;
 using AipsCore.Domain.Abstract;
 
 namespace AipsCore.Application.Models.User.Command.SignUp;
 
-public class SignUpUserCommandHandler : ICommandHandler<SignUpUserCommand, SignUpUserCommandResult>
+public sealed class SignUpUserCommandHandler 
+    : AbstractCommandHandler<SignUpUserCommand, SignUpUserCommandResult, EmptyCommandHandlerContext>
 {
     private readonly IAuthService _authService;
     private readonly ITokenProvider _tokenProvider;
@@ -23,8 +25,13 @@ public class SignUpUserCommandHandler : ICommandHandler<SignUpUserCommand, SignU
         _refreshTokenManager = refreshTokenManager;
         _unitOfWork = unitOfWork;
     }
-    
-    public async Task<SignUpUserCommandResult> Handle(SignUpUserCommand command, CancellationToken cancellationToken = default)
+
+    protected override Task<EmptyCommandHandlerContext> Prepare(SignUpUserCommand command, CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(new EmptyCommandHandlerContext());
+    }
+
+    protected override async Task<SignUpUserCommandResult> HandleInternal(SignUpUserCommand command, EmptyCommandHandlerContext context, CancellationToken cancellationToken = default)
     {
         var user = Domain.Models.User.User.Create(command.Email, command.Username); 
         

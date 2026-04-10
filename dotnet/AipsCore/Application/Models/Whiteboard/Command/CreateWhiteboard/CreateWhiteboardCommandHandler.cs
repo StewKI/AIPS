@@ -1,13 +1,14 @@
 using AipsCore.Application.Abstract.Command;
 using AipsCore.Application.Abstract.UserContext;
+using AipsCore.Application.Common.Command.Context;
 using AipsCore.Domain.Abstract;
 using AipsCore.Domain.Models.Whiteboard.External;
 using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Application.Models.Whiteboard.Command.CreateWhiteboard;
 
-public class CreateWhiteboardCommandHandler 
-    : ICommandHandler<CreateWhiteboardCommand, CreateWhiteboardCommandResult>
+public sealed class CreateWhiteboardCommandHandler 
+    : AbstractCommandHandler<CreateWhiteboardCommand, CreateWhiteboardCommandResult, EmptyCommandHandlerContext>
 {
     private readonly IWhiteboardRepository _whiteboardRepository;
     private readonly IUserContext _userContext;
@@ -19,8 +20,13 @@ public class CreateWhiteboardCommandHandler
         _userContext = userContext;
         _unitOfWork = unitOfWork;
     }
-    
-    public async Task<CreateWhiteboardCommandResult> Handle(CreateWhiteboardCommand command, CancellationToken cancellationToken = default)
+
+    protected override Task<EmptyCommandHandlerContext> Prepare(CreateWhiteboardCommand command, CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(new EmptyCommandHandlerContext());
+    }
+
+    protected override async Task<CreateWhiteboardCommandResult> HandleInternal(CreateWhiteboardCommand command, EmptyCommandHandlerContext context, CancellationToken cancellationToken = default)
     {
         var whiteboardCode = await WhiteboardCode.GenerateUniqueAsync(_whiteboardRepository);
 

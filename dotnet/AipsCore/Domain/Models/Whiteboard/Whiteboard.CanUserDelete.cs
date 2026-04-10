@@ -4,11 +4,6 @@ namespace AipsCore.Domain.Models.Whiteboard;
 
 public partial class Whiteboard
 {
-    public bool CanUserDelete(UserId userId)
-    {
-        return IsOwner(userId);
-    }
-
     public bool ShouldRequestToJoin(UserId userId)
     {
         return !IsOwner(userId);

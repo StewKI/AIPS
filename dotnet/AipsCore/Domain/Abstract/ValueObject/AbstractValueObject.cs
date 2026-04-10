@@ -5,7 +5,10 @@ namespace AipsCore.Domain.Abstract.ValueObject;
 
 public abstract record AbstractValueObject : IValidatable
 {
-    public abstract ICollection<IRule> GetValidationRules();
-
-    protected void Validate() => ((IValidatable)this).Validate();
+    public virtual ICollection<IRule> GetValidationRules()
+    {
+        return [];
+    }
+    
+    public void Validate() => ((IValidatable)this).Validate();
 }

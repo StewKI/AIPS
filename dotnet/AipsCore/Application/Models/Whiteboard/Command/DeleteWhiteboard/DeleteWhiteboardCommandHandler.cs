@@ -9,7 +9,7 @@ using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Application.Models.Whiteboard.Command.DeleteWhiteboard;
 
-public class DeleteWhiteboardCommandHandler 
+public sealed class DeleteWhiteboardCommandHandler 
     : AbstractCommandHandler<DeleteWhiteboardCommand, DeleteWhiteboardCommandHandlerContext>
 {
     private readonly IUserContext _userContext;

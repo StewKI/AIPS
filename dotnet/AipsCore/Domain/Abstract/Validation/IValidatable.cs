@@ -3,7 +3,7 @@ using AipsCore.Domain.Common.Validation;
 
 namespace AipsCore.Domain.Abstract.Validation;
 
-public interface IValidatable
+public interface  IValidatable
 {
     ICollection<IRule> GetValidationRules();
 
