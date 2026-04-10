@@ -5,7 +5,7 @@ using AipsCore.Domain.Models.WhiteboardMembership;
 
 namespace AipsCore.Application.Models.Whiteboard.Command.UserCanceledRequestToJoin;
 
-public record UserCanceledRequestToJoinCommandHandlerContext(
+public sealed record UserCanceledRequestToJoinCommandHandlerContext(
     WhiteboardId WhiteboardId,
     UserId UserId,
     WhiteboardMembership? WhiteboardMembership

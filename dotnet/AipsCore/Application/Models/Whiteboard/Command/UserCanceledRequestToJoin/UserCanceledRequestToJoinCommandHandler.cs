@@ -1,18 +1,14 @@
 using AipsCore.Application.Abstract.Command;
-using AipsCore.Application.Abstract.UserContext;
 using AipsCore.Domain.Abstract;
 using AipsCore.Domain.Abstract.Rule;
-using AipsCore.Domain.Common.Validation;
 using AipsCore.Domain.Models.User.ValueObjects;
 using AipsCore.Domain.Models.Whiteboard.ValueObjects;
-using AipsCore.Domain.Models.WhiteboardMembership.Enums;
 using AipsCore.Domain.Models.WhiteboardMembership.External;
-using AipsCore.Domain.Models.WhiteboardMembership.Validation;
 using AipsCore.Domain.Models.WhiteboardMembership.Validation.Rules;
 
 namespace AipsCore.Application.Models.Whiteboard.Command.UserCanceledRequestToJoin;
 
-public class CancelJoinRequestCommandHandler 
+public sealed class CancelJoinRequestCommandHandler 
     : AbstractCommandHandler<UserCanceledRequestToJoinCommand, UserCanceledRequestToJoinCommandHandlerContext>
 {
     private readonly IWhiteboardMembershipRepository _whiteboardMembershipRepository;

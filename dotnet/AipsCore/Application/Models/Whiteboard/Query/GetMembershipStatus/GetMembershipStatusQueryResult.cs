@@ -3,4 +3,4 @@ using AipsCore.Domain.Models.WhiteboardMembership.Enums;
 
 namespace AipsCore.Application.Models.Whiteboard.Query.GetMembershipStatus;
 
-public record GetMembershipStatusQueryResult(WhiteboardMembershipStatus Status) : IQueryResult;
+public sealed record GetMembershipStatusQueryResult(WhiteboardMembershipStatus Status) : IQueryResult;

@@ -4,7 +4,7 @@ using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Application.Models.Whiteboard.Command.BanUserFromWhiteboard;
 
-public record BanUserFromWhiteboardCommandHandlerContext(
+public sealed record BanUserFromWhiteboardCommandHandlerContext(
     WhiteboardId WhiteboardId,
     UserId UserToBeBannedId,
     UserId UserId,

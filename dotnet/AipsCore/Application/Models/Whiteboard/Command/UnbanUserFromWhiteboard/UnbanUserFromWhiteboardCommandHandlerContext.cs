@@ -4,7 +4,7 @@ using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Application.Models.Whiteboard.Command.UnbanUserFromWhiteboard;
 
-public record UnbanUserFromWhiteboardCommandHandlerContext(
+public sealed record UnbanUserFromWhiteboardCommandHandlerContext(
     WhiteboardId WhiteboardId,
     UserId UserToBeUnbannedId,
     UserId UserId,

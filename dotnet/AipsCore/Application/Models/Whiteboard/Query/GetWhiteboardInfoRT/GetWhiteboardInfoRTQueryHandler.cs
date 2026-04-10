@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AipsCore.Application.Models.Whiteboard.Query.GetWhiteboardInfoRT;
 
-public class GetWhiteboardInfoRTQueryHandler : IQueryHandler<GetWhiteboardInfoRTQuery, GetWhiteboardInfoRTQueryResult>
+public sealed class GetWhiteboardInfoRTQueryHandler 
+    : IQueryHandler<GetWhiteboardInfoRTQuery, GetWhiteboardInfoRTQueryResult>
 {
     private readonly AipsDbContext _context;
 

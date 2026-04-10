@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AipsCore.Application.Models.User.Query.GetUser;
 
-public class GetUserQueryHandler : IQueryHandler<GetUserQuery, GetUserQueryResult>
+public class GetUserQueryHandler 
+    : IQueryHandler<GetUserQuery, GetUserQueryResult>
 {
     private readonly AipsDbContext _context;
 

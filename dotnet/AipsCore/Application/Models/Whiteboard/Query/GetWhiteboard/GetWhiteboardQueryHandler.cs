@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AipsCore.Application.Models.Whiteboard.Query.GetWhiteboard;
 
-public class GetWhiteboardQueryHandler : IQueryHandler<GetWhiteboardQuery, GetWhiteboardQueryResult>
+public sealed class GetWhiteboardQueryHandler 
+    : IQueryHandler<GetWhiteboardQuery, GetWhiteboardQueryResult>
 {
     private readonly AipsDbContext _context;
     

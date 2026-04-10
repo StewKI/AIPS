@@ -3,4 +3,4 @@ using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Application.Models.Whiteboard.Command.CreateWhiteboard;
 
-public record CreateWhiteboardCommandResult(string WhiteboardId) : ICommandResult;
+public sealed record CreateWhiteboardCommandResult(string WhiteboardId) : ICommandResult;

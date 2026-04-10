@@ -2,13 +2,13 @@ using AipsCore.Application.Abstract.Query;
 using AipsCore.Domain.Common.Validation;
 using AipsCore.Domain.Models.User.ValueObjects;
 using AipsCore.Domain.Models.Whiteboard.ValueObjects;
-using AipsCore.Domain.Models.WhiteboardMembership.Enums;
 using AipsCore.Domain.Models.WhiteboardMembership.External;
 using AipsCore.Domain.Models.WhiteboardMembership.Validation;
 
 namespace AipsCore.Application.Models.Whiteboard.Query.GetMembershipStatus;
 
-public class GetMembershipStatusQueryHandler : IQueryHandler<GetMembershipStatusQuery, GetMembershipStatusQueryResult>
+public sealed class GetMembershipStatusQueryHandler 
+    : IQueryHandler<GetMembershipStatusQuery, GetMembershipStatusQueryResult>
 {
     private readonly IWhiteboardMembershipRepository _whiteboardMembershipRepository;
 

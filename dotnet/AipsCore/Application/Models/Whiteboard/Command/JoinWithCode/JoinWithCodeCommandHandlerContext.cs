@@ -5,7 +5,7 @@ using AipsCore.Domain.Models.WhiteboardMembership;
 
 namespace AipsCore.Application.Models.Whiteboard.Command.JoinWithCode;
 
-public record JoinWithCodeCommandHandlerContext(
+public sealed record JoinWithCodeCommandHandlerContext(
     UserId UserId,
     WhiteboardCode Code,
     Domain.Models.Whiteboard.Whiteboard? Whiteboard,

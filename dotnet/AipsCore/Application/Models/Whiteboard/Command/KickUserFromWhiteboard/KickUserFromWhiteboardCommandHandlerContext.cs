@@ -4,7 +4,7 @@ using AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 namespace AipsCore.Application.Models.Whiteboard.Command.KickUserFromWhiteboard;
 
-public record KickUserFromWhiteboardCommandHandlerContext(
+public sealed record KickUserFromWhiteboardCommandHandlerContext(
     WhiteboardId WhiteboardId,
     UserId UserToBeKickedId,
     UserId UserId,

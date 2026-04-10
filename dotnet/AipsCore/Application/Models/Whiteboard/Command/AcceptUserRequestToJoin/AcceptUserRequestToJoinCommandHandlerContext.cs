@@ -5,7 +5,7 @@ using AipsCore.Domain.Models.WhiteboardMembership;
 
 namespace AipsCore.Application.Models.Whiteboard.Command.AcceptUserRequestToJoin;
 
-public record AcceptUserRequestToJoinCommandHandlerContext(
+public sealed record AcceptUserRequestToJoinCommandHandlerContext(
     WhiteboardId WhiteboardId,
     UserId UserId,
     WhiteboardMembership? WhiteboardMembership

@@ -3,7 +3,7 @@ using AipsCore.Domain.Models.Whiteboard.Enums;
 
 namespace AipsCore.Application.Models.Whiteboard.Command.CreateWhiteboard;
 
-public record CreateWhiteboardCommand(
+public sealed record CreateWhiteboardCommand(
     string Title,
     int MaxParticipants,
     WhiteboardJoinPolicy JoinPolicy)

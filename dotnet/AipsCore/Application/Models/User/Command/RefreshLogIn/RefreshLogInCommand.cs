@@ -2,4 +2,4 @@ using AipsCore.Application.Abstract.Command;
 
 namespace AipsCore.Application.Models.User.Command.RefreshLogIn;
 
-public record RefreshLogInCommand(string RefreshToken) : ICommand<RefreshLogInCommandResult>;
+public sealed record RefreshLogInCommand(string RefreshToken) : ICommand<RefreshLogInCommandResult>;

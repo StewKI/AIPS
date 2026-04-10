@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AipsCore.Application.Models.Whiteboard.Query.GetRecentWhiteboards;
 
-public class GetRecentWhiteboardsQueryHandler : IQueryHandler<GetRecentWhiteboardsQuery, GetRecentWhiteboardsQueryResult>
+public sealed class GetRecentWhiteboardsQueryHandler 
+    : IQueryHandler<GetRecentWhiteboardsQuery, GetRecentWhiteboardsQueryResult>
 {
     private readonly AipsDbContext _context;
     private readonly IUserContext _userContext;

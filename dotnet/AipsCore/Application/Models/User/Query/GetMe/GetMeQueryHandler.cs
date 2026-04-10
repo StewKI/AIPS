@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AipsCore.Application.Models.User.Query.GetMe;
 
-public class GetMeQueryHandler : IQueryHandler<GetMeQuery, GetMeQueryResult>
+public sealed class GetMeQueryHandler 
+    : IQueryHandler<GetMeQuery, GetMeQueryResult>
 {
     private readonly AipsDbContext _context;
     private readonly IUserContext _userContext;

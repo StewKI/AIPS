@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AipsCore.Application.Models.Whiteboard.Query.GetWhiteboardHistory;
 
-public class GetWhiteboardHistoryQueryHandler : IQueryHandler<GetWhiteboardHistoryQuery, GetWhiteboardHistoryQueryResult>
+public sealed class GetWhiteboardHistoryQueryHandler 
+    : IQueryHandler<GetWhiteboardHistoryQuery, GetWhiteboardHistoryQueryResult>
 {
     private readonly AipsDbContext _context;
     private readonly IUserContext _userContext;
