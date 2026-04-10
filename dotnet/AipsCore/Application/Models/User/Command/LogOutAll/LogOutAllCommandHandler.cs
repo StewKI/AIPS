@@ -1,9 +1,11 @@
 using AipsCore.Application.Abstract.Command;
 using AipsCore.Application.Abstract.UserContext;
+using AipsCore.Application.Common.Command.Context;
 
 namespace AipsCore.Application.Models.User.Command.LogOutAll;
 
-public class LogOutAllCommandHandler : ICommandHandler<LogOutAllCommand>
+public sealed class LogOutAllCommandHandler 
+    : AbstractCommandHandler<LogOutAllCommand, EmptyCommandHandlerContext>
 {
     private readonly IRefreshTokenManager _refreshTokenManager;
     private readonly IUserContext _userContext;
@@ -13,8 +15,13 @@ public class LogOutAllCommandHandler : ICommandHandler<LogOutAllCommand>
         _refreshTokenManager = refreshTokenManager;
         _userContext = userContext;
     }
-    
-    public Task Handle(LogOutAllCommand command, CancellationToken cancellationToken = default)
+
+    protected override Task<EmptyCommandHandlerContext> Prepare(LogOutAllCommand command, CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(new EmptyCommandHandlerContext());
+    }
+
+    protected override Task HandleInternal(LogOutAllCommand command, EmptyCommandHandlerContext context, CancellationToken cancellationToken = default)
     {
         var userId = _userContext.GetCurrentUserId();
         

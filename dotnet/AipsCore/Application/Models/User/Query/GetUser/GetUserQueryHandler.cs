@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AipsCore.Application.Models.User.Query.GetUser;
 
-public class GetUserQueryHandler : IQueryHandler<GetUserQuery, GetUserQueryDto>
+public class GetUserQueryHandler 
+    : IQueryHandler<GetUserQuery, GetUserQueryResult>
 {
     private readonly AipsDbContext _context;
 
@@ -16,7 +17,7 @@ public class GetUserQueryHandler : IQueryHandler<GetUserQuery, GetUserQueryDto>
         _context = context;
     }
     
-    public async Task<GetUserQueryDto> Handle(GetUserQuery query, CancellationToken cancellationToken = default)
+    public async Task<GetUserQueryResult> Handle(GetUserQuery query, CancellationToken cancellationToken = default)
     {
         var result = await _context.Users
             .Where(u => u.Id.ToString() == query.UserId)
@@ -27,6 +28,6 @@ public class GetUserQueryHandler : IQueryHandler<GetUserQuery, GetUserQueryDto>
             throw new ValidationException(UserErrors.NotFound(new UserId(query.UserId)));
         }
 
-        return new GetUserQueryDto(result.Id.ToString(), result.Email!, result.UserName!);
+        return new GetUserQueryResult(result.Id.ToString(), result.Email!, result.UserName!);
     }
 }

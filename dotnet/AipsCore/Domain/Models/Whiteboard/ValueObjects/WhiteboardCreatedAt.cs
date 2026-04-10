@@ -14,7 +14,7 @@ public record WhiteboardCreatedAt : AbstractValueObject
         Validate();
     }
     
-    protected override ICollection<IRule> GetValidationRules()
+    public override ICollection<IRule> GetValidationRules()
     {
         return [
             new DateInPastRule(CreatedAtValue)

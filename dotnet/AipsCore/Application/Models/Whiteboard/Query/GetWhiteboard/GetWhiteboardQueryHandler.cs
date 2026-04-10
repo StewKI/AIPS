@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AipsCore.Application.Models.Whiteboard.Query.GetWhiteboard;
 
-public class GetWhiteboardQueryHandler 
-    : IQueryHandler<GetWhiteboardQuery, Infrastructure.Persistence.Whiteboard.Whiteboard?>
+public sealed class GetWhiteboardQueryHandler 
+    : IQueryHandler<GetWhiteboardQuery, GetWhiteboardQueryResult>
 {
     private readonly AipsDbContext _context;
     
@@ -14,10 +14,12 @@ public class GetWhiteboardQueryHandler
         _context = context;
     }
     
-    public async Task<Infrastructure.Persistence.Whiteboard.Whiteboard?> Handle(GetWhiteboardQuery query, CancellationToken cancellationToken = default)
+    public async Task<GetWhiteboardQueryResult> Handle(GetWhiteboardQuery query, CancellationToken cancellationToken = default)
     {
-        return await _context.Whiteboards
+        var whiteboard = await _context.Whiteboards
             .Where(w => w.Id.ToString() == query.WhiteboardId)
             .FirstOrDefaultAsync(cancellationToken);
+        
+        return new GetWhiteboardQueryResult(whiteboard);
     }
 }

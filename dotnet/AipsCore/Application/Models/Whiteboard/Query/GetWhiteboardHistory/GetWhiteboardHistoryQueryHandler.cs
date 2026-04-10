@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AipsCore.Application.Models.Whiteboard.Query.GetWhiteboardHistory;
 
-public class GetWhiteboardHistoryQueryHandler 
-    : IQueryHandler<GetWhiteboardHistoryQuery, ICollection<Infrastructure.Persistence.Whiteboard.Whiteboard>>
+public sealed class GetWhiteboardHistoryQueryHandler 
+    : IQueryHandler<GetWhiteboardHistoryQuery, GetWhiteboardHistoryQueryResult>
 {
     private readonly AipsDbContext _context;
     private readonly IUserContext _userContext;
@@ -18,12 +18,14 @@ public class GetWhiteboardHistoryQueryHandler
         _userContext = userContext;
     }
 
-    public async Task<ICollection<Infrastructure.Persistence.Whiteboard.Whiteboard>> Handle(GetWhiteboardHistoryQuery query, CancellationToken cancellationToken = default)
+    public async Task<GetWhiteboardHistoryQueryResult> Handle(GetWhiteboardHistoryQuery query, CancellationToken cancellationToken = default)
     {
         var userIdGuid = new Guid(_userContext.GetCurrentUserId().IdValue);
         
-        return await _context.Whiteboards
+        var whiteboards = await _context.Whiteboards
             .Where(w => w.OwnerId == userIdGuid && w.State != WhiteboardState.Deleted)
             .ToListAsync(cancellationToken);
+        
+        return new GetWhiteboardHistoryQueryResult(whiteboards);
     }
 }

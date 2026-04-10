@@ -1,9 +1,11 @@
 using AipsCore.Application.Abstract.Command;
 using AipsCore.Application.Abstract.UserContext;
+using AipsCore.Application.Common.Command.Context;
 
 namespace AipsCore.Application.Models.User.Command.LogOut;
 
-public class LogOutCommandHandler : ICommandHandler<LogOutCommand>
+public sealed class LogOutCommandHandler 
+    : AbstractCommandHandler<LogOutCommand, EmptyCommandHandlerContext>
 {
     private readonly IRefreshTokenManager _refreshTokenManager;
     
@@ -11,8 +13,13 @@ public class LogOutCommandHandler : ICommandHandler<LogOutCommand>
     {
         _refreshTokenManager = refreshTokenManager;
     }
-    
-    public async Task Handle(LogOutCommand command, CancellationToken cancellationToken = default)
+
+    protected override Task<EmptyCommandHandlerContext> Prepare(LogOutCommand command, CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(new EmptyCommandHandlerContext());
+    }
+
+    protected override async Task HandleInternal(LogOutCommand command, EmptyCommandHandlerContext context, CancellationToken cancellationToken = default)
     {
         await _refreshTokenManager.RevokeAsync(command.RefreshToken, cancellationToken);
     }

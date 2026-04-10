@@ -16,7 +16,7 @@ public record DomainId : AbstractValueObject
         Validate();
     }
 
-    protected override ICollection<IRule> GetValidationRules()
+    public override ICollection<IRule> GetValidationRules()
     {
         return [
             new MinLengthRule(IdValue, 5)

@@ -24,18 +24,20 @@ public sealed class Dispatcher : IDispatcher
         await this.Handle(handlerType, command, cancellationToken);
     }
 
-    public async Task<TResult> Execute<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default)
+    public async Task<TCommandResult> Execute<TCommandResult>(ICommand<TCommandResult> command, CancellationToken cancellationToken = default)
+        where TCommandResult : ICommandResult
     {
-        var handlerType = typeof(ICommandHandler<,>).MakeGenericType(command.GetType(), typeof(TResult));
+        var handlerType = typeof(ICommandHandler<,>).MakeGenericType(command.GetType(), typeof(TCommandResult));
         
-        return await this.HandleWithResult<TResult>(handlerType, command, cancellationToken);
+        return await this.HandleWithResult<TCommandResult>(handlerType, command, cancellationToken);
     }
 
-    public async Task<TResult> Execute<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
+    public async Task<TQueryResult> Execute<TQueryResult>(IQuery<TQueryResult> query, CancellationToken cancellationToken = default)
+        where TQueryResult : IQueryResult
     {
-        var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
+        var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TQueryResult));
         
-        return await this.HandleWithResult<TResult>(handlerType, query, cancellationToken);
+        return await this.HandleWithResult<TQueryResult>(handlerType, query, cancellationToken);
     }
 
     public async Task Execute(IMessage message, CancellationToken cancellationToken = default)

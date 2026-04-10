@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AipsCore.Application.Models.Whiteboard.Query.GetRecentWhiteboards;
 
-public class GetRecentWhiteboardsQueryHandler : IQueryHandler<GetRecentWhiteboardsQuery, ICollection<Infrastructure.Persistence.Whiteboard.Whiteboard>>
+public sealed class GetRecentWhiteboardsQueryHandler 
+    : IQueryHandler<GetRecentWhiteboardsQuery, GetRecentWhiteboardsQueryResult>
 {
     private readonly AipsDbContext _context;
     private readonly IUserContext _userContext;
@@ -18,11 +19,13 @@ public class GetRecentWhiteboardsQueryHandler : IQueryHandler<GetRecentWhiteboar
         _userContext = userContext;
     }
     
-    public async Task<ICollection<Infrastructure.Persistence.Whiteboard.Whiteboard>> Handle(GetRecentWhiteboardsQuery query, CancellationToken cancellationToken = default)
+    public async Task<GetRecentWhiteboardsQueryResult> Handle(GetRecentWhiteboardsQuery query, CancellationToken cancellationToken = default)
     {
         var userId = _userContext.GetCurrentUserId().IdValue;
         
-        return await GetQuery(userId).ToListAsync(cancellationToken);
+        var whiteboards = await GetQuery(userId).ToListAsync(cancellationToken);
+        
+        return new GetRecentWhiteboardsQueryResult(whiteboards);
     }
 
     private IQueryable<Infrastructure.Persistence.Whiteboard.Whiteboard> GetQuery(string userId)

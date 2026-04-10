@@ -24,10 +24,10 @@ public class WhiteboardController : ControllerBase
     
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<string>> CreateWhiteboard(CreateWhiteboardCommand command, CancellationToken cancellationToken)
+    public async Task<ActionResult<CreateWhiteboardCommandResult>> CreateWhiteboard(CreateWhiteboardCommand command, CancellationToken cancellationToken)
     {
-        var whiteboardId = await _dispatcher.Execute(command, cancellationToken);
-        return Ok(whiteboardId.IdValue);
+        var result = await _dispatcher.Execute(command, cancellationToken);
+        return Ok(result);
     }
     
     [Authorize]
@@ -69,7 +69,7 @@ public class WhiteboardController : ControllerBase
 
     [Authorize]
     [HttpPost("join")]
-    public async Task<ActionResult<JoinWithCodeDto>> JoinWhiteboardWithCode(JoinWithCodeCommand command, CancellationToken cancellationToken)
+    public async Task<ActionResult<JoinWithCodeCommandResult>> JoinWhiteboardWithCode(JoinWithCodeCommand command, CancellationToken cancellationToken)
     {
         var result = await _dispatcher.Execute(command, cancellationToken);
         return Ok(result);

@@ -1,3 +1,4 @@
 ﻿namespace AipsCore.Application.Abstract.Query;
 
-public interface IQuery<TResult> {}
+public interface IQuery<TQueryResult>
+    where TQueryResult : IQueryResult;

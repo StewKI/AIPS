@@ -1,4 +1,3 @@
-using AipsCore.Application.Abstract;
 using AipsCore.Application.Abstract.MessageBroking;
 using AipsCore.Application.Common.Dispatcher;
 using AipsCore.Infrastructure.MessageBroking.RabbitMQ;
@@ -9,26 +8,30 @@ namespace AipsCore.Infrastructure.DI;
 
 public static class AipsRegistrationExtensions
 {
-    public static IServiceCollection AddAips(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        services.AddHandlersFromAssembly(typeof(Dispatcher).Assembly);
-        services.AddTransient<IDispatcher, Dispatcher>();
+        public IServiceCollection AddAips(IConfiguration configuration)
+        {
+            services.AddAipsHandlersFromAssembly(typeof(Dispatcher).Assembly);
+            services.AddAipsDispatcher();
 
-        services.AddPersistence(configuration);
+            services.AddAipsPersistence(configuration);
 
-        services.AddUserContext(configuration);
+            services.AddAipsAuth(configuration);
+            services.AddAipsUserContext();
 
-        services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
-        services.AddSingleton<IMessagePublisher, RabbitMqPublisher>();
-        services.AddSingleton<IMessageSubscriber, RabbitMqSubscriber>();
+            services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
+            services.AddSingleton<IMessagePublisher, RabbitMqPublisher>();
+            services.AddSingleton<IMessageSubscriber, RabbitMqSubscriber>();
         
-        return services;
-    }
+            return services;
+        }
 
-    public static IServiceCollection AddAipsMessageHandlers(this IServiceCollection services)
-    {
-        services.AddMessageHandlersFromAssembly(typeof(IMessage).Assembly);
+        public IServiceCollection AddAipsMessageHandlers()
+        {
+            services.AddAipsMessageHandlersFromAssembly(typeof(IMessage).Assembly);
 
-        return services;
+            return services;
+        }
     }
 }

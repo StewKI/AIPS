@@ -1,12 +1,13 @@
 using AipsCore.Application.Abstract.Command;
 using AipsCore.Application.Abstract.UserContext;
 using AipsCore.Application.Common.Authentication;
-using AipsCore.Application.Common.Authentication.Dtos;
+using AipsCore.Application.Common.Command.Context;
 using AipsCore.Domain.Abstract;
 
 namespace AipsCore.Application.Models.User.Command.LogIn;
 
-public class LogInUserCommandHandler : ICommandHandler<LogInUserCommand, LogInUserResultDto>
+public sealed class LogInUserCommandHandler 
+    : AbstractCommandHandler<LogInUserCommand, LogInUserCommandResult, EmptyCommandHandlerContext>
 {
     private readonly ITokenProvider _tokenProvider;
     private readonly IRefreshTokenManager _refreshTokenManager;
@@ -24,8 +25,13 @@ public class LogInUserCommandHandler : ICommandHandler<LogInUserCommand, LogInUs
         _authService = authService;
         _unitOfWork = unitOfWork;
     }
-    
-    public async Task<LogInUserResultDto> Handle(LogInUserCommand command, CancellationToken cancellationToken = default)
+
+    protected override Task<EmptyCommandHandlerContext> Prepare(LogInUserCommand command, CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(new EmptyCommandHandlerContext());
+    }
+
+    protected override async Task<LogInUserCommandResult> HandleInternal(LogInUserCommand command, EmptyCommandHandlerContext context, CancellationToken cancellationToken = default)
     {
         var loginResult = await _authService.LoginWithEmailAndPasswordAsync(command.Email, command.Password, cancellationToken);
 
@@ -35,6 +41,6 @@ public class LogInUserCommandHandler : ICommandHandler<LogInUserCommand, LogInUs
         await _refreshTokenManager.AddAsync(refreshToken, loginResult.User.Id, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new LogInUserResultDto(accessToken, refreshToken);
+        return new LogInUserCommandResult(accessToken, refreshToken);
     }
 }

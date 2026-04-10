@@ -1,7 +1,7 @@
 using AipsCore.Domain.Common.Validation.Rules;
 using AipsCore.Utility.Text;
 
-namespace AipsCore.Domain.Models.Whiteboard.Validation;
+namespace AipsCore.Domain.Models.Whiteboard.Validation.Rules;
 
 public class WhiteboardTitleCharsetRule : CharsetRule
 {

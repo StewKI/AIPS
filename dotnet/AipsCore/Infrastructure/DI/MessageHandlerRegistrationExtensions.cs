@@ -6,31 +6,34 @@ namespace AipsCore.Infrastructure.DI;
 
 public static class MessageHandlerRegistrationExtensions
 {
-    public static IServiceCollection AddMessageHandlersFromAssembly(this IServiceCollection services, Assembly assembly)
+    extension(IServiceCollection services)
     {
-        var handlerInterface = typeof(IMessageHandler<>);
-        
-        var types = assembly.GetTypes()
-            .Where(t => t is { IsAbstract: false, IsInterface: false });
-
-        foreach (var type in types)
+        public IServiceCollection AddAipsMessageHandlersFromAssembly(Assembly assembly)
         {
-            var interfaces = type.GetInterfaces();
+            var handlerInterface = typeof(IMessageHandler<>);
+        
+            var types = assembly.GetTypes()
+                .Where(t => t is { IsAbstract: false, IsInterface: false });
 
-            foreach (var @interface in interfaces)
+            foreach (var type in types)
             {
-                if (!@interface.IsGenericType)
-                    continue;
+                var interfaces = type.GetInterfaces();
 
-                var genericDef = @interface.GetGenericTypeDefinition();
+                foreach (var @interface in interfaces)
+                {
+                    if (!@interface.IsGenericType)
+                        continue;
 
-                if (handlerInterface != genericDef)
-                    continue;
+                    var genericDef = @interface.GetGenericTypeDefinition();
+
+                    if (handlerInterface != genericDef)
+                        continue;
                 
-                services.AddTransient(@interface, type);
+                    services.AddTransient(@interface, type);
+                }
             }
-        }
 
-        return services;
+            return services;
+        }
     }
 }

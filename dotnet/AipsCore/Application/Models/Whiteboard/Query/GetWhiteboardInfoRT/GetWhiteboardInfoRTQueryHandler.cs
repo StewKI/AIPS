@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AipsCore.Application.Models.Whiteboard.Query.GetWhiteboardInfoRT;
 
-public class GetWhiteboardInfoRTQueryHandler
-    : IQueryHandler<GetWhiteboardInfoRTQuery, Infrastructure.Persistence.Whiteboard.Whiteboard>
+public sealed class GetWhiteboardInfoRTQueryHandler 
+    : IQueryHandler<GetWhiteboardInfoRTQuery, GetWhiteboardInfoRTQueryResult>
 {
     private readonly AipsDbContext _context;
 
@@ -17,7 +17,7 @@ public class GetWhiteboardInfoRTQueryHandler
         _context = context;
     }
     
-    public async Task<Infrastructure.Persistence.Whiteboard.Whiteboard> Handle(GetWhiteboardInfoRTQuery query, CancellationToken cancellationToken = default)
+    public async Task<GetWhiteboardInfoRTQueryResult> Handle(GetWhiteboardInfoRTQuery query, CancellationToken cancellationToken = default)
     {
         var whiteboard = await GetQuery(query.WhiteboardId).FirstOrDefaultAsync(cancellationToken);
 
@@ -26,7 +26,7 @@ public class GetWhiteboardInfoRTQueryHandler
             throw new ValidationException(WhiteboardErrors.NotFound(new WhiteboardId(query.WhiteboardId.ToString())));
         }
         
-        return whiteboard;
+        return new GetWhiteboardInfoRTQueryResult(whiteboard);
     }
     
     private IQueryable<Infrastructure.Persistence.Whiteboard.Whiteboard> GetQuery(Guid whiteboardId)

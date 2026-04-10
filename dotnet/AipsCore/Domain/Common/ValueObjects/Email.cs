@@ -16,7 +16,7 @@ public record Email : AbstractValueObject
         Validate();
     }
 
-    protected override ICollection<IRule> GetValidationRules()
+    public override ICollection<IRule> GetValidationRules()
     {
         return
         [
