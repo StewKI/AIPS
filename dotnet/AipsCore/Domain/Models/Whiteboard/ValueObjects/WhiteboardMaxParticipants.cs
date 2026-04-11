@@ -13,7 +13,7 @@ public record WhiteboardMaxParticipants : AbstractValueObject
     public WhiteboardMaxParticipants(int MaxParticipantsValue)
     {
         this.MaxParticipantsValue = MaxParticipantsValue;
-        Validate();
+        ValidateObject();
     }
     public override ICollection<IRule> GetValidationRules()
     {

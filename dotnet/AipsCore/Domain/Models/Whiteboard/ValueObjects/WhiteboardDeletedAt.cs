@@ -11,7 +11,7 @@ public record WhiteboardDeletedAt : AbstractValueObject
     public WhiteboardDeletedAt(DateTime? DeletedAtValue)
     {
         this.DeletedAtValue = DeletedAtValue;
-        Validate();
+        ValidateObject();
     }
     
     public override ICollection<IRule> GetValidationRules()

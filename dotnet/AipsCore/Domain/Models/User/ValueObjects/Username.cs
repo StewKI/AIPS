@@ -15,7 +15,7 @@ public record Username : AbstractValueObject
     public Username(string UsernameValue)
     {
         this.UsernameValue = UsernameValue;
-        Validate();
+        ValidateObject();
     }
 
     private const int MinimumLength = 8;

@@ -11,7 +11,7 @@ public record WhiteboardCreatedAt : AbstractValueObject
     public WhiteboardCreatedAt(DateTime CreatedAtValue)
     {
         this.CreatedAtValue = CreatedAtValue;
-        Validate();
+        ValidateObject();
     }
     
     public override ICollection<IRule> GetValidationRules()

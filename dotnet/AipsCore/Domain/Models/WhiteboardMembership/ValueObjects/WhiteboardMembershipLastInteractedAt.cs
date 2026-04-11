@@ -11,7 +11,7 @@ public record WhiteboardMembershipLastInteractedAt : AbstractValueObject
     public WhiteboardMembershipLastInteractedAt(DateTime LastInteractedAtValue)
     {
         this.LastInteractedAtValue = LastInteractedAtValue;
-        Validate();
+        ValidateObject();
     }
     
     public override ICollection<IRule> GetValidationRules()

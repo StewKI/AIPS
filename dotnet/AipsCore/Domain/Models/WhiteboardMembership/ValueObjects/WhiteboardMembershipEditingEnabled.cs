@@ -10,7 +10,7 @@ public record WhiteboardMembershipEditingEnabled : AbstractValueObject
     public WhiteboardMembershipEditingEnabled(bool EditingEnabledValue)
     {
         this.EditingEnabledValue = EditingEnabledValue;
-        Validate();
+        ValidateObject();
     }
     
     public override ICollection<IRule> GetValidationRules()

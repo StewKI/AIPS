@@ -14,7 +14,7 @@ public record Thickness : AbstractValueObject
     public Thickness(int value)
     {
         Value = value;
-        Validate();
+        ValidateObject();
     }
     
     public override ICollection<IRule> GetValidationRules()

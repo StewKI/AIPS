@@ -11,7 +11,7 @@ public record UserDeletedAt : AbstractValueObject
     public UserDeletedAt(DateTime? DeletedAtValue)
     {
         this.DeletedAtValue = DeletedAtValue;
-        Validate();
+        ValidateObject();
     }
     
     public override ICollection<IRule> GetValidationRules()
