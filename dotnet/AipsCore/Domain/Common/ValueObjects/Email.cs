@@ -13,7 +13,7 @@ public record Email : AbstractValueObject
     public Email(string EmailValue)
     {
         this.EmailValue = EmailValue;
-        Validate();
+        ValidateObject();
     }
 
     public override ICollection<IRule> GetValidationRules()

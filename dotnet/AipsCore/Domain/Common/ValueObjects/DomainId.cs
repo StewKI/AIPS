@@ -13,7 +13,7 @@ public record DomainId : AbstractValueObject
     public DomainId(string IdValue)
     {
         this.IdValue = IdValue;
-        Validate();
+        ValidateObject();
     }
 
     public override ICollection<IRule> GetValidationRules()

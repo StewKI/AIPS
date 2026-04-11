@@ -11,7 +11,7 @@ public record UserCreatedAt : AbstractValueObject
     public UserCreatedAt(DateTime CreatedAtValue)
     {
         this.CreatedAtValue = CreatedAtValue;
-            Validate();
+            ValidateObject();
     }
     
     public override ICollection<IRule> GetValidationRules()

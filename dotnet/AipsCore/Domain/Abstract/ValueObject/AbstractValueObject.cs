@@ -10,5 +10,5 @@ public abstract record AbstractValueObject : IValidatable
         return [];
     }
     
-    public void Validate() => ((IValidatable)this).Validate();
+    public void ValidateObject() => ((IValidatable)this).Validate();
 }

@@ -16,7 +16,7 @@ public record WhiteboardTitle : AbstractValueObject
     public WhiteboardTitle(string TitleValue)
     {
         this.TitleValue = TitleValue;
-        Validate();
+        ValidateObject();
     }   
 
     public override ICollection<IRule> GetValidationRules()
