@@ -1,12 +1,13 @@
 ﻿using System.Net.Mail;
-using AipsCore.Domain.Abstract;
 using AipsCore.Domain.Abstract.Rule;
 
 namespace AipsCore.Domain.Common.Validation.Rules;
 
-public class EmailRule : AbstractRule
+public class EmailRule : AbstractRule, IRuleMetadata
 {
-    protected override string ErrorCode => "email_invalid";
+    public static string ErrorCodeString => "email_invalid";
+    
+    protected override string ErrorCode => ErrorCodeString;
     protected override string ErrorMessage => "Email is not in the valid format";
 
     private readonly string _emailValue;

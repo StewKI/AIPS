@@ -1,13 +1,12 @@
 using AipsCore.Domain.Abstract.Rule;
 using AipsCore.Domain.Abstract.ValueObject;
 using AipsCore.Domain.Common.Validation.Rules;
+using AipsCore.Domain.Models.Whiteboard.Options;
 
 namespace AipsCore.Domain.Models.Whiteboard.ValueObjects;
 
 public record WhiteboardMaxParticipants : AbstractValueObject
 {
-    private const int MinMaxParticipants = 1;
-    private const int MaxMaxParticipants = 100;
     public int MaxParticipantsValue { get; init; }
 
     public WhiteboardMaxParticipants(int MaxParticipantsValue)
@@ -18,8 +17,8 @@ public record WhiteboardMaxParticipants : AbstractValueObject
     public override ICollection<IRule> GetValidationRules()
     {
         return [
-            new MinValueRule<int>(MaxParticipantsValue, MinMaxParticipants),
-            new MaxValueRule<int>(MaxParticipantsValue, MaxMaxParticipants)
+            new MinValueRule<int>(MaxParticipantsValue, WhiteboardOptionsDefaults.MinMaxParticipants),
+            new MaxValueRule<int>(MaxParticipantsValue, WhiteboardOptionsDefaults.MaxMaxParticipants)
         ];
     }
 }

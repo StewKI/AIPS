@@ -3,22 +3,24 @@ using AipsCore.Domain.Abstract.Rule;
 
 namespace AipsCore.Domain.Common.Validation.Rules;
 
-public class ExactLength : AbstractRule
+public class ExactLength : AbstractRule, IRuleMetadata
 {
     private readonly string _stringValue;
-    private readonly int _exactLentgh;
-    protected override string ErrorCode => "exact_length";
+    private readonly int _exactLength;
+    protected override string ErrorCode => ErrorCodeString;
     protected override string ErrorMessage 
-        => $"Length of '{ValueObjectName}' must be {_exactLentgh} characters";
+        => $"Length of '{ValueObjectName}' must be {_exactLength} characters";
     
-    public ExactLength(string stringValue, int exactLentgh)
+    public ExactLength(string stringValue, int exactLength)
     {
         _stringValue = stringValue;
-        _exactLentgh = exactLentgh;
+        _exactLength = exactLength;
     }
     
     public override bool Validate()
     {
-        return _stringValue.Length == _exactLentgh;
+        return _stringValue.Length == _exactLength;
     }
+
+    public static string ErrorCodeString => "exact_length";
 }
