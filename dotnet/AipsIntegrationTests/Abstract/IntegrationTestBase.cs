@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using AipsCore.Infrastructure.DI;
 using AipsCore.Infrastructure.Persistence.Db;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using Testcontainers.PostgreSql;
 namespace AipsIntegrationTests.Abstract;
 
 [TestFixture]
+[SuppressMessage("NUnit.Framework", "NUnit1032")]
 public abstract class IntegrationTestBase
 {
     private static readonly PostgreSqlContainer PgContainer = new PostgreSqlBuilder("postgres:latest")
@@ -29,7 +31,6 @@ public abstract class IntegrationTestBase
     public async Task GlobalTeardown()
     {
         await PgContainer.StopAsync();
-        await PgContainer.DisposeAsync();
     }
 
     [SetUp]
