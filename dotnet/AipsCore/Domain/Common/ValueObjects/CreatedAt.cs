@@ -2,13 +2,13 @@ using AipsCore.Domain.Abstract.Rule;
 using AipsCore.Domain.Abstract.ValueObject;
 using AipsCore.Domain.Common.Validation.Rules;
 
-namespace AipsCore.Domain.Models.Whiteboard.ValueObjects;
+namespace AipsCore.Domain.Common.ValueObjects;
 
-public record WhiteboardCreatedAt : AbstractValueObject
+public record CreatedAt : AbstractValueObject
 {
-    public DateTime CreatedAtValue { get; init; }
+    public DateTime CreatedAtValue { get; private set; }
 
-    public WhiteboardCreatedAt(DateTime CreatedAtValue)
+    public CreatedAt(DateTime CreatedAtValue)
     {
         this.CreatedAtValue = CreatedAtValue;
         ValidateObject();
@@ -16,7 +16,8 @@ public record WhiteboardCreatedAt : AbstractValueObject
     
     public override ICollection<IRule> GetValidationRules()
     {
-        return [
+        return 
+        [
             new DateInPastRule(CreatedAtValue)
         ];
     }

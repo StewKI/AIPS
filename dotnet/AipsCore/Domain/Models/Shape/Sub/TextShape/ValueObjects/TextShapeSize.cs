@@ -1,27 +1,26 @@
 using AipsCore.Domain.Abstract.Rule;
 using AipsCore.Domain.Abstract.ValueObject;
 using AipsCore.Domain.Common.Validation.Rules;
+using AipsCore.Domain.Models.Shape.Sub.TextShape.Options;
 
 namespace AipsCore.Domain.Models.Shape.Sub.TextShape.ValueObjects;
 
 public record TextShapeSize : AbstractValueObject
 {
-    public const int MaxTextShapeSize = 72;
-    public const int MinTextShapeSize = 8;
-    
     public int Size { get; }
 
     public TextShapeSize(int size)
     {
         Size = size;
+        ValidateObject();
     }
     
     public override ICollection<IRule> GetValidationRules()
     {
         return
         [
-            new MaxValueRule<int>(Size, MaxTextShapeSize),
-            new MinValueRule<int>(Size, MinTextShapeSize)
+            new MaxValueRule<int>(Size, TextShapeOptionsDefaults.MaxTextShapeSize),
+            new MinValueRule<int>(Size, TextShapeOptionsDefaults.MinTextShapeSize)
         ];
     }
 }

@@ -1,10 +1,9 @@
-﻿using AipsCore.Domain.Abstract;
-using AipsCore.Domain.Abstract.Rule;
+﻿using AipsCore.Domain.Abstract.Rule;
 using AipsCore.Domain.Abstract.ValueObject;
-using AipsCore.Domain.Common.Validation;
 using AipsCore.Domain.Common.Validation.Rules;
-using AipsCore.Domain.Common.ValueObjects;
+using AipsCore.Domain.Models.User.Options;
 using AipsCore.Domain.Models.User.Validation;
+using AipsCore.Domain.Models.User.Validation.Rules;
 
 namespace AipsCore.Domain.Models.User.ValueObjects;
 
@@ -18,15 +17,12 @@ public record Username : AbstractValueObject
         ValidateObject();
     }
 
-    private const int MinimumLength = 8;
-    private const int MaximumLength = 20;
-
     public override ICollection<IRule> GetValidationRules()
     {
         return
         [
-            new MinLengthRule(UsernameValue, MinimumLength),
-            new MaxLengthRule(UsernameValue, MaximumLength),
+            new MinLengthRule(UsernameValue, UserOptionsDefaults.UsernameMinimumLength),
+            new MaxLengthRule(UsernameValue, UserOptionsDefaults.UsernameMaximumLength),
             new UsernameCharsetRule(UsernameValue)
         ];
     }

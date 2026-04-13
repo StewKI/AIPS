@@ -1,4 +1,5 @@
 ﻿using AipsCore.Domain.Abstract;
+using AipsCore.Domain.Common.ValueObjects;
 using AipsCore.Domain.Models.User.ValueObjects;
 using AipsCore.Domain.Models.Whiteboard.Enums;
 using AipsCore.Domain.Models.Whiteboard.ValueObjects;
@@ -10,8 +11,8 @@ public partial class Whiteboard : DomainModel<WhiteboardId>
     public UserId WhiteboardOwnerId { get; private set; }
     public WhiteboardCode Code { get; private set; }
     public WhiteboardTitle Title { get; private set; }
-    public WhiteboardCreatedAt CreatedAt { get; private set; }
-    public WhiteboardDeletedAt DeletedAt { get; private set; }
+    public CreatedAt CreatedAt { get; private set; }
+    public DeletedAt DeletedAt { get; private set; }
     public WhiteboardMaxParticipants MaxParticipants { get; private set; }
     public WhiteboardJoinPolicy JoinPolicy { get; private set; }
     public WhiteboardState State { get; private set; }
@@ -21,8 +22,8 @@ public partial class Whiteboard : DomainModel<WhiteboardId>
         User.User whiteboardOwner, 
         WhiteboardCode code, 
         WhiteboardTitle title,
-        WhiteboardCreatedAt createdAt, 
-        WhiteboardDeletedAt deletedAt, 
+        CreatedAt createdAt, 
+        DeletedAt deletedAt, 
         WhiteboardMaxParticipants maxParticipants,
         WhiteboardJoinPolicy joinPolicy,
         WhiteboardState state)
@@ -43,8 +44,8 @@ public partial class Whiteboard : DomainModel<WhiteboardId>
         UserId whiteboardOwnerId,
         WhiteboardCode code, 
         WhiteboardTitle title, 
-        WhiteboardCreatedAt createdAt,
-        WhiteboardDeletedAt deletedAt, 
+        CreatedAt createdAt,
+        DeletedAt deletedAt, 
         WhiteboardMaxParticipants maxParticipants,
         WhiteboardJoinPolicy joinPolicy,
         WhiteboardState state)
@@ -75,8 +76,8 @@ public partial class Whiteboard : DomainModel<WhiteboardId>
         var whiteboardOwnerId = new UserId(ownerId);
         var whiteboardCode = new WhiteboardCode(code);
         var whiteboardTitle = new WhiteboardTitle(title);
-        var whiteboardCreatedAt = new WhiteboardCreatedAt(createdAt);
-        var whiteboardDeletedAt = new WhiteboardDeletedAt(deletedAt);
+        var whiteboardCreatedAt = new CreatedAt(createdAt);
+        var whiteboardDeletedAt = new DeletedAt(deletedAt);
         var whiteboardMaxParticipants = new WhiteboardMaxParticipants(maxParticipants);
         
         return new Whiteboard(
@@ -102,8 +103,8 @@ public partial class Whiteboard : DomainModel<WhiteboardId>
         var whiteboardOwnerId = new UserId(ownerId);
         var whiteboardCode = new WhiteboardCode(code);
         var whiteboardTitle = new WhiteboardTitle(title);
-        var whiteboardCreatedAt = new WhiteboardCreatedAt(DateTime.UtcNow);
-        var whiteboardDeletedAt = new WhiteboardDeletedAt(null);
+        var whiteboardCreatedAt = new CreatedAt(DateTime.UtcNow);
+        var whiteboardDeletedAt = new DeletedAt(null);
         var whiteboardMaxParticipants = new WhiteboardMaxParticipants(maxParticipants);
         
         return new Whiteboard(

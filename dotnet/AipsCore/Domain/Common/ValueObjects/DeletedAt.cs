@@ -2,13 +2,13 @@ using AipsCore.Domain.Abstract.Rule;
 using AipsCore.Domain.Abstract.ValueObject;
 using AipsCore.Domain.Common.Validation.Rules;
 
-namespace AipsCore.Domain.Models.User.ValueObjects;
+namespace AipsCore.Domain.Common.ValueObjects;
 
-public record UserDeletedAt : AbstractValueObject
+public record DeletedAt : AbstractValueObject
 {
     public DateTime? DeletedAtValue { get; private set; }
     
-    public UserDeletedAt(DateTime? DeletedAtValue)
+    public DeletedAt(DateTime? DeletedAtValue)
     {
         this.DeletedAtValue = DeletedAtValue;
         ValidateObject();
@@ -16,7 +16,8 @@ public record UserDeletedAt : AbstractValueObject
     
     public override ICollection<IRule> GetValidationRules()
     {
-        return [
+        return 
+        [
             new DateInPastRule(DeletedAtValue)
         ];
     }

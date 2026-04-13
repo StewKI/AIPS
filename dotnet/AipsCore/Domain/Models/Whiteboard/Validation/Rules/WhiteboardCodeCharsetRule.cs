@@ -1,9 +1,10 @@
-﻿using AipsCore.Domain.Common.Validation.Rules;
+﻿using AipsCore.Domain.Abstract.Rule;
+using AipsCore.Domain.Common.Validation.Rules;
 using AipsCore.Utility.Text;
 
 namespace AipsCore.Domain.Models.Whiteboard.Validation.Rules;
 
-public class WhiteboardCodeCharsetRule : CharsetRule
+public class WhiteboardCodeCharsetRule : CharsetRule, IRuleMetadata
 {
     public WhiteboardCodeCharsetRule(string stringValue)
         : base(stringValue, GetWhiteboardCodeCharset())
@@ -15,6 +16,7 @@ public class WhiteboardCodeCharsetRule : CharsetRule
         return Charset.GetNumericCharset();
     }
 
-    protected override string ErrorCode => "whiteboard_code_charset";
+    protected override string ErrorCode => ErrorCodeString;
     protected override string ErrorMessage => "Whiteboard code must contain only numbers";
+    public static string ErrorCodeString => "whiteboard_code_charset";
 }

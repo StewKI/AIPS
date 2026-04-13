@@ -16,7 +16,8 @@ public record WhiteboardMembershipLastInteractedAt : AbstractValueObject
     
     public override ICollection<IRule> GetValidationRules()
     {
-        return [
+        return 
+        [
             new DateInPastRule(LastInteractedAtValue)
         ];
     }

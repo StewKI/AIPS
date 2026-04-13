@@ -3,11 +3,11 @@ using AipsCore.Domain.Abstract.Rule;
 
 namespace AipsCore.Domain.Common.Validation.Rules;
 
-public class MaxLengthRule : AbstractRule
+public class MaxLengthRule : AbstractRule, IRuleMetadata
 {
     private readonly string _stringValue;
     private readonly int _maximumLentgh;
-    protected override string ErrorCode => "maximum_length";
+    protected override string ErrorCode => ErrorCodeString;
     protected override string ErrorMessage 
         => $"Length of '{ValueObjectName}' must be at most {_maximumLentgh} characters";
 
@@ -21,4 +21,6 @@ public class MaxLengthRule : AbstractRule
     {
         return _stringValue.Length <= _maximumLentgh;
     }
+
+    public static string ErrorCodeString => "maximum_length";
 }

@@ -2,7 +2,7 @@
 using AipsCore.Domain.Abstract.ValueObject;
 using AipsCore.Domain.Common.Validation.Rules;
 using AipsCore.Domain.Models.Whiteboard.External;
-using AipsCore.Domain.Models.Whiteboard.Validation;
+using AipsCore.Domain.Models.Whiteboard.Options;
 using AipsCore.Domain.Models.Whiteboard.Validation.Rules;
 
 namespace AipsCore.Domain.Models.Whiteboard.ValueObjects;
@@ -17,13 +17,11 @@ public record WhiteboardCode : AbstractValueObject
         ValidateObject();
     }
 
-    private const int CodeLength = 8;
-
     public override ICollection<IRule> GetValidationRules()
     {
         return
         [
-            new ExactLength(CodeValue, CodeLength),
+            new ExactLength(CodeValue, WhiteboardOptionsDefaults.WhiteboardCodeLength),
             new WhiteboardCodeCharsetRule(CodeValue)
         ];
     }

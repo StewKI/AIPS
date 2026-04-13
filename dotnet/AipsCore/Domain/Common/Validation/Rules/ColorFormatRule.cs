@@ -2,10 +2,10 @@ using AipsCore.Domain.Abstract.Rule;
 
 namespace AipsCore.Domain.Common.Validation.Rules;
 
-public class ColorFormatRule : AbstractRule
+public class ColorFormatRule : AbstractRule, IRuleMetadata
 {
     private readonly string _colorValue;
-    protected override string ErrorCode => "color_format";
+    protected override string ErrorCode => ErrorCodeString;
     protected override string ErrorMessage => "Color should be in format '#000000'";
 
     public ColorFormatRule(string colorValue)
@@ -26,4 +26,6 @@ public class ColorFormatRule : AbstractRule
         
         return true;
     }
+
+    public static string ErrorCodeString => "color_format";
 }

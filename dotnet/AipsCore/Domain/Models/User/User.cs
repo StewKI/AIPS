@@ -8,10 +8,10 @@ public class User : DomainModel<UserId>
 {
     public Email Email { get; private set; }
     public Username Username { get; private set; }
-    public UserCreatedAt CreatedAt { get; private set; }
-    public UserDeletedAt DeletedAt { get; private set; }
+    public CreatedAt CreatedAt { get; private set; }
+    public DeletedAt DeletedAt { get; private set; }
 
-    public User(UserId id, Email email, Username username, UserCreatedAt createdAt, UserDeletedAt deletedAt)
+    public User(UserId id, Email email, Username username, CreatedAt createdAt, DeletedAt deletedAt)
         : base(id)
     {
         Email = email;
@@ -25,8 +25,8 @@ public class User : DomainModel<UserId>
         var userIdVo = new UserId(id);
         var usernameVo = new Username(username);
         var emailVo = new Email(email);
-        var createdAtVo = new UserCreatedAt(createdAt);
-        var deletedAtVo = new UserDeletedAt(deletedAt);
+        var createdAtVo = new CreatedAt(createdAt);
+        var deletedAtVo = new DeletedAt(deletedAt);
         
         return new User(userIdVo, emailVo, usernameVo, createdAtVo, deletedAtVo);
     }
@@ -35,8 +35,8 @@ public class User : DomainModel<UserId>
     {
         var usernameVo = new Username(username);
         var emailVo = new Email(email);
-        var createdAtVo = new UserCreatedAt(DateTime.UtcNow);
-        var deletedAtVo = new UserDeletedAt(null);
+        var createdAtVo = new CreatedAt(DateTime.UtcNow);
+        var deletedAtVo = new DeletedAt(null);
         
         return new User(UserId.Any(), emailVo, usernameVo, createdAtVo, deletedAtVo);
     }

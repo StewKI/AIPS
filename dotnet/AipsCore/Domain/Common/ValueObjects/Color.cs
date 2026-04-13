@@ -11,6 +11,7 @@ public record Color : AbstractValueObject
     public Color(string value)
     {
         Value = value;
+        ValidateObject();
     }
     
     public override ICollection<IRule> GetValidationRules()
