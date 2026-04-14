@@ -5,33 +5,16 @@ namespace AipsE2ETests.Abstract;
 
 public abstract class PlaywrightTestBase : PageTest
 {
-    protected TestEnvironment TestEnvironment = null!;
+    protected TestEnvironment TestEnvironment => GlobalSetup.TestEnvironment;
     
     protected const string BaseUrl = TestEnvironment.BaseUrl;
     protected const string WebApiUrl = TestEnvironment.WebApiUrl;
-    
-    [OneTimeSetUp]
-    public async Task GlobalSetup()
-    {
-        TestEnvironment = (await TestEnvironmentBuilder.CreateAsync())
-            .AddAipsWebApi().WithOutputRedirectedToTestConsole()
-            .AddAipsRT().WithOutputRedirectedToTestConsole()
-            .AddAipsWorker().WithOutputRedirectedToTestConsole()
-            .AddFrontend()
-            .Build();
-
-        await TestEnvironment.InitializeAsync();
-    }
-    
-    [OneTimeTearDown]
-    public async Task GlobalTeardown()
-    {
-        await TestEnvironment.DisposeAsync();
-    }
 
     [SetUp]
     public async Task BaseSetUp()
     {
         await TestEnvironment.ResetDatabaseAsync();
+        
+        await Page.GotoAsync(BaseUrl);
     }
 }

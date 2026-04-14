@@ -32,13 +32,13 @@ async function onSubmit() {
     <div class="card-body p-4">
       <h2 class="card-title text-center mb-4">Sign Up</h2>
 
-      <div v-if="error.length" class="alert alert-danger">
+      <div v-if="error.length" class="alert alert-danger" data-testid="signup-error">
         <ul>
           <li v-for="m in error" :key="m">{{ m }}</li>
         </ul>
       </div>
 
-      <form @submit.prevent="onSubmit">
+      <form @submit.prevent="onSubmit" data-testid="signup-form">
         <div class="mb-3">
           <label for="username" class="form-label">Username</label>
           <input
@@ -48,6 +48,7 @@ async function onSubmit() {
             class="form-control"
             required
             autocomplete="username"
+            data-testid="signup-username-input"
           />
         </div>
 
@@ -60,6 +61,7 @@ async function onSubmit() {
             class="form-control"
             required
             autocomplete="email"
+            data-testid="signup-email-input"
           />
         </div>
 
@@ -72,17 +74,18 @@ async function onSubmit() {
             class="form-control"
             required
             autocomplete="new-password"
+            data-testid="signup-password-input"
           />
         </div>
 
-        <button type="submit" class="btn btn-primary w-100" :disabled="loading">
+        <button type="submit" class="btn btn-primary w-100" :disabled="loading" data-testid="signup-submit-button">
           {{ loading ? 'Signing up...' : 'Sign Up' }}
         </button>
       </form>
 
       <p class="text-center mt-3 mb-0">
         Already have an account?
-        <RouterLink to="/login">Log in</RouterLink>
+        <RouterLink to="/login" data-testid="signup-login-link">Log in</RouterLink>
       </p>
     </div>
   </div>
