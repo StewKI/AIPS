@@ -34,20 +34,43 @@ const showLogoutConfirm = ref(false)
         <ul class="navbar-nav">
           <template v-if="auth.isAuthenticated">
             <li class="nav-item">
-              <span class="nav-link text-light">{{ auth.user?.username }}</span>
+              <span
+                class="nav-link text-light"
+                data-testid="topbar-username"
+              >
+                {{ auth.user?.username }}
+              </span>
             </li>
             <li class="nav-item">
-              <button class="btn btn-outline-light btn-sm my-1" @click="showLogoutConfirm = true">
+              <button
+                class="btn btn-outline-light btn-sm my-1"
+                @click="showLogoutConfirm = true"
+                data-testid="topbar-logout-button"
+              >
                 Logout
               </button>
             </li>
           </template>
           <template v-else>
             <li class="nav-item">
-              <RouterLink class="nav-link" active-class="active" to="/login">Login</RouterLink>
+              <RouterLink
+                class="nav-link"
+                active-class="active"
+                to="/login"
+                data-testid="topbar-login-link"
+              >
+                Login
+              </RouterLink>
             </li>
             <li class="nav-item">
-              <RouterLink class="nav-link" active-class="active" to="/signup">Sign Up</RouterLink>
+              <RouterLink
+                class="nav-link"
+                active-class="active"
+                to="/signup"
+                data-testid="topbar-signup-link"
+              >
+                Sign Up
+              </RouterLink>
             </li>
           </template>
         </ul>
@@ -88,6 +111,7 @@ const showLogoutConfirm = ref(false)
               type="button"
               class="btn btn-danger"
               @click="showLogoutConfirm = false; auth.logout()"
+              data-testid="logout-modal-confirm-button"
             >
               Yes, logout
             </button>

@@ -15,7 +15,7 @@ public static class LoadingDotEnv
 
         if (dir != null)
         {
-            Env.Load(Path.Combine(dir, ".env"));
+            Env.NoClobber().Load(Path.Combine(dir, ".env"));
             return true;
         }
 
