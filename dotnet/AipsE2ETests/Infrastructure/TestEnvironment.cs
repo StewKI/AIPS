@@ -9,36 +9,37 @@ namespace AipsE2ETests.Infrastructure;
 public class TestEnvironment : IAsyncDisposable
 {
     private TestInfrastructure _infrastructure = null!;
-    
-    protected AipsWebApiProcessService WebApi = null!;
-    protected AipsRTProcessService Rt = null!;
-    protected AipsWorkerProcessService Worker = null!;
-    protected FrontendProcessService Frontend = null!;
+
+    private readonly List<ProcessService> _processServices = [];
     
     protected HttpClient Client = null!;
     
     public const string BaseUrl = "http://localhost:5173";
     public const string WebApiUrl = "http://localhost:5266/api";
 
+    internal TestEnvironment()
+    {
+        
+    }
+    
+    internal void AddProcessService(ProcessService process)
+    {
+        _processServices.Add(process);
+    }
+
+    internal void SetInfrastructure(TestInfrastructure infrastructure)
+    {
+        _infrastructure = infrastructure;
+    }
+
     public async Task InitializeAsync()
     {
-        _infrastructure = new TestInfrastructure();
-        await _infrastructure.InitializeAsync();
-        
         await MigrateAsync();
 
-        WebApi = new AipsWebApiProcessService(_infrastructure);
-        Rt = new AipsRTProcessService(_infrastructure);
-        Worker = new AipsWorkerProcessService(_infrastructure);
-        Frontend = new FrontendProcessService(_infrastructure);
-
-        await WebApi.StartProcessAsync();
-        await Rt.StartProcessAsync();
-        await Worker.StartProcessAsync();
-        
-        WebApi.RedirectOutputToTestConsole();
-        Rt.RedirectOutputToTestConsole();
-        Worker.RedirectOutputToTestConsole();
+        foreach (var processService in _processServices)
+        {
+            await processService.StartProcessAsync();
+        }
         
         Client = new HttpClient
         {
@@ -46,8 +47,6 @@ public class TestEnvironment : IAsyncDisposable
         };
 
         await WaitForWebApi();
-        
-        await Frontend.StartProcessAsync();
 
         await Task.Delay(5000);
     }
@@ -67,8 +66,8 @@ public class TestEnvironment : IAsyncDisposable
             }
         }, TimeSpan.FromSeconds(60));
     }
-    
-    protected async Task MigrateAsync()
+
+    private async Task MigrateAsync()
     {
         var connString = _infrastructure.PostgresConnectionString;
 
@@ -122,13 +121,13 @@ public class TestEnvironment : IAsyncDisposable
     
     public async ValueTask DisposeAsync()
     {
-        await Worker.DisposeAsync();
-        await Rt.DisposeAsync();
-        await WebApi.DisposeAsync();
+        foreach (var processService in _processServices)
+        {
+            await processService.DisposeAsync();
+        }
         
         Client.Dispose();
         
-        await Frontend.DisposeAsync();
         await _infrastructure.DisposeAsync();
     }
 }

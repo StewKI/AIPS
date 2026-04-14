@@ -107,7 +107,8 @@ public abstract class IntegrationTestBase
                     'TRUNCATE TABLE ' || string_agg(format('%I.%I', schemaname, tablename), ', ') || ' RESTART IDENTITY CASCADE;'
                 FROM pg_tables
                 WHERE schemaname IN ('public')
-                AND tablename != '__EFMigrationsHistory';
+                AND tablename != '__EFMigrationsHistory'
+                AND tablename != 'AspNetRoles';  
 
                 IF stmt IS NOT NULL THEN
                     EXECUTE stmt;

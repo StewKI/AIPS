@@ -4,7 +4,16 @@ namespace AipsE2ETests.Infrastructure.Processes;
 
 public abstract class ProcessService : IProcessService
 {
+    private enum RedirectionType
+    {
+        None,
+        ToTerminal,
+        ToTestConsole
+    }
+    
     private Process? _process;
+    private RedirectionType _redirectionType = RedirectionType.None;
+    
     private readonly TestInfrastructure _infrastructure;
     
     protected abstract string LogTag { get; }
@@ -19,13 +28,39 @@ public abstract class ProcessService : IProcessService
         _process = ConfigureProcess();
         
         SetEnvironmentVariables();
+
+        RedirectOutput();
         
         _process.Start();
         
-        _process.BeginOutputReadLine();
-        _process.BeginErrorReadLine();
+        if (_process.StartInfo.RedirectStandardOutput)
+        {
+            _process.BeginOutputReadLine();
+        }
+        
+        if (_process.StartInfo.RedirectStandardError)
+        {
+            _process.BeginErrorReadLine();
+        }
 
         return Task.CompletedTask;
+    }
+
+    private void RedirectOutput()
+    {
+        switch (_redirectionType)
+        {
+            case RedirectionType.None:
+                break;
+            case RedirectionType.ToTerminal:
+                ApplyRedirectOutputToTerminal();
+                break;
+            case RedirectionType.ToTestConsole:
+                ApplyRedirectOutputToTestConsole();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
     protected abstract Process ConfigureProcess();
@@ -57,7 +92,17 @@ public abstract class ProcessService : IProcessService
         }
     }
 
-    public void RedirectOutputToConsole()
+    public void RedirectOutputToTerminal()
+    {
+        _redirectionType = RedirectionType.ToTerminal;
+    }
+
+    public void RedirectOutputToTestConsole()
+    {
+        _redirectionType = RedirectionType.ToTestConsole;
+    }
+    
+    private void ApplyRedirectOutputToTerminal()
     {
         if (_process is null)
         {
@@ -88,7 +133,7 @@ public abstract class ProcessService : IProcessService
         };
     }
 
-    public void RedirectOutputToTestConsole()
+    private void ApplyRedirectOutputToTestConsole()
     {
         if (_process is null)
         {

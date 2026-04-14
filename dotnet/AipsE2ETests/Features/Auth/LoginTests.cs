@@ -29,8 +29,13 @@ public class LoginTests : PlaywrightTestBase
         var topbarLoginLink = Page.GetByTestId("topbar-login-link");
         var topbarSignupLink = Page.GetByTestId("topbar-signup-link");
         
+        var topbarUsername = Page.GetByTestId("topbar-username");
+        var topbarLogoutButton = Page.GetByTestId("topbar-logout-button");
+        
         await Expect(topbarLoginLink).ToBeVisibleAsync();
         await Expect(topbarSignupLink).ToBeVisibleAsync();
+        await Expect(topbarUsername).Not.ToBeVisibleAsync();
+        await Expect(topbarLogoutButton).Not.ToBeVisibleAsync();
         
         var form = Page.GetByTestId("login-form");
         
@@ -41,14 +46,9 @@ public class LoginTests : PlaywrightTestBase
         
         await Page.WaitForURLAsync(BaseUrl);
         
-        var topbarUsername = Page.GetByTestId("topbar-username");
-        
+        await Expect(topbarLogoutButton).ToBeVisibleAsync();
         await Expect(topbarUsername).ToBeVisibleAsync();
         await Expect(topbarUsername).ToContainTextAsync(UserName);
-        
-        var topbarLogoutButton = Page.GetByTestId("topbar-logout-button");
-        
-        await Expect(topbarLogoutButton).ToBeVisibleAsync();
         
         await Expect(topbarLoginLink).Not.ToBeVisibleAsync();
         await Expect(topbarSignupLink).Not.ToBeVisibleAsync();
