@@ -5,7 +5,7 @@ using DotNetEnv;
 
 if (File.Exists("../../.env"))
 {
-    Env.Load("../../.env");
+    Env.NoClobber().Load("../../.env");
 }
 
 var builder = WebApplication.CreateBuilder(args);

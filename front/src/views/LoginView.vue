@@ -33,13 +33,13 @@ async function onSubmit() {
     <div class="card-body p-4">
       <h2 class="card-title text-center mb-4">Log In</h2>
 
-      <div v-if="error.length" class="alert alert-danger">
+      <div v-if="error.length" class="alert alert-danger" data-testid="login-error">
         <ul>
           <li v-for="m in error" :key="m">{{ m }}</li>
         </ul>
       </div>
 
-      <form @submit.prevent="onSubmit">
+      <form @submit.prevent="onSubmit" data-testid="login-form">
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
           <input
@@ -49,6 +49,7 @@ async function onSubmit() {
             class="form-control"
             required
             autocomplete="email"
+            data-testid="login-email-input"
           />
         </div>
 
@@ -61,17 +62,18 @@ async function onSubmit() {
             class="form-control"
             required
             autocomplete="current-password"
+            data-testid="login-password-input"
           />
         </div>
 
-        <button type="submit" class="btn btn-primary w-100" :disabled="loading">
+        <button type="submit" class="btn btn-primary w-100" :disabled="loading" data-testid="login-submit-button">
           {{ loading ? 'Logging in...' : 'Log In' }}
         </button>
       </form>
 
       <p class="text-center mt-3 mb-0">
         Don't have an account?
-        <RouterLink to="/signup">Sign up</RouterLink>
+        <RouterLink to="/signup" data-testid="login-signup-link">Sign up</RouterLink>
       </p>
     </div>
   </div>
