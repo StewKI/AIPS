@@ -2,15 +2,18 @@ using System.Diagnostics;
 
 namespace AipsE2ETests.Infrastructure.Processes;
 
-public sealed class AipsRTProcessService : IAsyncDisposable
+public sealed class AipsRTProcessService : ProcessService
 {
-    private Process? _process;
-
-    public Task StartAsync(string db, string rabbit)
+    public AipsRTProcessService(TestInfrastructure infrastructure) 
+        : base(infrastructure)
     {
-        var env = EnvBuilder.CreateCommon(db, rabbit);
+    }
 
-        _process = new Process
+    protected override string LogTag => "RT";
+    
+    protected override Process ConfigureProcess()
+    {
+        return new Process
         {
             StartInfo = new ProcessStartInfo
             {
@@ -22,20 +25,5 @@ public sealed class AipsRTProcessService : IAsyncDisposable
                 RedirectStandardError = true
             }
         };
-
-        foreach (var kv in env)
-            _process.StartInfo.Environment[kv.Key] = kv.Value;
-
-        _process.Start();
-
-        return Task.CompletedTask;
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_process is { HasExited: false })
-            _process.Kill(true);
-
-        _process?.Dispose();
     }
 }

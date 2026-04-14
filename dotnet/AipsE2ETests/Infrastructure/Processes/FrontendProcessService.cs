@@ -2,13 +2,18 @@ using System.Diagnostics;
 
 namespace AipsE2ETests.Infrastructure.Processes;
 
-public sealed class FrontendProcessService : IAsyncDisposable
+public sealed class FrontendProcessService : ProcessService
 {
-    private Process? _process;
-
-    public Task StartAsync()
+    public FrontendProcessService(TestInfrastructure infrastructure) 
+        : base(infrastructure)
     {
-        _process = new Process
+    }
+
+    protected override string LogTag => "FRONT";
+    
+    protected override Process ConfigureProcess()
+    {
+        return new Process
         {
             StartInfo = new ProcessStartInfo
             {
@@ -20,28 +25,5 @@ public sealed class FrontendProcessService : IAsyncDisposable
                 RedirectStandardError = true
             }
         };
-
-        _process.Start();
-
-        return Task.CompletedTask;
-    }
-
-    public ValueTask DisposeAsync()
-    {
-        try
-        {
-            if (_process is { HasExited: false })
-            {
-                _process.Kill(true);
-            }
-
-            _process?.Dispose();
-            
-            return ValueTask.CompletedTask;
-        }
-        catch (Exception exception)
-        {
-            return ValueTask.FromException(exception);
-        }
     }
 }

@@ -15,7 +15,7 @@ public class LoginTests : PlaywrightTestBase
     [SetUp]
     public async Task SignupUser()
     {
-        await CreateUser(UserName, ValidEmail, ValidPassword);
+        await TestEnvironment.CreateUser(UserName, ValidEmail, ValidPassword);
     }
     
     [Test]

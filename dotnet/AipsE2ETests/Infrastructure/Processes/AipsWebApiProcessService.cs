@@ -2,17 +2,19 @@ using System.Diagnostics;
 
 namespace AipsE2ETests.Infrastructure.Processes;
 
-public sealed class AipsWebApiProcessService : IAsyncDisposable
+public sealed class AipsWebApiProcessService : ProcessService
 {
-    private Process? _process;
-
-    public Task StartAsync(string db, string rabbit)
+    public AipsWebApiProcessService(TestInfrastructure infrastructure) 
+        : base(infrastructure)
     {
-        var env = EnvBuilder.CreateCommon(db, rabbit);
         
-        env["ASPNETCORE_URLS"] = "http://localhost:5266";
+    }
 
-        _process = new Process
+    protected override string LogTag => "WEBAPI";
+
+    protected override Process ConfigureProcess()
+    {
+        return new Process
         {
             StartInfo = new ProcessStartInfo
             {
@@ -24,59 +26,5 @@ public sealed class AipsWebApiProcessService : IAsyncDisposable
                 RedirectStandardError = true
             }
         };
-
-        foreach (var kv in env)
-        {
-            _process.StartInfo.Environment[kv.Key] = kv.Value;
-        }
-        
-        _process.OutputDataReceived += (_, e) =>
-        {
-            if (e.Data != null)
-            {
-                TestContext.Progress.WriteLine($"[WEBAPI] {e.Data}");
-            }
-        };
-
-        _process.ErrorDataReceived += (_, e) =>
-        {
-            if (e.Data != null)
-            {
-                TestContext.Progress.WriteLine($"[WEBAPI ERROR] {e.Data}");
-            }
-        };
-        
-        _process.EnableRaisingEvents = true;
-
-        _process.Exited += (_, _) =>
-        {
-            TestContext.Progress.WriteLine($"[WEBAPI EXITED] Code: {_process.ExitCode}");
-        };
-
-        _process.Start();
-        
-        _process.BeginOutputReadLine();
-        _process.BeginErrorReadLine();
-
-        return Task.CompletedTask;
-    }
-    
-    public ValueTask DisposeAsync()
-    {
-        try
-        {
-            if (_process is { HasExited: false })
-            {
-                _process.Kill(true);
-            }
-
-            _process?.Dispose();
-            
-            return ValueTask.CompletedTask;
-        }
-        catch (Exception exception)
-        {
-            return ValueTask.FromException(exception);
-        }
     }
 }
