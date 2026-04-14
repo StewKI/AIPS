@@ -13,7 +13,13 @@ public abstract class PlaywrightTestBase : PageTest
     [OneTimeSetUp]
     public async Task GlobalSetup()
     {
-        TestEnvironment = new TestEnvironment();
+        TestEnvironment = (await TestEnvironmentBuilder.CreateAsync())
+            .AddAipsWebApi().WithOutputRedirectedToTestConsole()
+            .AddAipsRT().WithOutputRedirectedToTestConsole()
+            .AddAipsWorker().WithOutputRedirectedToTestConsole()
+            .AddFrontend()
+            .Build();
+
         await TestEnvironment.InitializeAsync();
     }
     
