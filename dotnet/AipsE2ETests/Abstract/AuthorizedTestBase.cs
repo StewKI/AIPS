@@ -35,5 +35,7 @@ public abstract class AuthorizedTestBase : PlaywrightTestBase
         await _passwordInput.FillAsync(DefaultPassword);
         
         await _submitButton.ClickAsync();
+        
+        await Page.WaitForURLAsync(BaseUrl);       
     }
 }

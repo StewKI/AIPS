@@ -87,6 +87,7 @@ async function joinWithCode() {
       data-bs-target="#whiteboardSidebar"
       aria-controls="whiteboardSidebar"
       style="writing-mode: vertical-rl;"
+      data-testid="whiteboard-history-sidebar-open-button"
     >
       My Whiteboards
     </button>
@@ -188,8 +189,8 @@ async function joinWithCode() {
   </div>
   <div v-if="showCreateModal" class="modal-backdrop fade show"></div>
 
-  <WhiteboardHistorySidebar v-if="auth.isAuthenticated" />
-  <RecentWhiteboardsPanel v-if="auth.isAuthenticated" />
+  <WhiteboardHistorySidebar v-if="auth.isAuthenticated" data-testid="whiteboard-history-sidebar"/>
+  <RecentWhiteboardsPanel v-if="auth.isAuthenticated" data-testid="recent-whiteboards-sidebar"/>
 </template>
 
 <style scoped>

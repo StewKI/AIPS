@@ -11,9 +11,10 @@ import WhiteboardHistoryList from './WhiteboardHistoryList.vue'
     class="offcanvas offcanvas-start bg-dark text-light"
     tabindex="-1"
     aria-labelledby="whiteboardSidebarLabel"
+    data-testid="whiteboard-history-sidebar"
   >
     <div class="offcanvas-header border-bottom border-secondary">
-      <h5 id="whiteboardSidebarLabel" class="offcanvas-title">
+      <h5 id="whiteboardSidebarLabel" class="offcanvas-title" data-testid="whiteboard-history-sidebar-title">
         My Whiteboards
       </h5>
       <button
@@ -21,6 +22,7 @@ import WhiteboardHistoryList from './WhiteboardHistoryList.vue'
         class="btn-close"
         data-bs-dismiss="offcanvas"
         aria-label="Close"
+        data-testid="whiteboard-history-sidebar-close-button"
       />
     </div>
     <div class="offcanvas-body p-0">
