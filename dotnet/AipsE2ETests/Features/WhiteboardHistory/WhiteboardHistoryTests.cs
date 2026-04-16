@@ -24,7 +24,7 @@ public class WhiteboardHistoryTests : AuthorizedTestBase
     private ILocator _whiteboardHistoryItemDeleteButton = null!;
     
     [SetUp]
-    public async Task MyWhiteboardsTestsSetUp()
+    public async Task WhiteboardHistoryTestsSetUp()
     {
         await Page.SetViewportSizeAsync(1280, 720); 
         
@@ -75,7 +75,7 @@ public class WhiteboardHistoryTests : AuthorizedTestBase
     }
 
     [Test]
-    public async Task User_Can_See_No_Whiteboards_Yet()
+    public async Task User_Can_See_No_Whiteboard_History_Yet()
     {
         await _whiteboardHistorySidebarOpenButton.ClickAsync();
         
@@ -90,7 +90,7 @@ public class WhiteboardHistoryTests : AuthorizedTestBase
     {
         const string title = "Test Whiteboard";
         
-        await TestEnvironment.CreateWhiteboardForUser(DefaultEmail, DefaultPassword, title, WhiteboardJoinPolicy.FreeToJoin, 10);
+        _ = await TestEnvironment.CreateWhiteboardForUser(DefaultEmail, DefaultPassword, title, WhiteboardJoinPolicy.FreeToJoin, 10);
         await Page.ReloadAsync();
         
         await _whiteboardHistorySidebarOpenButton.ClickAsync();
@@ -107,7 +107,7 @@ public class WhiteboardHistoryTests : AuthorizedTestBase
     [TestCase(10)]
     public async Task User_Can_Scroll_Through_His_Whiteboard_History(int whiteboardCount)
     {
-        await TestEnvironment.CreateMultipleWhiteboardsForUser(DefaultEmail, DefaultPassword, whiteboardCount);
+        _ = await TestEnvironment.CreateMultipleWhiteboardsForUser(DefaultEmail, DefaultPassword, whiteboardCount);
         await Page.ReloadAsync();
         
         await _whiteboardHistorySidebarOpenButton.ClickAsync();

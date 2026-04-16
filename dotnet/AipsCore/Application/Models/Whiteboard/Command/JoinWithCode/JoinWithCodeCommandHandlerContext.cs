@@ -10,4 +10,7 @@ public sealed record JoinWithCodeCommandHandlerContext(
     WhiteboardCode Code,
     Domain.Models.Whiteboard.Whiteboard? Whiteboard,
     WhiteboardMembership? WhiteboardMembership
-) : ICommandHandlerContext;
+) : ICommandHandlerContext<JoinWithCodeCommandResult>
+{
+    public JoinWithCodeCommandResult? Result { get; set; }
+}

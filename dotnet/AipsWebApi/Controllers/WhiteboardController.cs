@@ -34,12 +34,12 @@ public class WhiteboardController : ControllerBase
     [HttpGet("{whiteboardId}")]
     public async Task<ActionResult<Whiteboard>> GetWhiteboardById([FromRoute] string whiteboardId, CancellationToken cancellationToken)
     {
-        var whiteboard = await _dispatcher.Execute(new GetWhiteboardQuery(whiteboardId), cancellationToken);
-        if (whiteboard == null)
+        var result = await _dispatcher.Execute(new GetWhiteboardQuery(whiteboardId), cancellationToken);
+        if (result.Whiteboard == null)
         {
             return NotFound();
         }
-        return Ok(whiteboard);
+        return Ok(result.Whiteboard);
     }
 
     [Authorize]

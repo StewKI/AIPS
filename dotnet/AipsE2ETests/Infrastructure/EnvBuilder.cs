@@ -20,8 +20,8 @@ public static class EnvBuilder
             ["RABBITMQ_DEFAULT_VHOST"] = "/",
             ["RABBITMQ_EXCHANGE"] = "worker",
 
-            ["JWT_ISSUER"] = "AIPS_test",
-            ["JWT_AUDIENCE"] = "AIPSWebApi_test",
+            ["JWT_ISSUER"] = "AIPS",
+            ["JWT_AUDIENCE"] = "AIPSWebApi",
             ["JWT_KEY"] = "7fY2sK9xLpQmN4vRtXzW8aBcDeFgHiJkLmNoPqRsTuVwXyZ1234567890ABCDEF",
             ["JWT_EXPIRATION_MINUTES"] = "15",
             ["JWT_REFRESH_TOKEN_EXPIRATION_DAYS"] = "7"

@@ -17,10 +17,11 @@ const handleClick = () => emit('click', props.whiteboard)
   <div
     class="card border rounded-3 p-3 cursor-pointer hover-card"
     @click="handleClick"
+    data-testid="recent-whiteboards-item"
   >
     <div class="d-flex justify-content-between align-items-start mb-2">
-      <h5 class="mb-0">{{ whiteboard.title }}</h5>
-      <small class="text-muted">{{ formatDate(whiteboard.createdAt) }}</small>
+      <h5 class="mb-0" data-testid="recent-whiteboards-item-title">{{ whiteboard.title }}</h5>
+      <small class="text-muted" data-testid="recent-whiteboards-item-creation-date">{{ formatDate(whiteboard.createdAt) }}</small>
     </div>
   </div>
 </template>

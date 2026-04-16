@@ -98,6 +98,7 @@ async function joinWithCode() {
       data-bs-target="#recentWhiteboardsSidebar"
       aria-controls="recentWhiteboardsSidebar"
       style="writing-mode: vertical-rl;"
+      data-testid="recent-whiteboards-sidebar-open-button"
     >
       Recent Whiteboards
     </button>
