@@ -1,3 +1,4 @@
+using DotNet.Testcontainers.Builders;
 using Testcontainers.PostgreSql;
 using Testcontainers.RabbitMq;
 
@@ -10,7 +11,7 @@ public sealed class TestInfrastructure
     
     public string PostgresConnectionString => Postgres.GetConnectionString();
     
-    public string RabbitMqUri => $"amqp://guest:guest@{RabbitMq.Hostname}:{RabbitMq.GetMappedPublicPort(5672)}/";
+    public string RabbitMqUri => $"amqp://guest:guest@localhost:{RabbitMq.GetMappedPublicPort(5672)}/";
     
     public async Task InitializeAsync()
     {
@@ -21,6 +22,8 @@ public sealed class TestInfrastructure
             .Build();
 
         RabbitMq = new RabbitMqBuilder("rabbitmq:3-management")
+            .WithUsername("guest")
+            .WithPassword("guest")
             .WithPortBinding(5672, true)
             .WithPortBinding(15672, true)
             .Build();

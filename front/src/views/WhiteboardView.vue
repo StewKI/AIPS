@@ -71,7 +71,11 @@ async function handleLeave() {
     </div>
   </div>
 
-  <div v-else class="d-flex vh-100">
+  <div
+    v-else
+    class="d-flex vh-100"
+    data-testid="whiteboard-view"
+  >
     <WhiteboardToolbar @leave="handleLeave" />
     <WhiteboardCanvas />
 

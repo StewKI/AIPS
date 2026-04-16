@@ -26,4 +26,13 @@ public sealed class AipsWorkerProcessService : ProcessService
             }
         };
     }
+    
+    protected override Dictionary<string, string> OverrideEnvironmentVariables()
+    {
+        return new Dictionary<string, string>
+        {
+            {"ASPNETCORE_ENVIRONMENT", "Production"},
+            {"DOTNET_ENVIRONMENT", "Production"}
+        };
+    }
 }

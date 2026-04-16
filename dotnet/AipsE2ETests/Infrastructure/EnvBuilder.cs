@@ -15,8 +15,8 @@ public static class EnvBuilder
             ["POSTGRES_PASSWORD"] = "postgres",
 
             ["RABBITMQ_AMQP_URI"] = rabbit,
-            ["RABBITMQ_DEFAULT_USER"] = "guest_test",
-            ["RABBITMQ_DEFAULT_PASS"] = "guest_test",
+            ["RABBITMQ_DEFAULT_USER"] = "guest",
+            ["RABBITMQ_DEFAULT_PASS"] = "guest",
             ["RABBITMQ_DEFAULT_VHOST"] = "/",
             ["RABBITMQ_EXCHANGE"] = "worker",
 
