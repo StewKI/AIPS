@@ -42,21 +42,31 @@ async function handleLeave() {
 </script>
 
 <template>
-  <div v-if="infoStore.isWaitingToJoin"
-       class="d-flex flex-column justify-content-center align-items-center vh-100 text-center">
+  <div
+    v-if="infoStore.isWaitingToJoin"
+    class="d-flex flex-column justify-content-center align-items-center vh-100 text-center"
+    data-testid="whiteboard-view-waiting-room"
+  >
     <div class="spinner-border text-primary mb-4" role="status">
       <span class="visually-hidden">Waiting...</span>
     </div>
 
     <h5 class="mb-3">Waiting for owner's approval</h5>
 
-    <button class="btn btn-outline-danger"
-            @click="handleLeave">
+    <button
+      v-if="sessionStore.isConnected"
+      class="btn btn-outline-danger"
+      @click="handleLeave"
+      data-testid="whiteboard-view-waiting-room-cancel-button"
+    >
       Cancel
     </button>
   </div>
 
-  <div v-else-if="sessionStore.isLoading" class="d-flex flex-column justify-content-center align-items-center vh-100">
+  <div
+    v-else-if="sessionStore.isLoading"
+    class="d-flex flex-column justify-content-center align-items-center vh-100"
+  >
     <div class="spinner-border text-primary mb-3" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
@@ -71,7 +81,11 @@ async function handleLeave() {
     </div>
   </div>
 
-  <div v-else class="d-flex vh-100">
+  <div
+    v-else
+    class="d-flex vh-100"
+    data-testid="whiteboard-view"
+  >
     <WhiteboardToolbar @leave="handleLeave" />
     <WhiteboardCanvas />
 

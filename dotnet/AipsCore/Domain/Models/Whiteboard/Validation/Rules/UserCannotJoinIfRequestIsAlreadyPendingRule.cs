@@ -4,9 +4,9 @@ namespace AipsCore.Domain.Models.Whiteboard.Validation.Rules;
 
 public class UserCannotJoinIfRequestIsAlreadyPendingRule : AbstractRule
 {
-    private readonly WhiteboardMembership.WhiteboardMembership _whiteboardMembership;
+    private readonly WhiteboardMembership.WhiteboardMembership? _whiteboardMembership;
 
-    public UserCannotJoinIfRequestIsAlreadyPendingRule(WhiteboardMembership.WhiteboardMembership whiteboardMembership)
+    public UserCannotJoinIfRequestIsAlreadyPendingRule(WhiteboardMembership.WhiteboardMembership? whiteboardMembership)
     {
         _whiteboardMembership = whiteboardMembership;
     }
@@ -15,6 +15,11 @@ public class UserCannotJoinIfRequestIsAlreadyPendingRule : AbstractRule
     protected override string ErrorMessage => "User cannot join if request is already pending";
     public override bool Validate()
     {
+        if (_whiteboardMembership is null)
+        {
+            return true;
+        }
+        
         return !_whiteboardMembership.IsPending();
     }
 }

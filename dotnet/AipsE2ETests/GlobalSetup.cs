@@ -14,7 +14,7 @@ public class GlobalSetup
             .AddAipsWebApi().WithOutputRedirectedToTestConsole()
             .AddAipsRT().WithOutputRedirectedToTestConsole()
             .AddAipsWorker().WithOutputRedirectedToTestConsole()
-            .AddFrontend()
+            .AddFrontend().WithOutputRedirectedToTestConsole()
             .Build();
 
         await TestEnvironment.InitializeAsync();

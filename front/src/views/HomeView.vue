@@ -41,6 +41,8 @@ async function handleCreateNewWhiteboard() {
     selectedJoinPolicy.value = WhiteboardJoinPolicy.FreeToJoin
     maxParticipants.value = 10
 
+    console.log(newWhiteboardId)
+
     await router.push({ name: 'whiteboard', params: { id: newWhiteboardId } })
   } catch (e: any) {
     newWhiteboardError.value = e.messages || ['Failed to create whiteboard']
@@ -87,6 +89,7 @@ async function joinWithCode() {
       data-bs-target="#whiteboardSidebar"
       aria-controls="whiteboardSidebar"
       style="writing-mode: vertical-rl;"
+      data-testid="whiteboard-history-sidebar-open-button"
     >
       My Whiteboards
     </button>
@@ -97,6 +100,7 @@ async function joinWithCode() {
       data-bs-target="#recentWhiteboardsSidebar"
       aria-controls="recentWhiteboardsSidebar"
       style="writing-mode: vertical-rl;"
+      data-testid="recent-whiteboards-sidebar-open-button"
     >
       Recent Whiteboards
     </button>
@@ -109,7 +113,7 @@ async function joinWithCode() {
   >
     <div style="width: 320px;">
 
-      <div v-if="joinWithCodeError.length" class="alert alert-danger">
+      <div v-if="joinWithCodeError.length" class="alert alert-danger" data-testid="join-with-code-error">
         <ul>
           <li v-for="errorMessage in joinWithCodeError" :key="errorMessage">{{ errorMessage }}</li>
         </ul>
@@ -125,28 +129,55 @@ async function joinWithCode() {
         inputmode="numeric"
         pattern="[0-9]*"
         @input="joinCode = joinCode.replace(/\D/g, '')"
+        data-testid="join-with-code-input"
       />
-      <button class="btn btn-primary w-75 mt-2 d-block mx-auto" :disabled="whiteboards.isLoading" @click="joinWithCode">
+      <button
+        class="btn btn-primary w-75 mt-2 d-block mx-auto"
+        :disabled="whiteboards.isLoading"
+        @click="joinWithCode"
+        data-testid="join-with-code-submit-button"
+      >
         <span v-if="whiteboards.isLoading" class="spinner-border spinner-border-sm me-2"></span>
         Join with code
       </button>
       <div class="text-center">
         <small class="text-muted my-4 d-inline-block">or</small>
       </div>
-      <button class="btn btn-outline-light w-75 d-block mx-auto" @click="showCreateModal = true">Create new whiteboard</button>
+      <button
+        class="btn btn-outline-light w-75 d-block mx-auto"
+        @click="showCreateModal = true"
+        data-testid="create-whiteboard-open-button"
+      >
+        Create new whiteboard
+      </button>
     </div>
   </div>
 
-  <div v-if="showCreateModal" class="modal d-block" tabindex="-1" @click.self="showCreateModal = false">
+  <div
+    v-if="showCreateModal"
+    class="modal d-block"
+    tabindex="-1"
+    @click.self="showCreateModal = false"
+    data-testid="create-whiteboard-dialog"
+  >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content bg-dark text-light">
         <div class="modal-header border-secondary">
-          <h5 class="modal-title">Create new whiteboard</h5>
-          <button type="button" class="btn-close btn-close-white" @click="showCreateModal = false"></button>
+          <h5 class="modal-title" data-testid="create-whiteboard-dialog-title">Create new whiteboard</h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            @click="showCreateModal = false"
+            data-testid="create-whiteboard-dialog-close-button"
+          ></button>
         </div>
         <div class="modal-body">
 
-          <div v-if="newWhiteboardError.length" class="alert alert-danger">
+          <div
+            v-if="newWhiteboardError.length"
+            class="alert alert-danger"
+            data-testid="create-whiteboard-dialog-error"
+          >
             <ul>
               <li v-for="errorMessage in newWhiteboardError" :key="errorMessage">{{ errorMessage }}</li>
             </ul>
@@ -157,11 +188,13 @@ async function joinWithCode() {
             type="text"
             class="form-control bg-dark text-light border-secondary"
             placeholder="Whiteboard title"
+            data-testid="create-whiteboard-dialog-title-input"
           />
           <label class="form-label mt-3 mb-1">Join Policy</label>
           <select
             v-model="selectedJoinPolicy"
             class="form-select bg-dark text-light border-secondary"
+            data-testid="create-whiteboard-dialog-join-policy-select"
           >
             <option :value="WhiteboardJoinPolicy.FreeToJoin">Free to Join</option>
             <option :value="WhiteboardJoinPolicy.RequestToJoin">Request to Join</option>
@@ -174,11 +207,24 @@ async function joinWithCode() {
             min="2"
             max="50"
             class="form-control bg-dark text-light border-secondary"
+            data-testid="create-whiteboard-dialog-max-participants-input"
           />
         </div>
         <div class="modal-footer border-secondary">
-          <button type="button" class="btn btn-secondary" @click="showCreateModal = false">Cancel</button>
-          <button type="button" class="btn btn-primary" @click="handleCreateNewWhiteboard">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            @click="showCreateModal = false"
+            data-testid="create-whiteboard-dialog-cancel-button"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="handleCreateNewWhiteboard"
+            data-testid="create-whiteboard-dialog-submit-button"
+          >
             <span v-if="whiteboards.isLoading" class="spinner-border spinner-border-sm me-2"></span>
             Create
           </button>
@@ -188,8 +234,8 @@ async function joinWithCode() {
   </div>
   <div v-if="showCreateModal" class="modal-backdrop fade show"></div>
 
-  <WhiteboardHistorySidebar v-if="auth.isAuthenticated" />
-  <RecentWhiteboardsPanel v-if="auth.isAuthenticated" />
+  <WhiteboardHistorySidebar v-if="auth.isAuthenticated" data-testid="whiteboard-history-sidebar"/>
+  <RecentWhiteboardsPanel v-if="auth.isAuthenticated" data-testid="recent-whiteboards-sidebar"/>
 </template>
 
 <style scoped>

@@ -11,9 +11,10 @@ import RecentWhiteboardsList from './RecentWhiteboardsList.vue'
     class="offcanvas offcanvas-start bg-dark text-light"
     tabindex="-1"
     aria-labelledby="recentWhiteboardsSidebarLabel"
+    data-testid="recent-whiteboards-sidebar"
   >
     <div class="offcanvas-header border-bottom border-secondary">
-      <h5 id="recentWhiteboardsSidebarLabel" class="offcanvas-title">
+      <h5 id="recentWhiteboardsSidebarLabel" class="offcanvas-title" data-testid="recent-whiteboards-sidebar-title">
         Recent Whiteboards
       </h5>
       <button
@@ -21,6 +22,7 @@ import RecentWhiteboardsList from './RecentWhiteboardsList.vue'
         class="btn-close"
         data-bs-dismiss="offcanvas"
         aria-label="Close"
+        data-testid="recent-whiteboards-sidebar-close-button"
       />
     </div>
     <div class="offcanvas-body p-0">

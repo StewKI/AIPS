@@ -29,7 +29,11 @@ const handleDelete = async (whiteboard: Whiteboard) => {
 </script>
 
 <template>
-  <div class="d-flex flex-column gap-3 overflow-auto h-100 w-100 p-3" v-if="sortedWhiteboards.length > 0">
+  <div
+    class="d-flex flex-column gap-3 overflow-auto h-100 w-100 p-3"
+    v-if="sortedWhiteboards.length > 0"
+    data-testid="whiteboard-history-list"
+  >
     <WhiteboardHistoryItem
       v-for="wb in sortedWhiteboards"
       :key="wb.id"
@@ -38,7 +42,11 @@ const handleDelete = async (whiteboard: Whiteboard) => {
       @delete="handleDelete"
     />
   </div>
-  <div class="d-flex flex-column gap-3 overflow-auto h-100 w-100 p-3" v-else>
+  <div
+    class="d-flex flex-column gap-3 overflow-auto h-100 w-100 p-3"
+    v-else
+    data-testid="whiteboard-history-empty"
+  >
     <p class="text-muted">You have not created a whiteboard yet</p>
   </div>
 </template>

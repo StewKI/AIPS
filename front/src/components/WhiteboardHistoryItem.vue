@@ -42,15 +42,17 @@ const handleConfirmDelete = (e: MouseEvent) => {
   <div
     class="card border rounded-3 p-3 cursor-pointer hover-card"
     @click="handleClick"
+    data-testid="whiteboard-history-item"
   >
     <div class="d-flex justify-content-between align-items-start mb-2">
-      <h5 class="mb-0">{{ whiteboard.title }}</h5>
+      <h5 class="mb-0" data-testid="whiteboard-history-item-title">{{ whiteboard.title }}</h5>
       <div class="d-flex align-items-center gap-2">
-        <small class="text-muted">{{ formatDate(whiteboard.createdAt) }}</small>
+        <small class="text-muted" data-testid="whiteboard-history-item-creation-date">{{ formatDate(whiteboard.createdAt) }}</small>
         <button
           class="btn btn-link p-0 text-danger"
           title="Delete whiteboard"
           @click="handleDeleteClick"
+          data-testid="whiteboard-history-item-delete-button"
         >
           <i class="bi bi-trash fs-5"></i>
         </button>

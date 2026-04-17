@@ -26,7 +26,11 @@ const handleClick = (whiteboard: any) => {
 
 <template>
 
-  <div class="d-flex flex-column gap-3 overflow-auto h-100 w-100 p-3" v-if="sortedWhiteboards.length > 0">
+  <div
+    class="d-flex flex-column gap-3 overflow-auto h-100 w-100 p-3"
+    v-if="sortedWhiteboards.length > 0"
+    data-testid="recent-whiteboards-list"
+  >
     <RecentWhiteboardsItem
       v-for="wb in sortedWhiteboards"
       :key="wb.id"
@@ -34,7 +38,11 @@ const handleClick = (whiteboard: any) => {
       @click="handleClick"
     />
   </div>
-  <div class="d-flex flex-column gap-3 overflow-auto h-100 w-100 p-3" v-else>
+  <div
+    class="d-flex flex-column gap-3 overflow-auto h-100 w-100 p-3"
+    v-else
+    data-testid="recent-whiteboards-empty"
+  >
     <p class="text-muted">No recent whiteboards</p>
   </div>
 

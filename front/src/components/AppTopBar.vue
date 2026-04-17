@@ -85,6 +85,7 @@ const showLogoutConfirm = ref(false)
       tabindex="-1"
       style="background: rgba(0,0,0,0.5)"
       @click.self="showLogoutConfirm = false"
+      data-testid="logout-confirm-modal"
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -94,6 +95,7 @@ const showLogoutConfirm = ref(false)
               type="button"
               class="btn-close"
               @click="showLogoutConfirm = false"
+              data-testid="logout-modal-close-button"
             ></button>
           </div>
           <div class="modal-body">
@@ -104,6 +106,7 @@ const showLogoutConfirm = ref(false)
               type="button"
               class="btn btn-outline-secondary"
               @click="showLogoutConfirm = false"
+              data-testid="logout-modal-cancel-button"
             >
               Cancel
             </button>

@@ -1,4 +1,3 @@
-using System.Net.Http.Json;
 using AipsCore.Infrastructure.Persistence.Db;
 using AipsE2ETests.Infrastructure.Processes;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +5,7 @@ using Npgsql;
 
 namespace AipsE2ETests.Infrastructure;
 
-public class TestEnvironment : IAsyncDisposable
+public sealed partial class TestEnvironment : IAsyncDisposable
 {
     private TestInfrastructure _infrastructure = null!;
 
@@ -105,18 +104,6 @@ public class TestEnvironment : IAsyncDisposable
 
         await using var cmd = new NpgsqlCommand(sql, conn);
         await cmd.ExecuteNonQueryAsync();
-    }
-    
-    public async Task CreateUser(string username, string email, string password)
-    {
-        var response = await Client.PostAsJsonAsync("/api/auth/signup", new
-        {
-            username,
-            email,
-            password
-        });
-
-        response.EnsureSuccessStatusCode();
     }
     
     public async ValueTask DisposeAsync()

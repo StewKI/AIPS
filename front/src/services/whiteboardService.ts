@@ -20,7 +20,7 @@ export const whiteboardService = {
 
   async getWhiteboardById(id: string): Promise<Whiteboard> {
     const result = await api.get<any>(`/api/Whiteboard/${id}`)
-    return mapWhiteboard(result.whiteboard)
+    return mapWhiteboard(result)
   },
 
   async deleteWhiteboard(id: string): Promise<void> {

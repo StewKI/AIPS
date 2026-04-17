@@ -6,7 +6,21 @@ namespace AipsCore.Domain.Models.Whiteboard;
 
 public partial class Whiteboard 
 {
-    public WhiteboardMembership.WhiteboardMembership RequestJoin(UserId userId)
+    public WhiteboardMembership.WhiteboardMembership TryJoin(UserId userId, WhiteboardMembership.WhiteboardMembership? membership = null)
+    {
+        if (membership is not null)
+        {
+            RequestReJoin(membership);
+        }
+        else
+        {
+            membership = RequestJoin(userId);
+        }
+        
+        return membership;
+    }
+    
+    private WhiteboardMembership.WhiteboardMembership RequestJoin(UserId userId, WhiteboardMembership.WhiteboardMembership? membership = null)
     {
         return WhiteboardMembership.WhiteboardMembership.Create(
             Id.IdValue,
@@ -16,7 +30,7 @@ public partial class Whiteboard
             DateTime.UtcNow);
     }
 
-    public void RequestReJoin(WhiteboardMembership.WhiteboardMembership membership)
+    private void RequestReJoin(WhiteboardMembership.WhiteboardMembership membership)
     {
         switch (membership.Status)
         {
