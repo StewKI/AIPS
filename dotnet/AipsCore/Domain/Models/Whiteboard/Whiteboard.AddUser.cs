@@ -20,7 +20,7 @@ public partial class Whiteboard
         return membership;
     }
     
-    private WhiteboardMembership.WhiteboardMembership RequestJoin(UserId userId)
+    private WhiteboardMembership.WhiteboardMembership RequestJoin(UserId userId, WhiteboardMembership.WhiteboardMembership? membership = null)
     {
         return WhiteboardMembership.WhiteboardMembership.Create(
             Id.IdValue,

@@ -113,7 +113,7 @@ async function joinWithCode() {
   >
     <div style="width: 320px;">
 
-      <div v-if="joinWithCodeError.length" class="alert alert-danger">
+      <div v-if="joinWithCodeError.length" class="alert alert-danger" data-testid="join-with-code-error">
         <ul>
           <li v-for="errorMessage in joinWithCodeError" :key="errorMessage">{{ errorMessage }}</li>
         </ul>
@@ -129,8 +129,14 @@ async function joinWithCode() {
         inputmode="numeric"
         pattern="[0-9]*"
         @input="joinCode = joinCode.replace(/\D/g, '')"
+        data-testid="join-with-code-input"
       />
-      <button class="btn btn-primary w-75 mt-2 d-block mx-auto" :disabled="whiteboards.isLoading" @click="joinWithCode">
+      <button
+        class="btn btn-primary w-75 mt-2 d-block mx-auto"
+        :disabled="whiteboards.isLoading"
+        @click="joinWithCode"
+        data-testid="join-with-code-submit-button"
+      >
         <span v-if="whiteboards.isLoading" class="spinner-border spinner-border-sm me-2"></span>
         Join with code
       </button>

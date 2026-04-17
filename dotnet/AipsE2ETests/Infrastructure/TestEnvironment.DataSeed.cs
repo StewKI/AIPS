@@ -6,6 +6,7 @@ using AipsCore.Application.Models.Whiteboard.Command.CreateWhiteboard;
 using AipsCore.Domain.Models.Whiteboard.Enums;
 using AipsCore.Domain.Models.WhiteboardMembership.Enums;
 using AipsCore.Infrastructure.Persistence.Db;
+using AipsCore.Infrastructure.Persistence.Whiteboard;
 using Microsoft.EntityFrameworkCore;
 using WhiteboardMembership = AipsCore.Domain.Models.WhiteboardMembership.WhiteboardMembership;
 
@@ -131,6 +132,41 @@ public sealed partial class TestEnvironment
         
         var logoutResponse = await Client.SendAsync(logoutRequest);
         logoutResponse.EnsureSuccessStatusCode();
+    }
+
+    public async Task<string> GetWhiteboardCodeFromId(string email, string password, string whiteboardId)
+    {
+        var loginResponse = await Client.PostAsJsonAsync("/api/auth/login", new
+        {
+            email,
+            password
+        });
+
+        loginResponse.EnsureSuccessStatusCode();
+
+        var loginResult = await loginResponse.Content.ReadFromJsonAsync<LogInUserCommandResult>();
+        
+        using var whiteboardRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/whiteboard/{whiteboardId}");
+        whiteboardRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", loginResult!.AccessToken);
+
+        var whiteboardResponse = await Client.SendAsync(whiteboardRequest);
+        whiteboardResponse.EnsureSuccessStatusCode();
+
+        var whiteboardResult = await whiteboardResponse.Content.ReadFromJsonAsync<Whiteboard>();
+
+        var code = whiteboardResult!.Code;
+        
+        using var logoutRequest = new HttpRequestMessage(HttpMethod.Delete, "/api/auth/logout");
+        logoutRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", loginResult.AccessToken);
+        logoutRequest.Content = JsonContent.Create(new
+        {
+            loginResult.RefreshToken
+        });
+        
+        var logoutResponse = await Client.SendAsync(logoutRequest);
+        logoutResponse.EnsureSuccessStatusCode();
+
+        return code;
     }
     
     private AipsDbContext CreateDb()

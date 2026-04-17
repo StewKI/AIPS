@@ -45,7 +45,7 @@ public abstract class AbstractCommandHandlerStage<TCommand, TCommandResult, TCom
         
         (this as IValidatable<TCommand, TCommandHandlerContext>).Validate(command, updatedContext);
         
-        updatedContext = await Execute(command, context, cancellationToken);
+        updatedContext = await Execute(command, updatedContext, cancellationToken);
         
         return updatedContext;
     }

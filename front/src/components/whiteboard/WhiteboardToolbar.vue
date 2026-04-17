@@ -192,6 +192,7 @@ const copyCodeToClipboard = async () => {
         class="btn btn-sm btn-outline-danger leave-btn"
         title="Leave whiteboard"
         @click="emit('leave')"
+        data-testid="whiteboard-view-leave-button"
       >
         Leave
       </button>
