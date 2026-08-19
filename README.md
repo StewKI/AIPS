@@ -84,6 +84,20 @@ The frontend is a thin client that draws and relays. Almost all of the design si
 - `dotnet/AipsWorker/Utilities/SubscribeMethodUtility.cs` binds the generic `SubscribeAsync<T>` for each message type through reflection, which is how the Worker registers all of its subscriptions from a plain list of types.
 - `dotnet/AipsRT/Services/RtErrorHandleStrategy.cs` is what actually runs when persistence rejects a change: reload the board from the database and re-initialise every connected client.
 
+## Why it is built this way
+
+**The realtime service is separate from the Web API.** The two do different kinds of work. One holds long lived WebSocket connections and per board state, the other answers stateless requests and forgets them. Keeping them apart means connection state never sits inside the REST process, and either one can be restarted without dragging the other down with it.
+
+**A board lives in memory while people are drawing on it.** A database round trip on every stroke would be felt by the person drawing, so RT answers from its own state and broadcasts straight away.
+
+**Persistence goes through a broker instead of a direct write.** The interactive path never waits on the database. If the Worker is slow or restarting, drawing carries on and the messages wait in the queue.
+
+**Mistakes are corrected afterwards rather than prevented up front.** RT could validate a shape before broadcasting it, but then the domain rules would have to exist in two places and drift apart. Instead the rules live only in the domain, run in the Worker, and when they reject something the Worker says so with an `ErrorMessage`. RT then reloads the board and re-initialises everyone. Optimistic, with one explicit correction step.
+
+**Three entrypoints, one set of handlers.** A hub call, an HTTP request and a broker message all reach the same dispatcher and the same handler, so a rule cannot behave one way over REST and another way over the hub.
+
+**Domain models are kept apart from the EF entities.** Validation lives in value objects that cannot be constructed in an invalid state, and the mapping to storage is written out by hand in both directions. It costs a set of mapper classes, and in exchange no persistence concern reaches the rules.
+
 ## Requirements
 
 | What | Version | Notes |
