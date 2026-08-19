@@ -81,7 +81,7 @@ The frontend is a thin client. Almost all of the design is on the .NET side, rou
 |---|---|
 | `AipsRT/Hubs/WhiteboardHub.cs` | The entire realtime surface. Every drawing action updates the in-memory board, publishes a message and broadcasts to the group |
 | `AipsWebApi/Controllers/` | Deliberately thin. Build a command or a query, hand it to the dispatcher, return the result |
-| `AipsCore/Application/Common/Dispatcher/` | Resolves the handler from the command or query type, which is why all three entrypoints execute the same way |
+| `AipsCore/Application/Common/Dispatcher/` | Resolves the handler from the command or query type, which is why a hub call, an HTTP request and a broker message all execute the same way |
 | `AipsCore/Application/Models/Shape/Command/CreateRectangle/` | One command and handler pair, if you want a single vertical slice to read |
 | `AipsCore/Domain/` | Value objects declare their rules, the validator runs all of them, and construction fails with a `ValidationException` carrying every error, not just the first. No EF reference anywhere under here |
 | `AipsCore/Infrastructure/Persistence/` | Repositories and hand written mappers keeping the EF entities off the domain models |
