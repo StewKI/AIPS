@@ -7,7 +7,6 @@ using AipsRT.Model.Whiteboard;
 using AipsRT.Services;
 using AipsRT.Services.Interfaces;
 using DotNetEnv;
-using Microsoft.AspNetCore.SignalR;
 
 if (File.Exists("../../.env"))
 {
@@ -48,17 +47,11 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-app.MapGet("/test", (IHubContext<TestHub> hubContext) =>
-{
-    hubContext.Clients.All.SendAsync("ReceiveText", "Ide gas! ");
-});
-
 app.UseCors("frontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapHub<TestHub>("/hubs/test");
 app.MapHub<WhiteboardHub>("/hubs/whiteboard");
 
 app.Run();

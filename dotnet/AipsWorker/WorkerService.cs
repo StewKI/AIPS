@@ -2,7 +2,6 @@ using System.Reflection;
 using AipsCore.Application.Abstract;
 using AipsCore.Application.Abstract.MessageBroking;
 using AipsCore.Application.Common.Message.ErrorMessage;
-using AipsCore.Application.Common.Message.TestMessage;
 using AipsCore.Domain.Common.Validation;
 using AipsWorker.Utilities;
 using Microsoft.Extensions.Hosting;

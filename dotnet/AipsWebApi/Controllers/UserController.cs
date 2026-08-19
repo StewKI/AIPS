@@ -1,7 +1,5 @@
 using AipsCore.Application.Abstract;
 using AipsCore.Application.Common.Authentication.Dtos;
-using AipsCore.Application.Abstract.MessageBroking;
-using AipsCore.Application.Common.Message.TestMessage;
 using AipsCore.Application.Models.User.Command.LogIn;
 using AipsCore.Application.Models.User.Command.LogOut;
 using AipsCore.Application.Models.User.Command.LogOutAll;
@@ -9,7 +7,6 @@ using AipsCore.Application.Models.User.Command.RefreshLogIn;
 using AipsCore.Application.Models.User.Command.SignUp;
 using AipsCore.Application.Models.User.Query.GetMe;
 using AipsCore.Application.Models.User.Query.GetUser;
-using AipsCore.Infrastructure.Persistence.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -64,14 +61,6 @@ public class UserController : ControllerBase
     {
         await _dispatcher.Execute(command, cancellationToken);
         return Ok();
-    }
-
-    [AllowAnonymous]
-    [HttpPost("test")]
-    public async Task Test(IMessagePublisher publisher)
-    {
-        var test = new TestMessage("ovo je test poruka");
-        await publisher.PublishAsync(test);
     }
 
     [Authorize]
