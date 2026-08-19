@@ -19,7 +19,7 @@ A board in session. Everyone present is listed in the sidebar, every shape carri
 
 ## Architecture
 
-<img src="docs/diagrams/communication-components.png" alt="AIPS components and communication paths" width="460">
+<img src="docs/diagrams/communication-components.png" alt="AIPS components and communication paths" width="872">
 
 Nginx is the single entrypoint. Behind it the REST path and the realtime path go their separate ways, and they only meet again at the database.
 
