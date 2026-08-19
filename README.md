@@ -1,31 +1,18 @@
 # AIPS (Advanced Interactive Painting System)
 
-A real-time collaborative whiteboard. One user creates a board and shares it, and several participants then draw on it at the same time, with every change showing up for everyone right away. The available shapes are rectangle, line, arrow and text. The board owner controls who gets in: depending on the join policy a participant either enters directly or waits to be approved, and the owner can also reject, kick or ban. Authentication is JWT with refresh tokens.
+A real-time collaborative whiteboard. One user creates a board and shares it, and several participants then draw on it at the same time, with every change showing up for everyone right away. The available shapes are rectangle, line, arrow and text. The board owner controls who gets in: depending on the join policy a participant either walks straight in, waits to be approved, or is refused outright. Authentication is JWT with refresh tokens.
 
 <img src="docs/screenshots/screenshot_3.png" alt="A whiteboard in session with two participants" width="900">
 
 A board in session. Everyone present is listed in the sidebar, every shape carries the name of whoever drew it, and the eight digit code under the list is what other people use to get in.
 
-<table>
-<tr>
-<td width="50%"><img src="docs/screenshots/screenshot_1.png" alt="Home screen" width="100%"></td>
-<td width="50%"><img src="docs/screenshots/screenshot_2.png" alt="Creating a new whiteboard" width="100%"></td>
-</tr>
-<tr>
-<td>Joining an existing board by code, or starting one of your own.</td>
-<td>A new board takes a title, a join policy and a participant limit.</td>
-</tr>
-</table>
-
 ## Architecture
 
 <img src="docs/diagrams/communication-components.png" alt="AIPS components and communication paths" width="872">
 
-Nginx is the single entrypoint. Behind it the REST path and the realtime path go their separate ways, and they only meet again at the database.
+There are two paths through the system. Drawing takes the fast one: the realtime service keeps the board in memory, answers from there and broadcasts to everyone on the board, then hands the change to a queue for somebody else to save. Everything that is not drawing (signup, login, creating and deleting boards, history, joining by code) takes the ordinary REST path through the Web API. The two run as separate processes and meet again at the database.
 
 ### What happens when you draw a shape
-
-There are two paths through the system, a fast one for realtime and a durable one for persistence, and they are only loosely coupled:
 
 1. The client draws and invokes a hub method over **SignalR** (`AddRectangle`, `MoveShape` and so on).
 2. **AipsRT** (the realtime service) changes the board in its **in-memory** state and immediately broadcasts that change to the other participants on the board.
@@ -35,7 +22,15 @@ There are two paths through the system, a fast one for realtime and a durable on
 
 So drawing feels instant, because nothing waits on the database, but the database is still the source of truth and it corrects memory whenever the two drift apart.
 
-Everything that isn't drawing (signup, login, creating and deleting boards, history, joining by code) goes the ordinary REST way through **AipsWebApi**.
+### What happens when someone joins
+
+1. The visitor enters the eight digit code, which is a plain REST call to `POST /api/Whiteboard/join`. The handler finds the board by that code and either creates a membership or picks up the one left from a previous visit.
+2. The board's join policy decides what a fresh membership starts as: `FreeToJoin` accepts on the spot, `RequestToJoin` leaves it pending, `Private` refuses.
+3. The client then opens the hub connection and calls `JoinWhiteboard`. RT loads the board into memory if nobody is on it yet, puts the connection into the board's SignalR group, and asks the database for the membership status.
+4. Accepted means straight in: `InitWhiteboard` to the newcomer with the current board, `Joined` to everyone already there. Pending means waiting: `WaitingForApproval` to the newcomer, and `UserWaitingForApproval` to the owner alone.
+5. When the owner calls `AcceptUser`, RT does the same two things it does for a shape. It publishes `AcceptUserRequestToJoinMessage` so the Worker writes the membership change, and separately it lets the user in right away without waiting for that write. `RejectUser` works the same way.
+
+Membership is the second thing that goes through this split, and it is the reason the pattern is worth the machinery. Drawing is not a special case in the code, it is just the loudest one.
 
 ## Components
 
@@ -51,6 +46,8 @@ One row per box on the diagram, in the same order:
 | **AipsWorker** | `dotnet/AipsWorker/`, .NET Worker Service | Subscribes to the drawing and membership messages, runs them as commands, saves the result, and publishes `ErrorMessage` if validation fails |
 | **DB** | `postgres:18` via Docker | Users, whiteboards, shapes, whiteboard memberships and refresh tokens |
 
+### AipsCore, the shared library
+
 `dotnet/AipsCore` has no box on the diagram because it isn't a process. It is the class library the three .NET services are built on, and most of the design sits in it:
 
 - `Domain` for models, value objects and validation rules
@@ -58,6 +55,20 @@ One row per box on the diagram, in the same order:
 - `Infrastructure` for EF Core and migrations, the RabbitMQ publisher and subscriber, JWT and the DI wiring
 
 That shared library is the reason WebApi, RT and Worker can all work on the same model. All three host the same dispatcher and the same handlers, and the only difference between them is what sets a handler off: an HTTP request, a SignalR call, or a message from the broker.
+
+## Why it is built this way
+
+**The realtime service is separate from the Web API.** The two do different kinds of work. One holds long lived WebSocket connections and per board state, the other answers stateless requests and forgets them. Keeping them apart means connection state never sits inside the REST process, and either one can be restarted without dragging the other down with it.
+
+**A board lives in memory while people are drawing on it.** A database round trip on every stroke is latency the person drawing would feel. The cost is that RT is stateful: a live board belongs to the instance holding it and does not survive a restart, so it gets rebuilt from the database the next time somebody joins.
+
+**Persistence goes through a broker instead of a direct write.** The interactive path never waits on the database, and the Worker can be slow or restarting without anyone on a board noticing. What you give up is immediacy. For a short window the screen is ahead of storage, and since messages are acknowledged manually and not requeued, a message that fails is a change that quietly did not happen.
+
+**Mistakes are corrected afterwards rather than prevented up front.** RT could validate a shape before broadcasting it, but then the same rules would live in two places and drift apart. Keeping one copy of them in the domain means an invalid change is briefly visible to everyone, until the `ErrorMessage` comes back and RT re-initialises the board. Optimistic, with one explicit correction step.
+
+**Three entrypoints, one set of handlers.** A hub call, an HTTP request and a broker message all reach the same dispatcher and the same handler, so a rule cannot behave one way over REST and another way over the hub.
+
+**Domain models are kept apart from the EF entities.** Validation lives in value objects that cannot be constructed in an invalid state, and the mapping to storage is written out by hand in both directions. It costs a set of mapper classes, and in exchange no persistence concern reaches the rules.
 
 ## Where to look in the code
 
@@ -84,19 +95,18 @@ The frontend is a thin client that draws and relays. Almost all of the design si
 - `dotnet/AipsWorker/Utilities/SubscribeMethodUtility.cs` binds the generic `SubscribeAsync<T>` for each message type through reflection, which is how the Worker registers all of its subscriptions from a plain list of types.
 - `dotnet/AipsRT/Services/RtErrorHandleStrategy.cs` is what actually runs when persistence rejects a change: reload the board from the database and re-initialise every connected client.
 
-## Why it is built this way
+## Screenshots
 
-**The realtime service is separate from the Web API.** The two do different kinds of work. One holds long lived WebSocket connections and per board state, the other answers stateless requests and forgets them. Keeping them apart means connection state never sits inside the REST process, and either one can be restarted without dragging the other down with it.
-
-**A board lives in memory while people are drawing on it.** A database round trip on every stroke would be felt by the person drawing, so RT answers from its own state and broadcasts straight away.
-
-**Persistence goes through a broker instead of a direct write.** The interactive path never waits on the database. If the Worker is slow or restarting, drawing carries on and the messages wait in the queue.
-
-**Mistakes are corrected afterwards rather than prevented up front.** RT could validate a shape before broadcasting it, but then the domain rules would have to exist in two places and drift apart. Instead the rules live only in the domain, run in the Worker, and when they reject something the Worker says so with an `ErrorMessage`. RT then reloads the board and re-initialises everyone. Optimistic, with one explicit correction step.
-
-**Three entrypoints, one set of handlers.** A hub call, an HTTP request and a broker message all reach the same dispatcher and the same handler, so a rule cannot behave one way over REST and another way over the hub.
-
-**Domain models are kept apart from the EF entities.** Validation lives in value objects that cannot be constructed in an invalid state, and the mapping to storage is written out by hand in both directions. It costs a set of mapper classes, and in exchange no persistence concern reaches the rules.
+<table>
+<tr>
+<td width="50%"><img src="docs/screenshots/screenshot_1.png" alt="Home screen" width="100%"></td>
+<td width="50%"><img src="docs/screenshots/screenshot_2.png" alt="Creating a new whiteboard" width="100%"></td>
+</tr>
+<tr>
+<td>Joining an existing board by code, or starting one of your own.</td>
+<td>A new board takes a title, a join policy and a participant limit.</td>
+</tr>
+</table>
 
 ## Requirements
 
@@ -104,10 +114,10 @@ The frontend is a thin client that draws and relays. Almost all of the design si
 |---|---|---|
 | .NET SDK | 10.0 | All three services target `net10.0` |
 | `dotnet-ef` | 10.x | Needed once to create the schema, install with `dotnet tool install --global dotnet-ef` |
-| Docker | Engine with Compose v2 | Runs the two infrastructure containers |
-| Bun | 1.x | Installs the frontend and runs the dev server. Node 20.19+ or 22.12+ with npm works as well |
+| Docker | Engine with Compose v2 | Pulls and runs Postgres 18 and RabbitMQ 3, so neither has to be installed |
+| Bun | 1.x | `start-front.sh` runs `bun dev`. Node 20.19+ or 22.12+ with npm works too, if you start the frontend yourself |
 
-Postgres 18 and RabbitMQ 3 with the management plugin are pulled as images by `start-infra.sh`, so there is nothing to install for either. On the .NET side the project is on EF Core 10, Npgsql 10 and RabbitMQ.Client 7.
+On the .NET side the project is on EF Core 10, Npgsql 10 and RabbitMQ.Client 7.
 
 ## Running locally
 
