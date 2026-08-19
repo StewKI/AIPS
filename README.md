@@ -2,6 +2,21 @@
 
 A real-time collaborative whiteboard. One user creates a board and shares it, and several participants then draw on it at the same time, with every change showing up for everyone right away. The available shapes are rectangle, line, arrow and text. The board owner controls who gets in: depending on the join policy a participant either enters directly or waits to be approved, and the owner can also reject, kick or ban. Authentication is JWT with refresh tokens.
 
+<img src="docs/screenshots/screenshot_3.png" alt="A whiteboard in session with two participants" width="900">
+
+A board in session. Everyone present is listed in the sidebar, every shape carries the name of whoever drew it, and the eight digit code under the list is what other people use to get in.
+
+<table>
+<tr>
+<td width="50%"><img src="docs/screenshots/screenshot_1.png" alt="Home screen" width="100%"></td>
+<td width="50%"><img src="docs/screenshots/screenshot_2.png" alt="Creating a new whiteboard" width="100%"></td>
+</tr>
+<tr>
+<td>Joining an existing board by code, or starting one of your own.</td>
+<td>A new board takes a title, a join policy and a participant limit.</td>
+</tr>
+</table>
+
 ## Architecture
 
 <img src="docs/diagrams/communication-components.png" alt="AIPS components and communication paths" width="460">
@@ -69,22 +84,46 @@ The frontend is a thin client that draws and relays. Almost all of the design si
 - `dotnet/AipsWorker/Utilities/SubscribeMethodUtility.cs` binds the generic `SubscribeAsync<T>` for each message type through reflection, which is how the Worker registers all of its subscriptions from a plain list of types.
 - `dotnet/AipsRT/Services/RtErrorHandleStrategy.cs` is what actually runs when persistence rejects a change: reload the board from the database and re-initialise every connected client.
 
+## Requirements
+
+| What | Version | Notes |
+|---|---|---|
+| .NET SDK | 10.0 | All three services target `net10.0` |
+| `dotnet-ef` | 10.x | Needed once to create the schema, install with `dotnet tool install --global dotnet-ef` |
+| Docker | Engine with Compose v2 | Runs the two infrastructure containers |
+| Bun | 1.x | Installs the frontend and runs the dev server. Node 20.19+ or 22.12+ with npm works as well |
+
+Postgres 18 and RabbitMQ 3 with the management plugin are pulled as images by `start-infra.sh`, so there is nothing to install for either. On the .NET side the project is on EF Core 10, Npgsql 10 and RabbitMQ.Client 7.
+
 ## Running locally
 
 ```bash
-cp deploy/.env.example .env   # fill in the values
+cp deploy/.env.example .env   # fill in the values, and see the note below
 ./start-infra.sh              # Postgres :5432, RabbitMQ :5672 / UI :15672
 ./start-back.sh               # WebApi :5266, RT :5039, Worker
 ./start-front.sh              # Vite :5173 (proxies /api and /hubs to the backend)
 ```
 
-Migrations are applied automatically when WebApi starts (`InitializeInfrastructureAsync`).
+`deploy/.env.example` lists the variables the Docker deployment needs, where the compose file assembles the connection strings itself. Running the services straight on the host means they read those two strings directly, so add them to `.env` as well:
+
+```
+DB_CONN_STRING=Host=localhost;Port=5432;Database=aips_db;Username=aips_user;Password=<your password>
+RABBITMQ_AMQP_URI=amqp://<user>:<password>@localhost:5672/%2F
+```
+
+The schema is not created on startup, so apply the migrations once before the first run:
+
+```bash
+cd dotnet && dotnet ef database update --project AipsCore --startup-project AipsWebApi
+```
+
+What WebApi does do on startup is seed the Identity roles, in `InitializeInfrastructureAsync`.
 
 For production, `deploy/docker-compose.yml` builds every service and exposes nginx on `:8090`, with `deploy/nginx/aips-global.conf` acting as the TLS proxy on the host.
 
 ## Documentation
 
-`docs/` holds the project documents for each phase, covering architecture, the data and persistence model, and the communication models. Diagram sources (drawio) and their PNG exports are in `docs/diagrams/`. The phase documents are written in Serbian.
+`docs/` holds the project documents for each phase, covering architecture, the data and persistence model, and the communication models. Diagram sources (drawio) and their PNG exports are in `docs/diagrams/`, and the screenshots above are in `docs/screenshots/`. The phase documents are written in Serbian.
 
 ## Authors
 
