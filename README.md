@@ -10,7 +10,13 @@ A board in session. Everyone present is listed in the sidebar, every shape carri
 
 <img src="docs/diagrams/communication-components.png" alt="AIPS components and communication paths" width="872">
 
-There are two paths through the system. Drawing takes the fast one: the realtime service keeps the board in memory, answers from there and broadcasts to everyone on the board, then hands the change to a queue for somebody else to save. Everything that is not drawing (signup, login, creating and deleting boards, history, joining by code) takes the ordinary REST path through the Web API. The two run as separate processes and meet again at the database.
+There are two paths through the system, and the diagram colours them separately.
+
+**The REST path** handles everything that is not drawing: signup, login, creating and deleting boards, history and joining by code. Ordinary request and response through AipsWebApi, straight to the database.
+
+**The realtime path** handles drawing. The client talks to AipsRT over a SignalR hub, RT holds the board in memory and answers from there, so a shape appears for everyone before anything has been stored. The saving happens afterwards and out of band, through a queue and the Worker.
+
+The two are separate processes and never call each other. They share the AipsCore library and the database, and nothing else.
 
 ### What happens when you draw a shape
 
@@ -35,15 +41,15 @@ Drawing is not a special case in the code, just the loudest one. Membership goes
 
 One row per box on the diagram, in the same order:
 
-| Box on the diagram | Code / config | Role |
+| Box on the diagram | Code and stack | What it is |
 |---|---|---|
-| **Vue client** | `front/`, Vue 3, TypeScript, Vite, Pinia | SPA with an SVG canvas, `fetch` for REST and `@microsoft/signalr` for the hub |
-| **Nginx** | `deploy/nginx/` | The single entrypoint: `/api/` to AipsWebApi, `/hubs/` to AipsRT with a WebSocket upgrade, everything else the static SPA build. Deployment only, since Vite proxies in development |
-| **AipsRT** | `dotnet/AipsRT/`, ASP.NET Core with SignalR | Hub at `/hubs/whiteboard`. Holds active boards in memory (`WhiteboardManager`), broadcasts to the board group, publishes messages, listens for `ErrorMessage` |
-| **AipsWebApi** | `dotnet/AipsWebApi/`, ASP.NET Core Web API | `/api/User/*` for signup, login, refresh, logout and me. `/api/Whiteboard/*` for create, get, delete, history, recent and join |
-| **RabbitMQ** | `rabbitmq:3-management` via Docker | Topic exchange. Routing key and queue name are both the message type name, acknowledged manually |
-| **AipsWorker** | `dotnet/AipsWorker/`, .NET Worker Service | Runs drawing and membership messages as commands, saves the result, publishes `ErrorMessage` on validation failure |
-| **DB** | `postgres:18` via Docker | Users, whiteboards, shapes, memberships and refresh tokens |
+| **Vue client** | `front/`, Vue 3 with TypeScript, Vite and Pinia | The SPA, drawing on an SVG canvas |
+| **Nginx** | `deploy/nginx/` | The single entrypoint, in deployment only |
+| **AipsRT** | `dotnet/AipsRT/`, ASP.NET Core with SignalR | The realtime service: the hub, and the boards held in memory |
+| **AipsWebApi** | `dotnet/AipsWebApi/`, ASP.NET Core Web API | The REST API, for everything except drawing |
+| **RabbitMQ** | `rabbitmq:3-management` via Docker | The broker between RT and the Worker. Topic exchange, one queue per message type |
+| **AipsWorker** | `dotnet/AipsWorker/`, .NET Worker Service | The consumer, turning those messages into database writes |
+| **DB** | `postgres:18` via Docker | The source of truth: users, boards, shapes, memberships, refresh tokens |
 
 ### AipsCore, the shared library
 
