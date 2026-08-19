@@ -20,23 +20,6 @@ There are two paths through the system, and the diagram colours them separately.
 
 The two are separate processes and never call each other. They share the AipsCore library and the database, and nothing else.
 
-### What happens when you draw a shape
-
-1. The client draws and invokes a hub method over **SignalR** (`AddRectangle`, `MoveShape` and so on).
-2. **AipsRT** (the realtime service) changes the board in its **in-memory** state and immediately broadcasts that change to the other participants on the board.
-3. At the same time, RT publishes a message (`AddRectangleMessage`, `MoveShapeMessage`) to a **RabbitMQ** topic exchange.
-4. **AipsWorker** picks the message up and turns it into a command. The domain validates its rules and the result is written to **PostgreSQL**.
-5. If validation fails, the Worker publishes an `ErrorMessage`. RT receives it, reloads the board from the database and sends `InitWhiteboard` to everyone, so the in-memory state goes back to whatever was actually saved.
-
-So drawing feels instant, because nothing waits on the database, but the database is still the source of truth and it corrects memory whenever the two drift apart.
-
-### What happens when someone joins
-
-1. The visitor enters the eight digit code, a plain REST call to `POST /api/Whiteboard/join`. The board's join policy decides what the membership starts as: `FreeToJoin` accepts on the spot, `RequestToJoin` leaves it pending, `Private` refuses.
-2. The client then opens the hub connection and calls `JoinWhiteboard`. RT loads the board into memory if nobody is on it yet, joins the SignalR group and reads the membership status from the database.
-3. Accepted goes straight in, `InitWhiteboard` to the newcomer and `Joined` to the group. Pending gets `WaitingForApproval`, and the owner alone gets `UserWaitingForApproval`.
-4. `AcceptUser` then does exactly what adding a shape does: it publishes `AcceptUserRequestToJoinMessage` for the Worker to persist, and lets the user in immediately without waiting for that write. Nothing on the realtime path waits for a write to land.
-
 ## Components
 
 One row per box on the diagram, in the same order:
@@ -58,6 +41,23 @@ One row per box on the diagram, in the same order:
 - `Domain` for models, value objects and validation rules
 - `Application` for commands, queries, messages, their handlers and the dispatcher that routes them
 - `Infrastructure` for EF Core and migrations, the RabbitMQ publisher and subscriber, JWT and the DI wiring
+
+## What happens when you draw a shape
+
+1. The client draws and invokes a hub method over **SignalR** (`AddRectangle`, `MoveShape` and so on).
+2. **AipsRT** changes the board in its **in-memory** state and immediately broadcasts that change to the other participants on the board.
+3. At the same time, RT publishes a message (`AddRectangleMessage`, `MoveShapeMessage`) to a **RabbitMQ** topic exchange.
+4. **AipsWorker** picks the message up and turns it into a command. The domain validates its rules and the result is written to **PostgreSQL**.
+5. If validation fails, the Worker publishes an `ErrorMessage`. RT receives it, reloads the board from the database and sends `InitWhiteboard` to everyone, so the in-memory state goes back to whatever was actually saved.
+
+So drawing feels instant, because nothing waits on the database, but the database is still the source of truth and it corrects memory whenever the two drift apart.
+
+## What happens when someone joins
+
+1. The visitor enters the eight digit code, a plain REST call to `POST /api/Whiteboard/join`. The board's join policy decides what the membership starts as: `FreeToJoin` accepts on the spot, `RequestToJoin` leaves it pending, `Private` refuses.
+2. The client then opens the hub connection and calls `JoinWhiteboard`. RT loads the board into memory if nobody is on it yet, joins the SignalR group and reads the membership status from the database.
+3. Accepted goes straight in, `InitWhiteboard` to the newcomer and `Joined` to the group. Pending gets `WaitingForApproval`, and the owner alone gets `UserWaitingForApproval`.
+4. `AcceptUser` then does exactly what adding a shape does: it publishes `AcceptUserRequestToJoinMessage` for the Worker to persist, and lets the user in immediately without waiting for that write. Nothing on the realtime path waits for a write to land.
 
 ## Why it is built this way
 
