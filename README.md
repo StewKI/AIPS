@@ -1,6 +1,8 @@
 # AIPS (Advanced Interactive Painting System)
 
-A real-time collaborative whiteboard. One user creates a board and shares it, and several participants then draw on it at the same time, with every change showing up for everyone right away. The available shapes are rectangle, line, arrow and text. The board owner controls who gets in: depending on the join policy a participant either walks straight in, waits to be approved, or is refused outright. Authentication is JWT with refresh tokens.
+A real-time collaborative whiteboard: several people draw on the same board at once, and every change shows up for everyone right away.
+
+One user creates the board and shares its code, and the rest join with that code. The available shapes are rectangle, line, arrow and text. The board owner controls who gets in: depending on the join policy a participant either walks straight in, waits to be approved, or is refused outright.
 
 <img src="docs/screenshots/screenshot_3.png" alt="A whiteboard in session with two participants" width="900">
 
@@ -12,7 +14,7 @@ A board in session. Everyone present is listed in the sidebar, every shape carri
 
 There are two paths through the system, and the diagram colours them separately.
 
-**The REST path** handles everything that is not drawing: signup, login, creating and deleting boards, history and joining by code. Ordinary request and response through AipsWebApi, straight to the database.
+**The REST path** handles everything that is not drawing: signup and login (JWT with refresh tokens), creating and deleting boards, history and joining by code. Ordinary request and response through AipsWebApi, straight to the database.
 
 **The realtime path** handles drawing. The client talks to AipsRT over a SignalR hub, RT holds the board in memory and answers from there, so a shape appears for everyone before anything has been stored. The saving happens afterwards and out of band, through a queue and the Worker.
 
@@ -33,9 +35,7 @@ So drawing feels instant, because nothing waits on the database, but the databas
 1. The visitor enters the eight digit code, a plain REST call to `POST /api/Whiteboard/join`. The board's join policy decides what the membership starts as: `FreeToJoin` accepts on the spot, `RequestToJoin` leaves it pending, `Private` refuses.
 2. The client then opens the hub connection and calls `JoinWhiteboard`. RT loads the board into memory if nobody is on it yet, joins the SignalR group and reads the membership status from the database.
 3. Accepted goes straight in, `InitWhiteboard` to the newcomer and `Joined` to the group. Pending gets `WaitingForApproval`, and the owner alone gets `UserWaitingForApproval`.
-4. `AcceptUser` then does the same two things a shape does: publish `AcceptUserRequestToJoinMessage` for the Worker to persist, and let the user in immediately without waiting for that.
-
-Drawing is not a special case in the code, just the loudest one. Membership goes through the same split.
+4. `AcceptUser` then does exactly what adding a shape does: it publishes `AcceptUserRequestToJoinMessage` for the Worker to persist, and lets the user in immediately without waiting for that write. Nothing on the realtime path waits for a write to land.
 
 ## Components
 
