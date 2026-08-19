@@ -25,11 +25,7 @@ const showLogoutConfirm = ref(false)
       </button>
 
       <div id="navbarNav" class="collapse navbar-collapse">
-        <ul class="navbar-nav me-auto">
-          <!-- <li class="nav-item">
-            <RouterLink class="nav-link" active-class="active" to="/test">Test</RouterLink>
-          </li> -->
-        </ul>
+        <ul class="navbar-nav me-auto"></ul>
 
         <ul class="navbar-nav">
           <template v-if="auth.isAuthenticated">
