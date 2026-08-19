@@ -91,36 +91,25 @@ The frontend is a thin client. Almost all of the design is on the .NET side, rou
 
 ## Requirements
 
-| What | Version | Notes |
-|---|---|---|
-| .NET SDK | 10.0 | All three services target `net10.0` |
-| `dotnet-ef` | 10.x | Needed once to create the schema, install with `dotnet tool install --global dotnet-ef` |
-| Docker | Engine with Compose v2 | Pulls and runs Postgres 18 and RabbitMQ 3, so neither has to be installed |
-| Bun | 1.x | `start-front.sh` runs `bun dev`. Node 20.19+ or 22.12+ with npm works too, if you start the frontend yourself |
-
-On the .NET side the project is on EF Core 10, Npgsql 10 and RabbitMQ.Client 7.
+The .NET 10 SDK, Docker with Compose v2, and Bun (Node 20.19+ with npm works too). Postgres 18 and RabbitMQ 3 come down as images, so there is nothing to install for either. Creating the schema needs the EF tool once, `dotnet tool install --global dotnet-ef`.
 
 ## Running locally
 
-```bash
-cp deploy/.env.example .env   # see the note below
-./start-infra.sh              # Postgres :5432, RabbitMQ :5672 / UI :15672
-./start-back.sh               # WebApi :5266, RT :5039, Worker
-./start-front.sh              # Vite :5173 (proxies /api and /hubs to the backend)
-```
+1. **Create the env file** with `cp .env.example .env`. Nothing to fill in, the defaults are throwaway local values.
 
-`deploy/.env.example` covers the Docker deployment, where compose assembles the connection strings itself. Run the services on the host and they read those strings directly, so add both:
+2. **Start the infrastructure** with `./start-infra.sh`. Postgres comes up on `:5432`, RabbitMQ on `:5672` with its management UI on `:15672`.
 
-```
-DB_CONN_STRING=Host=localhost;Port=5432;Database=aips_db;Username=aips_user;Password=<your password>
-RABBITMQ_AMQP_URI=amqp://<user>:<password>@localhost:5672/%2F
-```
+3. **Create the schema.** The services do not migrate on startup, so run this once before the first run:
 
-The schema is not created on startup, so apply the migrations once before the first run:
+   ```bash
+   cd dotnet && dotnet ef database update --project AipsCore --startup-project AipsWebApi
+   ```
 
-```bash
-cd dotnet && dotnet ef database update --project AipsCore --startup-project AipsWebApi
-```
+4. **Start the backend** with `./start-back.sh`. That is all three services at once: WebApi on `:5266`, RT on `:5039`, and the Worker.
+
+5. **Start the frontend** with `./start-front.sh`, then open http://localhost:5173. Vite proxies `/api` and `/hubs` to the backend, so nginx is not needed here.
+
+Steps 2, 4 and 5 each hold their terminal, so use three.
 
 For production, `deploy/docker-compose.yml` builds every service and exposes nginx on `:8090`, with `deploy/nginx/aips-global.conf` acting as the TLS proxy on the host.
 
