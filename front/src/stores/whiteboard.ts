@@ -29,8 +29,9 @@ export const useWhiteboardStore = defineStore('whiteboard', () => {
     try {
       const resolved = await fetchUser(user.userId)
       const idx = list.value.findIndex(u => u.userId === user.userId)
-      if (idx !== -1 && resolved.username) {
-        list.value[idx] = { ...list.value[idx], username: resolved.username, email: resolved.email || list.value[idx].email }
+      const existing = idx === -1 ? undefined : list.value[idx]
+      if (existing && resolved.username) {
+        list.value[idx] = { ...existing, username: resolved.username, email: resolved.email || existing.email }
       }
     } catch (err) {
       console.warn(`Failed to resolve username for ${user.userId}`, err)
